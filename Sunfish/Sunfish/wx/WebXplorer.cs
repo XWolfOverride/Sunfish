@@ -362,7 +362,8 @@ namespace DolphinWebXplorer2.wx
                 string cmd = GET["cmd"];
                 if (cmd.Length == 0)
                     return;
-                string par = cmd.Substring(1);
+                string cc = cmd.Substring(0, 2);
+                string par = cmd.Substring(2);
                 int x;
                 int y;
                 string[] pars = par.Split(';');
@@ -370,18 +371,29 @@ namespace DolphinWebXplorer2.wx
                 int.TryParse(pars[1], out y);
                 Screen scr = Program.MAINFORM.MyScreen;
                 System.Windows.Forms.Cursor.Position = new Point(x + scr.Bounds.X, y + scr.Bounds.Y);
-                switch (cmd[0])
+                switch (cc)
                 {
-                    case 'D':
+                    case "LD":
                         Thread.Sleep(100);
                         mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
                         break;
-                    case 'U':
+                    case "LU":
                         Thread.Sleep(100);
                         mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
                         break;
-                    case 'W':
-
+                    case "RD":
+                        Thread.Sleep(100);
+                        mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
+                        break;
+                    case "RU":
+                        Thread.Sleep(100);
+                        mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
+                        break;
+                    case "WH":
+                        Thread.Sleep(100);
+                        int wheel;
+                        int.TryParse(pars[2], out wheel);
+                        mouse_event(MOUSEEVENTF_WHEEL, 0, 0, wheel, 0);
                         break;
                 }
                 Out.Write("Ok");
@@ -392,6 +404,9 @@ namespace DolphinWebXplorer2.wx
         #region WINAPI
         private const int MOUSEEVENTF_LEFTDOWN = 0x0002; /* left button down */
         private const int MOUSEEVENTF_LEFTUP = 0x0004; /* left button up */
+        private const int MOUSEEVENTF_RIGHTDOWN = 0x0008; /* left button down */
+        private const int MOUSEEVENTF_RIGHTUP = 0x0010; /* left button up */
+        private const int MOUSEEVENTF_WHEEL = 0x0800; /* The wheel has been moved, if the mouse has a wheel. The amount of movement is specified in dwData */
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
         #endregion

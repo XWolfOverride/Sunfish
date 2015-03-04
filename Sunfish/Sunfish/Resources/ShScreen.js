@@ -16,6 +16,7 @@ var shs = new (function () {
         xmlhttp.onerror = function () {
             sending = false;
         }
+        //console.log(cmd);
         xmlhttp.send();
     }
     this.start = function () {
@@ -37,17 +38,20 @@ var shs = new (function () {
             frm.style.display = "";
         }
         img.onmousemove = function (evt) {
-            send(code, "M"+evt.offsetX+";"+evt.offsetY);
+            send(code, "MV"+evt.offsetX+";"+evt.offsetY);
         }
         img.onmousedown = function (evt) {
-            send(code, "D" + evt.offsetX + ";" + evt.offsetY);
+            var buttons = ["LD","MD","RD"];
+            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY);
             return false;
         }
         img.onmouseup = function (evt) {
-            send(code, "U" + evt.offsetX + ";" + evt.offsetY);
+            var buttons = ["LU", "MU", "RU"];
+            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY);
         }
         img.onmousewheel = function (evt) {
-            send(code, "W" + evt.offsetX + ";" + evt.offsetY + ";" + evt.wheelDelta);
+            send(code, "WH" + evt.offsetX + ";" + evt.offsetY + ";" + evt.wheelDelta);
+            return false;
         }
         img.onclick = function (evt) {
             evt.preventDefault();
