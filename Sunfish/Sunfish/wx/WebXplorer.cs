@@ -26,6 +26,8 @@ namespace DolphinWebXplorer2.wx
         public static byte[] res_screen;
         public static byte[] res_folder;
         private static int port = 90;
+        private static bool sharedScreen = false;
+        private static string sharedScreenPwd;
         public static Random rnd = new Random();
         private static Dictionary<string, string> acodes = new Dictionary<string, string>();
 
@@ -44,6 +46,11 @@ namespace DolphinWebXplorer2.wx
             res_screen = GetImageData(Resources.screen, ImageFormat.Png);
             res_folder = GetImageData(Resources.foldericon, ImageFormat.Png);
             Win32.DestroyIcon(Win32.GetIcon(".").hIcon);
+            string letters = "abcdefghikjlmnopqrstuvwxyz1234567890";
+            Random rnd=new Random();
+            sharedScreenPwd = "";
+            while (sharedScreenPwd.Length < 10)
+                sharedScreenPwd += letters[rnd.Next(letters.Length)];
         }
 
         private static byte[] GetImageData(Image i, ImageFormat format)
@@ -115,14 +122,24 @@ namespace DolphinWebXplorer2.wx
             YN[true] = "Y";
             YN[false] = "N";
             List<string> data = new List<string>();
-            data.Add("#Sunfish WebXplorer V" + Program.VERSION + " (The new Dolphin WebXplorer) (C) XWolf 2014");
-            data.Add("");
-            data.Add("#Each line is: <name>|<path>|<enabled>|<allow subfolders>|<allow upload>|<allow deletion>|<allow rename>|<allow remote execution>|<allow create folders>");
-            data.Add("");
+            data.Add("#Sunfish WebXplorer V" + Program.VERSION + " (The new Dolphin WebXplorer) (C) XWolf 2014-2015");
             data.Add("Active: " + YN[Active]);
             data.Add("Port: " + port);
+            data.Add("SharedScreen:" + YN[sharedScreen]);
+            data.Add("SharedScreen.Password:" + sharedScreenPwd.ToLower());
+            data.Add("");
+            data.Add("#Each shared line is: Shared:<name>|<path>|<enabled>|<flags>");
+            data.Add("# Where flags stands for");
+            data.Add("#  ·S Allow sub folder navigation");
+            data.Add("#  ·U Allow upload files");
+            data.Add("#  ·D Allow file deletion");
+            data.Add("#  ·R Allow rile rename");
+            data.Add("#  ·X Allow remote execution (execute on server side)");
+            data.Add("#  ·F Allow create folders");
+            data.Add("#  ·T Send thumbnails icons");
+            data.Add("");
             foreach (WShared s in shares)
-                data.Add("Shared: " + s.Name + "|" + s.Path + "|" + YN[s.Enabled] + "|" + YN[s.AllowSubfolders] + "|" + YN[s.AllowUpload] + "|" + YN[s.AllowDeletion] + "|" + YN[s.AllowRename] + "|" + YN[s.AllowExecution] + "|" + YN[s.AllowNewFolder]);
+                data.Add("Shared: " + s.Name + "|" + s.Path + "|" + YN[s.Enabled] + "|" + s.GetFlags());
             File.WriteAllLines(filename, data.ToArray());
         }
 
@@ -130,11 +147,12 @@ namespace DolphinWebXplorer2.wx
         {
             string[] data = File.ReadAllLines(filename);
             bool setactive = false;
+            sharedScreen = false;
             shares.Clear();
             Stop();
             foreach (string l in data)
             {
-                if (l.StartsWith("#"))
+                if (l.StartsWith("#") || l.Length==0)
                     continue;
                 int dp = l.IndexOf(':');
                 if (dp < 0)
@@ -149,6 +167,12 @@ namespace DolphinWebXplorer2.wx
                     case "port":
                         int.TryParse(par, out port);
                         break;
+                    case "sharedscreen":
+                        sharedScreen = "Y".Equals(par);
+                        break;
+                    case "sharedscreen.password":
+                        sharedScreenPwd = par;
+                        break;
                     case "shared":
                         {
                             string[] s = par.Split('|');
@@ -158,12 +182,7 @@ namespace DolphinWebXplorer2.wx
                             {
                                 WShared sh = new WShared(sname, spath);
                                 sh.Enabled = "Y".Equals(s.Length > 2 ? s[2] : null);
-                                sh.AllowSubfolders = "Y".Equals(s.Length > 3 ? s[3] : null);
-                                sh.AllowUpload = "Y".Equals(s.Length > 4 ? s[4] : null);
-                                sh.AllowDeletion = "Y".Equals(s.Length > 5 ? s[5] : null);
-                                sh.AllowRename = "Y".Equals(s.Length > 6 ? s[6] : null);
-                                sh.AllowExecution = "Y".Equals(s.Length > 7 ? s[7] : null);
-                                sh.AllowNewFolder = "Y".Equals(s.Length > 8 ? s[8] : null);
+                                sh.SetFlags(s.Length > 3 ? s[3] : "");
                                 Add(sh);
                             }
                         }
@@ -209,6 +228,8 @@ namespace DolphinWebXplorer2.wx
         public static WShared[] Shares { get { return shares.ToArray(); } }
         public static bool Active { get { return server != null; } }
         public static int Port { get { return port; } set { if (Active) throw new Exception("Can't change port while running"); else port = value; } }
+        public static bool SharedScreen { get { return sharedScreen; } set { sharedScreen = value; } }
+        public static string SharedScreenPassword { get { return sharedScreenPwd; } set { sharedScreenPwd = value; } }
     }
 
     class XplorerProcessor : HttpServerProcessor
@@ -218,6 +239,8 @@ namespace DolphinWebXplorer2.wx
             string path = Path.Substring(1);
             if (path.StartsWith("·") || path == "favicon.ico")
                 Resource(path.Substring(1));
+            if (path.StartsWith("$"))
+                Special(path.Substring(1));
             else
             {
                 string shpath = path.Contains('/') ? path.Substring(0, path.IndexOf('/')) : null;
@@ -299,25 +322,34 @@ namespace DolphinWebXplorer2.wx
             }
         }
 
+        private void Special(string path)
+        {
+            if (path=="screen"){
+                BlackHeader("Shared Screen", global::DolphinWebXplorer2.Properties.Resources.ShScreen);
+                Out.Write("<div id='frm'>Password: <input id='scpwd' type='password'><button onclick='shs.start()'>Open</button></div>");
+                Out.Write("<img id='scr'>");
+                BlackFooter();
+            }
+        }
+
         private void GetIcon(WShared sh, string path)
         {
             path = sh.GetLocalPath(path);
             try
             {
-                //FileInfo fi = new FileInfo(path);
-                //if (fi.Length < 1024 * 1024)
-                //{
-                //    try{
-                //        using (Image i = Image.FromFile(path))
-                //        {
-                //            using (Image t = i.GetThumbnailImage(32, 32, null, IntPtr.Zero))
-                //            {
-                //                BinaryOut((Bitmap)t);
-                //                return;
-                //            }
-                //        }
-                //    }catch{};
-                //}
+                if (sh.SendThumbnails)
+                    try
+                    {
+                        FileInfo fi = new FileInfo(path);
+                        if (fi.Length < 10485760) //10Mb
+                            using (Image i = Image.FromFile(path))
+                            using (Image t = i.GetThumbnailImage(32, 32, null, IntPtr.Zero))
+                            {
+                                BinaryOut((Bitmap)t);
+                                return;
+                            }
+                    }
+                    catch { };
                 using (ShellIcon i = new ShellIcon(path))
                     BinaryOut(i.Image);
             }
@@ -609,6 +641,27 @@ namespace DolphinWebXplorer2.wx
             Footer();
         }
 
+        private void BlackHeader(string title, string script)
+        {
+            Out.Write("<html><head><title>Sunfish [");
+            Out.Write(title);
+            Out.Write("]</title><style>");
+            Out.Write(global::DolphinWebXplorer2.Properties.Resources.siteblack);
+            Out.Write("</style>");
+            if (script != null)
+            {
+                Out.Write("<script>");
+                Out.Write(script);
+                Out.Write("</script>");
+            }
+            Out.Write("</head><body><div id='ctt'><div id='main'>");
+        }
+
+        private void BlackFooter()
+        {
+            Out.Write("</div></div></body></html>");
+        }
+
         private void Header(string title, WShared sh, string[] path)
         {
             Out.Write("<html><head><title>Sunfish [");
@@ -647,8 +700,8 @@ namespace DolphinWebXplorer2.wx
             Out.Write("<div id='headtoolbox'>");
             if (sh != null && sh.AllowNewFolder)
                 Out.Write("<button class='htool' title='New Folder' onclick='location.href+=\"?Action=MKD\"'><img src='/·folder' width='16' height='16'></button>");
-            if (true)
-                Out.Write("<button class='htool' title='Simple remote control' onclick='location.href+=\"/screen\"'><img src='/·screen' width='16' height='16'></button>");
+            if (WebXplorer.SharedScreen)
+                Out.Write("<button class='htool' title='Simple remote control' onclick='location.href=\"/$screen\"'><img src='/·screen' width='16' height='16'></button>");
             Out.Write("</div>");
             Out.Write("</div><div id='main'>");
         }

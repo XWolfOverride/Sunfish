@@ -77,6 +77,7 @@
       <DependentUpon>FShared.cs</DependentUpon>
     </Compile>
     <Compile Include="HttpServer.cs" />
+    <Compile Include="IpInfo.cs" />
     <Compile Include="NetFwTypeLib\INetFwAuthorizedApplication.cs" />
     <Compile Include="NetFwTypeLib\INetFwAuthorizedApplications.cs" />
     <Compile Include="NetFwTypeLib\INetFwIcmpSettings.cs" />
@@ -150,9 +151,12 @@
     <None Include="Resources\bt_plus.bmp" />
     <None Include="Resources\run.png" />
     <None Include="Resources\share.png" />
+    <Content Include="Resources\ShScreen.js" />
+    <None Include="Resources\sh.js.txt" />
     <Content Include="Resources\site.css" />
     <None Include="Resources\sunfishWebServer.ico" />
     <None Include="Resources\sws.png" />
+    <None Include="Resources\site1.css" />
     <Content Include="sunfishWebServer.ico" />
   </ItemGroup>
   <ItemGroup>

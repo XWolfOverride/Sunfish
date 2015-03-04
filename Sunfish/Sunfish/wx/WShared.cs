@@ -16,6 +16,7 @@ namespace DolphinWebXplorer2.wx
         private bool allowRename;
         private bool allowExecution;
         private bool allowNewFolder;
+        private bool sendThumbnails;
 
         public WShared()
         {
@@ -37,6 +38,29 @@ namespace DolphinWebXplorer2.wx
             return '/' + name +'/'+ path;
         }
 
+        public string GetFlags()
+        {
+            StringBuilder sb = new StringBuilder("");
+            sb.Append(allowSubfolders ? 'S' : '-');
+            sb.Append(allowUpload ? 'U' : '-');
+            sb.Append(allowDeletion ? 'D' : '-');
+            sb.Append(allowRename ? 'R' : '-');
+            sb.Append(allowExecution ? 'X' : '-');
+            sb.Append(allowNewFolder ? 'F' : '-');
+            sb.Append(sendThumbnails ? 'T' : '-');
+            return sb.ToString();
+        }
+
+        public void SetFlags(string flags)
+        {
+            allowSubfolders=flags.Contains('S');
+            allowUpload = flags.Contains('U');
+            allowDeletion = flags.Contains('D');
+            allowRename = flags.Contains('R');
+            allowExecution = flags.Contains('X');
+            allowNewFolder = flags.Contains('F');
+            sendThumbnails = flags.Contains('T');
+        }
         public string Name { get { return name; } set { name = value; } }
         public string Path
         {
@@ -55,5 +79,6 @@ namespace DolphinWebXplorer2.wx
         public bool AllowRename { get { return allowRename; } set { allowRename = value; } }
         public bool AllowExecution { get { return allowExecution; } set { allowExecution = value; } }
         public bool AllowNewFolder { get { return allowNewFolder; } set { allowNewFolder = value; } }
+        public bool SendThumbnails { get { return sendThumbnails; } set { sendThumbnails = value; } }
     }
 }

@@ -41,6 +41,7 @@
             this.cbExec = new System.Windows.Forms.CheckBox();
             this.btOpen = new System.Windows.Forms.Button();
             this.cbMkDir = new System.Windows.Forms.CheckBox();
+            this.cbThumbnails = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -114,7 +115,7 @@
             // btOk
             // 
             this.btOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btOk.Location = new System.Drawing.Point(316, 140);
+            this.btOk.Location = new System.Drawing.Point(316, 162);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(75, 23);
             this.btOk.TabIndex = 7;
@@ -155,7 +156,7 @@
             // btOpen
             // 
             this.btOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btOpen.Location = new System.Drawing.Point(207, 140);
+            this.btOpen.Location = new System.Drawing.Point(207, 162);
             this.btOpen.Name = "btOpen";
             this.btOpen.Size = new System.Drawing.Size(103, 23);
             this.btOpen.TabIndex = 11;
@@ -173,12 +174,23 @@
             this.cbMkDir.Text = "Allow create folders";
             this.cbMkDir.UseVisualStyleBackColor = true;
             // 
+            // cbThumbnails
+            // 
+            this.cbThumbnails.AutoSize = true;
+            this.cbThumbnails.Location = new System.Drawing.Point(170, 137);
+            this.cbThumbnails.Name = "cbThumbnails";
+            this.cbThumbnails.Size = new System.Drawing.Size(200, 17);
+            this.cbThumbnails.TabIndex = 13;
+            this.cbThumbnails.Text = "Send image previews on icons (slow)";
+            this.cbThumbnails.UseVisualStyleBackColor = true;
+            // 
             // FShared
             // 
             this.AcceptButton = this.btOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 175);
+            this.ClientSize = new System.Drawing.Size(403, 197);
+            this.Controls.Add(this.cbThumbnails);
             this.Controls.Add(this.cbMkDir);
             this.Controls.Add(this.btOpen);
             this.Controls.Add(this.cbExec);
@@ -217,5 +229,6 @@
         private System.Windows.Forms.CheckBox cbExec;
         private System.Windows.Forms.Button btOpen;
         private System.Windows.Forms.CheckBox cbMkDir;
+        private System.Windows.Forms.CheckBox cbThumbnails;
     }
 }

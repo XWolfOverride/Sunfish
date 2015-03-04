@@ -145,6 +145,7 @@ namespace XWolf
                 swout = new StreamWriter(Response.OutputStream, utf8EncoderNoBOM);
                 Response.Headers[HttpResponseHeader.ContentType] = "text/html";
                 Response.Headers[HttpResponseHeader.ContentEncoding] = "UTF-8";
+
                 GetHeaders();
                 Process();
                 Out.Close();

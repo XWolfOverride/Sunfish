@@ -31,6 +31,7 @@ namespace DolphinWebXplorer2
                 f.cbRena.DataBindings.Add("Checked", sh, "AllowRename");
                 f.cbExec.DataBindings.Add("Checked", sh, "AllowExecution");
                 f.cbMkDir.DataBindings.Add("Checked", sh, "AllowNewFolder");
+                f.cbThumbnails.DataBindings.Add("Checked", sh, "SendThumbnails");
                 f.formerName = sh.Name;
                 f.btOpen.Visible=WebXplorer.Contains(sh);
                 return f.ShowDialog() == DialogResult.OK;

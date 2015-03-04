@@ -36,10 +36,23 @@ namespace DolphinWebXplorer2
             Enabled = false;
             nudPort.Value = WebXplorer.Port;
             cbActive.Checked=WebXplorer.Active;
+            shareScreenToolStripMenuItem.Checked = WebXplorer.SharedScreen;
+            tstbPassword.Text = WebXplorer.SharedScreenPassword;
             lbPaths.Items.Clear();
             foreach (WShared sh in WebXplorer.Shares)
                lbPaths.Items.Add(sh);
             Enabled = true;
+        }
+
+        private List<IpInfo> ListInterfacesIPs()
+        {
+            List<IpInfo> result = new List<IpInfo>();
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+                if (item.NetworkInterfaceType != NetworkInterfaceType.Loopback && item.OperationalStatus == OperationalStatus.Up)
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                            result.Add(new IpInfo(item, ip.Address.ToString()));
+            return result;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -134,27 +147,63 @@ namespace DolphinWebXplorer2
         {
             StringBuilder sb = new StringBuilder(WebXplorer.Active?"A":"ina");
             sb.Append("ctive.\r\n");
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (IpInfo ip in ListInterfacesIPs())
             {
-                if (item.NetworkInterfaceType != NetworkInterfaceType.Loopback && item.OperationalStatus == OperationalStatus.Up)
-                {
-                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
-                    {
-                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                        {
-                            sb.Append(item.Name);
-                            sb.Append(" (");
-                            sb.Append(item.NetworkInterfaceType);
-                            sb.Append("): ");
-                            sb.Append(ip.Address.ToString());
-                            sb.Append(":");
-                            sb.Append(WebXplorer.Port);
-                            sb.Append("\r\n");
-                        }
-                    }
-                }
+                sb.Append(ip.InterfaceName);
+                sb.Append(" (");
+                sb.Append(ip.InterfaceType);
+                sb.Append("): ");
+                sb.Append(ip.Address);
+                sb.Append(":");
+                sb.Append(WebXplorer.Port);
+                sb.Append("\r\n");
             }
             MessageBox.Show(sb.ToString(),"Network information",MessageBoxButtons.OK,MessageBoxIcon.Information);
+        }
+
+        private void cmsItem_Opening(object sender, CancelEventArgs e)
+        {
+            WShared sh = lbPaths.SelectedItem as WShared;            
+            editarToolStripMenuItem.Enabled = sh != null;
+            while (cmsItem.Items.Count > 1)
+                cmsItem.Items.RemoveAt(cmsItem.Items.Count - 1);
+            if (sh == null)
+                return;
+            foreach (IpInfo ip in ListInterfacesIPs())
+            {
+                ToolStripItem tsi = cmsItem.Items.Add("Copy url for " + ip.Address + " (" + ip.InterfaceName + ", " + ip.InterfaceType + ")");
+                tsi.Tag = "http://" + ip.Address + ":" + WebXplorer.Port + "/" + sh.Name + "/";
+                tsi.Click += tsi_Click;
+            }
+        }
+
+        void tsi_Click(object sender, EventArgs e)
+        {
+            ToolStripItem tsi = sender as ToolStripItem;
+            if (tsi == null)
+                return;
+            Clipboard.SetText(tsi.Tag.ToString());
+        }
+
+        private void btGeneralOptions_Click(object sender, EventArgs e)
+        {
+            cmsGOptions.Show(btGeneralOptions, new Point(0, btGeneralOptions.Height));
+        }
+
+        private void shareScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WebXplorer.SharedScreen = !WebXplorer.SharedScreen;
+            shareScreenToolStripMenuItem.Checked = WebXplorer.SharedScreen;
+        }
+
+        private void tstbPassword_TextChanged(object sender, EventArgs e)
+        {
+            WebXplorer.SharedScreenPassword = tstbPassword.Text;
+        }
+
+        private void tstbPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.KeyChar = char.ToLower(e.KeyChar);
         }
     }
 }

@@ -141,6 +141,15 @@ namespace DolphinWebXplorer2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string ShScreen {
+            get {
+                return ResourceManager.GetString("ShScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to html{
         /// background:#BBBBBB;
         ///}
@@ -175,6 +184,39 @@ namespace DolphinWebXplorer2.Properties {
         internal static string site {
             get {
                 return ResourceManager.GetString("site", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to html{
+        /// background: #222;
+        /// height: 100%;
+        ///}
+        ///
+        ///body{
+        /// display: table;
+        /// margin: 0 auto;
+        /// height: 100%;
+        ///}
+        ///
+        ///div#ctt {
+        /// display: table-cell;
+        /// vertical-align: middle;
+        /// height: 100%;
+        ///}
+        ///
+        ///div#main {
+        /// background: #FFF;
+        /// box-shadow: 0 2px 5px #555;
+        /// border: 1px solid #000;
+        /// font-family:verdana;
+        /// font-size:12px;
+        /// padding:0;
+        ///}.
+        /// </summary>
+        internal static string siteblack {
+            get {
+                return ResourceManager.GetString("siteblack", resourceCulture);
             }
         }
         

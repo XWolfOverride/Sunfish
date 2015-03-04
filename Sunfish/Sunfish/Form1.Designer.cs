@@ -37,10 +37,17 @@
             this.il16 = new System.Windows.Forms.ImageList(this.components);
             this.btSub = new System.Windows.Forms.Button();
             this.lbPaths = new System.Windows.Forms.ListBox();
+            this.cmsItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btShowIp = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btGeneralOptions = new System.Windows.Forms.Button();
+            this.cmsGOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.shareScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tstbPassword = new System.Windows.Forms.ToolStripTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
+            this.cmsItem.SuspendLayout();
+            this.cmsGOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -129,6 +136,7 @@
             this.lbPaths.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbPaths.ContextMenuStrip = this.cmsItem;
             this.lbPaths.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.lbPaths.FormattingEnabled = true;
             this.lbPaths.IntegralHeight = false;
@@ -140,6 +148,21 @@
             this.lbPaths.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbPaths_DrawItem);
             this.lbPaths.SelectedIndexChanged += new System.EventHandler(this.lbPaths_SelectedIndexChanged);
             this.lbPaths.DoubleClick += new System.EventHandler(this.clbPaths_DoubleClick);
+            // 
+            // cmsItem
+            // 
+            this.cmsItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editarToolStripMenuItem});
+            this.cmsItem.Name = "cmsItem";
+            this.cmsItem.Size = new System.Drawing.Size(107, 26);
+            this.cmsItem.Opening += new System.ComponentModel.CancelEventHandler(this.cmsItem_Opening);
+            // 
+            // editarToolStripMenuItem
+            // 
+            this.editarToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.editarToolStripMenuItem.Name = "editarToolStripMenuItem";
+            this.editarToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.editarToolStripMenuItem.Text = "Editar";
             // 
             // btShowIp
             // 
@@ -165,6 +188,31 @@
             this.btGeneralOptions.TabIndex = 9;
             this.toolTip1.SetToolTip(this.btGeneralOptions, "General Options");
             this.btGeneralOptions.UseVisualStyleBackColor = true;
+            this.btGeneralOptions.Click += new System.EventHandler(this.btGeneralOptions_Click);
+            // 
+            // cmsGOptions
+            // 
+            this.cmsGOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.shareScreenToolStripMenuItem});
+            this.cmsGOptions.Name = "cmsGOptions";
+            this.cmsGOptions.Size = new System.Drawing.Size(153, 48);
+            // 
+            // shareScreenToolStripMenuItem
+            // 
+            this.shareScreenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tstbPassword});
+            this.shareScreenToolStripMenuItem.Name = "shareScreenToolStripMenuItem";
+            this.shareScreenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.shareScreenToolStripMenuItem.Text = "Share Screen";
+            this.shareScreenToolStripMenuItem.Click += new System.EventHandler(this.shareScreenToolStripMenuItem_Click);
+            // 
+            // tstbPassword
+            // 
+            this.tstbPassword.Name = "tstbPassword";
+            this.tstbPassword.Size = new System.Drawing.Size(100, 23);
+            this.tstbPassword.ToolTipText = "Password";
+            this.tstbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbPassword_KeyPress);
+            this.tstbPassword.TextChanged += new System.EventHandler(this.tstbPassword_TextChanged);
             // 
             // Form1
             // 
@@ -184,6 +232,8 @@
             this.Text = "Sunfish";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).EndInit();
+            this.cmsItem.ResumeLayout(false);
+            this.cmsGOptions.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -201,6 +251,11 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ImageList il16;
         private System.Windows.Forms.Button btGeneralOptions;
+        private System.Windows.Forms.ContextMenuStrip cmsItem;
+        private System.Windows.Forms.ToolStripMenuItem editarToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip cmsGOptions;
+        private System.Windows.Forms.ToolStripMenuItem shareScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox tstbPassword;
     }
 }
 
