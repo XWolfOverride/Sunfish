@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5511BE4E-6AE1-479B-B5CD-5A20DC4C13F7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DolphinWebXplorer2</RootNamespace>
+    <AssemblyName>Sunfish</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>sunfishWebServer.ico</ApplicationIcon>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FShared.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FShared.Designer.cs">
+      <DependentUpon>FShared.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HttpServer.cs" />
+    <Compile Include="NetFwTypeLib\INetFwAuthorizedApplication.cs" />
+    <Compile Include="NetFwTypeLib\INetFwAuthorizedApplications.cs" />
+    <Compile Include="NetFwTypeLib\INetFwIcmpSettings.cs" />
+    <Compile Include="NetFwTypeLib\INetFwMgr.cs" />
+    <Compile Include="NetFwTypeLib\INetFwOpenPort.cs" />
+    <Compile Include="NetFwTypeLib\INetFwOpenPorts.cs" />
+    <Compile Include="NetFwTypeLib\INetFwPolicy.cs" />
+    <Compile Include="NetFwTypeLib\INetFwPolicy2.cs" />
+    <Compile Include="NetFwTypeLib\INetFwProduct.cs" />
+    <Compile Include="NetFwTypeLib\INetFwProducts.cs" />
+    <Compile Include="NetFwTypeLib\INetFwProfile.cs" />
+    <Compile Include="NetFwTypeLib\INetFwRemoteAdminSettings.cs" />
+    <Compile Include="NetFwTypeLib\INetFwRule.cs" />
+    <Compile Include="NetFwTypeLib\INetFwRule2.cs" />
+    <Compile Include="NetFwTypeLib\INetFwRules.cs" />
+    <Compile Include="NetFwTypeLib\INetFwService.cs" />
+    <Compile Include="NetFwTypeLib\INetFwServiceRestriction.cs" />
+    <Compile Include="NetFwTypeLib\INetFwServices.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_ACTION_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_IP_PROTOCOL_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_IP_VERSION_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_MODIFY_STATE_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_PROFILE_TYPE2_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_PROFILE_TYPE_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_RULE_DIRECTION_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_SCOPE_.cs" />
+    <Compile Include="NetFwTypeLib\NET_FW_SERVICE_TYPE_.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FShared.resx">
+      <DependentUpon>FShared.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Win32.cs" />
+    <Compile Include="WindowsFirewall.cs" />
+    <Compile Include="wx\WebXplorer.cs" />
+    <Compile Include="wx\WShared.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DolphinWeb.ico" />
+    <None Include="Resources\foldericon.png" />
+    <None Include="Resources\foldericond.png" />
+    <None Include="Resources\osubf.png" />
+    <None Include="Resources\ouplo.png" />
+    <None Include="Resources\messagebox_info.png" />
+    <None Include="Resources\messagebox_info1.png" />
+    <None Include="Resources\delete.png" />
+    <None Include="Resources\play.png" />
+    <None Include="Resources\pencil.png" />
+    <None Include="Resources\bt_plus.bmp" />
+    <None Include="Resources\run.png" />
+    <None Include="Resources\share.png" />
+    <Content Include="Resources\site.css" />
+    <None Include="Resources\sunfishWebServer.ico" />
+    <None Include="Resources\sws.png" />
+    <Content Include="sunfishWebServer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
