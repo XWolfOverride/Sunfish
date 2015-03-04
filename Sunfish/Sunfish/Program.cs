@@ -8,7 +8,8 @@ namespace DolphinWebXplorer2
 {
     static class Program
     {
-        public static string VERSION = "0.8";
+        public static string VERSION = "0.9";
+        private static Form1 mainform;
         /// <summary>
         /// Punto de entrada principal para la aplicación.
         /// </summary>
@@ -19,12 +20,14 @@ namespace DolphinWebXplorer2
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                Application.Run(new Form1());
+                Application.Run(mainform=new Form1());
             }
             finally
             {
                 WebXplorer.Stop();
             }
         }
+
+        public static Form1 MAINFORM { get { return mainform; } }
     }
 }

@@ -17,7 +17,7 @@ div#ctt {
 
 div#main {
  background: #FFF;
- box-shadow: 0 2px 5px #777;
+ box-shadow: 0 2px 7px #999;
  border: 0px;
  border-radius:4px;
  font-family:verdana;
@@ -30,6 +30,8 @@ div#frm {
 }
 
 img#scr {
+/*
  max-width:100%;
  max-height:100%;
+*/
 }

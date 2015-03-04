@@ -17,6 +17,7 @@ namespace DolphinWebXplorer2
         public const string conffile = "sunfish";
         public Font smallfont;
         public Brush itembrushgray;
+        private Screen myscreen;
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +30,7 @@ namespace DolphinWebXplorer2
             }
             PopulateData();
             Text += " "+Program.VERSION;
+            myscreen = Screen.FromControl(this);
         }
 
         private void PopulateData()
@@ -54,6 +56,8 @@ namespace DolphinWebXplorer2
                             result.Add(new IpInfo(item, ip.Address.ToString()));
             return result;
         }
+
+        public Screen MyScreen { get { lock (this) return myscreen; } }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -204,6 +208,12 @@ namespace DolphinWebXplorer2
         private void tstbPassword_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.KeyChar = char.ToLower(e.KeyChar);
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            lock (this)
+                myscreen = Screen.FromControl(this);
         }
     }
 }

@@ -11,6 +11,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using DolphinWebXplorer2.Properties;
 using System.Reflection;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace DolphinWebXplorer2.wx
 {
@@ -324,12 +326,88 @@ namespace DolphinWebXplorer2.wx
 
         private void Special(string path)
         {
-            if (path=="screen"){
+            if (path == "screen")
+            {
                 BlackHeader("Shared Screen", global::DolphinWebXplorer2.Properties.Resources.ShScreen);
-                Out.Write("<div id='frm'>Password: <input id='scpwd' type='password'><button onclick='shs.start()'>Open</button></div>");
-                Out.Write("<img id='scr'>");
+                Out.Write("<div id='frm'>Password: <input id='scpwd' type='password'>&nbsp;<button onclick='shs.start()'>Open</button></div>");
+                Out.Write("<div id='sh'><img id='scr'></div>");
                 BlackFooter();
+                return;
             }
+            if (path == "screencap")
+            {
+                if (GET["code"] != WebXplorer.SharedScreenPassword)
+                    return;
+                Screen scr = Program.MAINFORM.MyScreen;
+                MemoryStream ms = new MemoryStream();
+                using (Bitmap bmp = new Bitmap(scr.Bounds.Width, scr.Bounds.Height, PixelFormat.Format16bppRgb565))
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    g.CopyFromScreen(scr.Bounds.X, scr.Bounds.Y, 0, 0, scr.Bounds.Size);
+                    ImageCodecInfo jgpEncoder = GetEncoder();
+                    System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+                    EncoderParameters myEncoderParameters = new EncoderParameters(1);
+                    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 35L);
+                    myEncoderParameters.Param[0] = myEncoderParameter;
+                    bmp.Save(ms, jgpEncoder, myEncoderParameters);
+                    ms.Close();
+                }
+                BinaryOut(ms.ToArray(), "image/jpeg");
+                return;
+            }
+            if (path == "screencmd")
+            {
+                if (GET["code"] != WebXplorer.SharedScreenPassword)
+                    return;
+                string cmd = GET["cmd"];
+                if (cmd.Length == 0)
+                    return;
+                string par = cmd.Substring(1);
+                int x;
+                int y;
+                string[] pars = par.Split(';');
+                int.TryParse(pars[0], out x);
+                int.TryParse(pars[1], out y);
+                Screen scr = Program.MAINFORM.MyScreen;
+                System.Windows.Forms.Cursor.Position = new Point(x + scr.Bounds.X, y + scr.Bounds.Y);
+                switch (cmd[0])
+                {
+                    case 'D':
+                        Thread.Sleep(100);
+                        mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                        break;
+                    case 'U':
+                        Thread.Sleep(100);
+                        mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+                        break;
+                    case 'W':
+
+                        break;
+                }
+                Out.Write("Ok");
+                return;
+            }
+        }
+
+        #region WINAPI
+        private const int MOUSEEVENTF_LEFTDOWN = 0x0002; /* left button down */
+        private const int MOUSEEVENTF_LEFTUP = 0x0004; /* left button up */
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+        #endregion
+
+        private ImageCodecInfo jpegEncoder = null;
+
+        private ImageCodecInfo GetEncoder()
+        {
+            if (jpegEncoder == null)
+                foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageDecoders())
+                    if (codec.FormatID == ImageFormat.Jpeg.Guid)
+                    {
+                        jpegEncoder = codec;
+                        break;
+                    }
+            return jpegEncoder;
         }
 
         private void GetIcon(WShared sh, string path)
