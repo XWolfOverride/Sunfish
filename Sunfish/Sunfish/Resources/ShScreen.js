@@ -4,7 +4,7 @@ var shs = new (function () {
         return document.getElementById(name);
     }
     var sfifo = [];
-    var sending=false;
+    var sending = false;
     var send = function (code, cmd, important) {
         if (sending) {
             if (important)
@@ -22,7 +22,7 @@ var shs = new (function () {
                 send(code, null);
         }
         xmlhttp.onreadystatechange = function (evt) {
-            if (xmlhttp.readyState == 4) 
+            if (xmlhttp.readyState == 4)
                 unlock();
         }
         xmlhttp.onerror = function () {
@@ -49,11 +49,11 @@ var shs = new (function () {
             frm.style.display = "";
         }
         img.onmousemove = function (evt) {
-            send(code, "MV"+evt.offsetX+";"+evt.offsetY,false);
+            send(code, "MV" + evt.offsetX + ";" + evt.offsetY, false);
         }
         img.onmousedown = function (evt) {
-            var buttons = ["LD","MD","RD"];
-            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY,true);
+            var buttons = ["LD", "MD", "RD"];
+            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY, true);
             return false;
         }
         img.onmouseup = function (evt) {
@@ -62,13 +62,24 @@ var shs = new (function () {
             return false;
         }
         img.onmousewheel = function (evt) {
-            send(code, "WH" + evt.offsetX + ";" + evt.offsetY + ";" + evt.wheelDelta,false);
+            send(code, "WH" + evt.offsetX + ";" + evt.offsetY + ";" + evt.wheelDelta, false);
             return false;
         }
         img.onclick = function (evt) {
             evt.preventDefault();
         }
         img.oncontextmenu = function () {
+            return false;
+        }
+        document.onkeydown = function (evt) {
+            send(code, "KD" + evt.which, true);
+            return false;
+        }
+        document.onkeyup = function (evt) {
+            send(code, "KU" + evt.which, true);
+            return false;
+        }
+        document.onkeypress = function (evt) {
             return false;
         }
         img.src = "/$screencap?code=" + code;

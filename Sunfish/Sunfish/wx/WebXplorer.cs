@@ -364,6 +364,22 @@ namespace DolphinWebXplorer2.wx
                     return;
                 string cc = cmd.Substring(0, 2);
                 string par = cmd.Substring(2);
+                if (cc.StartsWith("K"))
+                {
+                    byte keyb;
+                    byte.TryParse(par, out keyb);
+                    Keys key=(Keys) Enum.ToObject(typeof(Keys),keyb);
+                    switch (cc)
+                    {
+                        case "KD":
+                            KeyDown(key);
+                            break;
+                        case "KU":
+                            KeyUp(key);
+                            break;
+                    }
+                    return;
+                }
                 int x;
                 int y;
                 string[] pars = par.Split(';');
@@ -409,6 +425,17 @@ namespace DolphinWebXplorer2.wx
         private const int MOUSEEVENTF_WHEEL = 0x0800; /* The wheel has been moved, if the mouse has a wheel. The amount of movement is specified in dwData */
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+        [DllImport("user32.dll")]
+        static extern uint keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+        public static void KeyDown(System.Windows.Forms.Keys key)
+        {
+            keybd_event((byte)key, 0, 0, 0);
+        }
+
+        public static void KeyUp(System.Windows.Forms.Keys key)
+        {
+            keybd_event((byte)key, 0, 0x7F, 0);
+        }
         #endregion
 
         private ImageCodecInfo jpegEncoder = null;
