@@ -736,7 +736,7 @@ namespace DolphinWebXplorer2.wx
 
         private void BlackHeader(string title, string script)
         {
-            Out.Write("<html><head><title>Sunfish [");
+            Out.Write("<html><head><meta charset='UTF-8'><title>Sunfish [");
             Out.Write(title);
             Out.Write("]</title><style>");
             Out.Write(global::DolphinWebXplorer2.Properties.Resources.siteblack);
@@ -757,7 +757,7 @@ namespace DolphinWebXplorer2.wx
 
         private void Header(string title, WShared sh, string[] path)
         {
-            Out.Write("<html><head><title>Sunfish [");
+            Out.Write("<html><head><meta charset='UTF-8'><title>Sunfish [");
             Out.Write(title);
             Out.Write("]</title><style>");
             Out.Write(global::DolphinWebXplorer2.Properties.Resources.site);

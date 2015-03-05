@@ -3,20 +3,31 @@ var shs = new (function () {
     var byId = function (name) {
         return document.getElementById(name);
     }
-    var sending = false;
-    var send = function (code, cmd) {
-        if (sending) return;
+    var sfifo = [];
+    var sending=false;
+    var send = function (code, cmd, important) {
+        if (sending) {
+            if (important)
+                sfifo.push(cmd);
+            return;
+        }
         sending = true;
+        if (cmd == null) {
+            cmd = sfifo.shift();
+        }
         xmlhttp.open("GET", "$screencmd?code=" + code + "&cmd=" + cmd, true);
+        var unlock = function () {
+            sending = false;
+            if (sfifo.length > 0)
+                send(code, null);
+        }
         xmlhttp.onreadystatechange = function (evt) {
-            if (xmlhttp.readyState == 4) {
-                sending = false;
-            }
+            if (xmlhttp.readyState == 4) 
+                unlock();
         }
         xmlhttp.onerror = function () {
-            sending = false;
+            unlock();
         }
-        //console.log(cmd);
         xmlhttp.send();
     }
     this.start = function () {
@@ -38,23 +49,27 @@ var shs = new (function () {
             frm.style.display = "";
         }
         img.onmousemove = function (evt) {
-            send(code, "MV"+evt.offsetX+";"+evt.offsetY);
+            send(code, "MV"+evt.offsetX+";"+evt.offsetY,false);
         }
         img.onmousedown = function (evt) {
             var buttons = ["LD","MD","RD"];
-            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY);
+            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY,true);
             return false;
         }
         img.onmouseup = function (evt) {
             var buttons = ["LU", "MU", "RU"];
-            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY);
+            send(code, buttons[evt.button] + evt.offsetX + ";" + evt.offsetY, true);
+            return false;
         }
         img.onmousewheel = function (evt) {
-            send(code, "WH" + evt.offsetX + ";" + evt.offsetY + ";" + evt.wheelDelta);
+            send(code, "WH" + evt.offsetX + ";" + evt.offsetY + ";" + evt.wheelDelta,false);
             return false;
         }
         img.onclick = function (evt) {
             evt.preventDefault();
+        }
+        img.oncontextmenu = function () {
+            return false;
         }
         img.src = "/$screencap?code=" + code;
     }

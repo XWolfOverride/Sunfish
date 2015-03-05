@@ -23,6 +23,7 @@ div#main {
  font-family:verdana;
  font-size:12px;
  padding:0;
+ overflow:hidden;
 }
 
 div#frm {
