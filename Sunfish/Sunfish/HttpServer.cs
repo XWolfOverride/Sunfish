@@ -128,9 +128,10 @@ namespace XWolf
         protected HttpListenerRequest Request;
         protected HttpListenerResponse Response;
         protected System.Security.Principal.IPrincipal User;
+        protected HttpPost Post;
         private StreamWriter swout;
         private string path;
-        private Dictionary<String, String> getArgs = new Dictionary<string, string>();
+        private Dictionary<string, string> getArgs = new Dictionary<string, string>();
         internal HttpServer server;
 
         internal void Process(HttpListenerContext ctx)
@@ -145,7 +146,11 @@ namespace XWolf
                 swout = new StreamWriter(Response.OutputStream, utf8EncoderNoBOM);
                 Response.Headers[HttpResponseHeader.ContentType] = "text/html";
                 Response.Headers[HttpResponseHeader.ContentEncoding] = "UTF-8";
-
+                getArgs.Clear();
+                if ("POST" == Request.HttpMethod)
+                {
+                    Post = new HttpPost(this, Request.InputStream, Request.ContentType, Request.ContentEncoding);
+                }
                 GetHeaders();
                 Process();
                 Out.Close();
@@ -164,7 +169,7 @@ namespace XWolf
                 ctx.Response.Close();
             }
             catch { };
-            if (error!=null && server != null)
+            if (error != null && server != null)
             {
                 server.LogError(error);
             }
@@ -172,25 +177,32 @@ namespace XWolf
 
         private void GetHeaders()
         {
-            getArgs.Clear();
             path = Request.Url.LocalPath;
             string qs = Request.Url.Query;
             if (qs.StartsWith("?"))
+                ReadEncodedArguments(qs.Substring(1));
+        }
+
+        internal void ReadEncodedArguments(string qs)
+        {
+            string[] args = qs.Split('&');
+            foreach (string arg in args)
             {
-                string[] args = qs.Substring(1).Split('&');
-                foreach (string arg in args)
+                int ppos = arg.IndexOf('=');
+                if (ppos == -1)
+                    getArgs[arg] = "true";
+                else
                 {
-                    int ppos = arg.IndexOf('=');
-                    if (ppos == -1)
-                        getArgs[arg] = "true";
-                    else
-                    {
-                        string aname = arg.Substring(0, ppos);
-                        string aval = arg.Substring(ppos + 1);
-                        getArgs[aname] = HttpUtility.UrlDecode(aval);
-                    }
+                    string aname = arg.Substring(0, ppos);
+                    string aval = arg.Substring(ppos + 1);
+                    getArgs[aname] = HttpUtility.UrlDecode(aval);
                 }
             }
+        }
+
+        internal void SetArgument(string name, string value)
+        {
+            getArgs[name] = value;
         }
 
         public HttpListenerResponse GetResponse() { return Response; }
@@ -249,6 +261,7 @@ namespace XWolf
         protected StreamWriter Out { get { return swout; } }
         public string Path { get { return path; } }
         public Dictionary<String, String> GET { get { return getArgs; } }
+        public Dictionary<String, String> POST { get { return getArgs; } }
     }
 
     public class LogError
@@ -263,5 +276,213 @@ namespace XWolf
 
         public DateTime Time { get { return time; } }
         public Exception Exception { get { return e; } }
+    }
+
+    public class HttpPost
+    {
+        private string contentType;
+        private Dictionary<string, string> parms;
+        private Dictionary<string, HttpPostFile> files=new Dictionary<string,HttpPostFile>();
+        private HttpServerProcessor owner;
+        private Encoding encoding;
+        private static char[] CRLF = { '\r', '\n' };
+        private string mimeBoundary;
+        private char[] mimeBoundaryChr;
+        private byte[] mimeBoundaryBytes;
+
+        public HttpPost(HttpServerProcessor owner, Stream input, string contentType, Encoding enc)
+        {
+            this.owner = owner;
+            this.encoding = enc;
+            string[] cttp = contentType.Split(';');
+            this.contentType = cttp[0];
+            if (cttp.Length > 1)
+            {
+                parms = new Dictionary<string, string>();
+                for (int i = 1; i < cttp.Length; i++)
+                {
+                    string[] s = cttp[i].Trim().Split('=');
+                    parms[s[0]] = s.Length > 1 ? s[1] : "X";
+                }
+            }
+            if ("multipart/form-data".Equals(cttp[0], StringComparison.InvariantCultureIgnoreCase))
+                ReadMultipart(input);
+            else
+                if ("application/x-www-form-urlencoded".Equals(cttp[0], StringComparison.InvariantCultureIgnoreCase))
+                    ReadPost(input);
+        }
+
+        private void ReadPost(Stream input)
+        {
+            MemoryStream ms = new MemoryStream();
+            byte[] buf = new byte[10240];
+            int readed = 0;
+            while ((readed = input.Read(buf, 0, buf.Length)) > 0)
+            {
+                ms.Write(buf, 0, readed);
+                if (ms.Length > 1024 * 1024)
+                    return;
+            }
+            ms.Close();
+            string args = encoding.GetString(ms.ToArray());
+            owner.ReadEncodedArguments(args);
+        }
+
+        private void ReadMultipart(Stream input)
+        {
+            mimeBoundary = "--"+parms["boundary"];
+            BinaryReader br = new BinaryReader(input, encoding);
+            string bnd = ReadLine(br);
+            if (bnd == mimeBoundary + "--")
+                return; //empty
+            if (bnd != mimeBoundary)
+                throw new Exception("form-data boundary error.");
+            mimeBoundary = "\r\n" + mimeBoundary;
+            mimeBoundaryChr = mimeBoundary.ToCharArray();
+            mimeBoundaryBytes = Encoding.ASCII.GetBytes(mimeBoundary);
+            while (ReadFormData(br)) ;
+        }
+
+        private string ReadLine(BinaryReader br)
+        {
+            return ReadUntil(br, CRLF);
+        }
+
+        private string ReadStringToBoundary(BinaryReader br)
+        {
+            return ReadUntil(br, mimeBoundaryChr);
+        }
+
+        private string ReadUntil(BinaryReader br, char[] signal)
+        {
+            List<char> chars = new List<char>();
+            while (true)
+            {
+                char ch = br.ReadChar();
+                chars.Add(ch);
+                if (chars.Count >= signal.Length)
+                {
+                    bool eq = true;
+                    for (int i = 0; i < signal.Length; i++)
+                    {
+                        if (signal[i]!=chars[(chars.Count-signal.Length)+i])
+                        {
+                            eq = false;
+                            break;
+                        }
+                    }
+                    if (eq)
+                    {
+                        char[] chs = chars.ToArray();
+                        return new string(chs,0,chs.Length-signal.Length);
+                    }
+                }
+            }
+        }
+
+        private byte[] ReadUntil(BinaryReader br, byte[] signal)
+        {
+            List<byte> bytes = new List<byte>();
+            while (true)
+            {
+                byte by = br.ReadByte();
+                bytes.Add(by);
+                if (bytes.Count >= signal.Length)
+                {
+                    bool eq = true;
+                    for (int i = 0; i < signal.Length; i++)
+                    {
+                        if (signal[i] != bytes[(bytes.Count - signal.Length) + i])
+                        {
+                            eq = false;
+                            break;
+                        }
+                    }
+                    if (eq)
+                    {
+                        return bytes.ToArray();
+                    }
+                }
+            }
+        }
+
+        private bool ReadFormData(BinaryReader br)
+        {
+            Dictionary<string, string> hdrs = new Dictionary<string, string>();
+            while (true)
+            {
+                string line = ReadLine(br);
+                if (line.Length == 0)
+                    break;
+                int dp = line.IndexOf(':');
+                if (dp < 0)
+                    throw new Exception("multipart form data error");
+                hdrs[line.Substring(0, dp)] = line.Substring(dp + 1);
+            }
+            Dictionary<string, string> cdisp = GetContentDisposition(hdrs);
+            if (hdrs.ContainsKey("Content-Type") || cdisp.ContainsKey("filename"))
+            {
+                byte[] data = ReadUntil(br, mimeBoundaryBytes);
+                string fname = cdisp["filename"];
+                if (fname.Length>0)
+                    files[cdisp["name"]] = new HttpPostFile(fname, data);
+            }
+            else
+            {
+                string data = ReadStringToBoundary(br);
+                owner.SetArgument(cdisp["name"], data);
+            }
+            char ch1 = br.ReadChar();
+            char ch2 = br.ReadChar();
+            if (ch1 == '\r' && ch2 == '\n')
+                return true;
+            if (ch1 == '-' && ch2 == '-')
+                return false;
+            throw new Exception("Error reading multipart (" + ch1 + ch2 + ")");
+        }
+
+        private Dictionary<string,string> GetContentDisposition(Dictionary<string, string> hdrs)
+        {
+            if (!hdrs.ContainsKey("Content-Disposition"))
+                return null;
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            foreach (string cd in hdrs["Content-Disposition"].Split(';')){
+                int pos = cd.IndexOf("=");
+                if (pos < 0)
+                    continue;
+                string name = cd.Substring(1, pos-1);
+                string var = cd.Substring(pos + 1);
+                if (var.Length > 0 && var[0] == '"')
+                    var = var.Substring(1, var.Length - 2);
+                result[name] = var;
+            }
+            return result;
+        }
+
+        //private void ReadToEnd(Stream input)
+        //{
+        //    byte[] buf = new byte[10240];
+        //    int readed = 0;
+        //    using (FileStream output = new FileStream("Test POST", FileMode.Create, FileAccess.Write))
+        //    {
+        //        while ((readed = input.Read(buf, 0, buf.Length)) > 0)
+        //            output.Write(buf, 0, readed);
+        //    }
+        //}
+    }
+
+    public class HttpPostFile
+    {
+        private string filename;
+        private byte[] data;
+
+        internal HttpPostFile(string filename, byte[] data)
+        {
+            this.filename = filename;
+            this.data = data;
+        }
+
+        public string Filename { get { return filename; } }
+        public byte[] Data { get { return data; } }
     }
 }

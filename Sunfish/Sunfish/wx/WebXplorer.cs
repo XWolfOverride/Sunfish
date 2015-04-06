@@ -347,7 +347,7 @@ namespace DolphinWebXplorer2.wx
                     ImageCodecInfo jgpEncoder = GetEncoder();
                     System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
                     EncoderParameters myEncoderParameters = new EncoderParameters(1);
-                    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 35L);
+                    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 17L);
                     myEncoderParameters.Param[0] = myEncoderParameter;
                     bmp.Save(ms, jgpEncoder, myEncoderParameters);
                     ms.Close();
@@ -438,6 +438,7 @@ namespace DolphinWebXplorer2.wx
         }
         #endregion
 
+        #region JPEG SCREEN SHARE
         private ImageCodecInfo jpegEncoder = null;
 
         private ImageCodecInfo GetEncoder()
@@ -451,6 +452,9 @@ namespace DolphinWebXplorer2.wx
                     }
             return jpegEncoder;
         }
+
+        //private 
+        #endregion
 
         private void GetIcon(WShared sh, string path)
         {
