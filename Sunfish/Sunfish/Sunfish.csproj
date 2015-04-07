@@ -137,6 +137,7 @@
     </Compile>
     <Compile Include="Win32.cs" />
     <Compile Include="WindowsFirewall.cs" />
+    <Compile Include="wx\RemoteScreen.cs" />
     <Compile Include="wx\WebXplorer.cs" />
     <Compile Include="wx\WShared.cs" />
   </ItemGroup>
