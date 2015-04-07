@@ -45,6 +45,9 @@
             this.cmsGOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.shareScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tstbPassword = new System.Windows.Forms.ToolStripTextBox();
+            this.añadirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             this.cmsItem.SuspendLayout();
             this.cmsGOptions.SuspendLayout();
@@ -152,16 +155,19 @@
             // cmsItem
             // 
             this.cmsItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editarToolStripMenuItem});
+            this.añadirToolStripMenuItem,
+            this.editarToolStripMenuItem,
+            this.borrarToolStripMenuItem,
+            this.toolStripSeparator1});
             this.cmsItem.Name = "cmsItem";
-            this.cmsItem.Size = new System.Drawing.Size(107, 26);
+            this.cmsItem.Size = new System.Drawing.Size(153, 98);
             this.cmsItem.Opening += new System.ComponentModel.CancelEventHandler(this.cmsItem_Opening);
             // 
             // editarToolStripMenuItem
             // 
             this.editarToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.editarToolStripMenuItem.Name = "editarToolStripMenuItem";
-            this.editarToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.editarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.editarToolStripMenuItem.Text = "Editar";
             // 
             // btShowIp
@@ -195,14 +201,14 @@
             this.cmsGOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.shareScreenToolStripMenuItem});
             this.cmsGOptions.Name = "cmsGOptions";
-            this.cmsGOptions.Size = new System.Drawing.Size(153, 48);
+            this.cmsGOptions.Size = new System.Drawing.Size(142, 26);
             // 
             // shareScreenToolStripMenuItem
             // 
             this.shareScreenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tstbPassword});
             this.shareScreenToolStripMenuItem.Name = "shareScreenToolStripMenuItem";
-            this.shareScreenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.shareScreenToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.shareScreenToolStripMenuItem.Text = "Share Screen";
             this.shareScreenToolStripMenuItem.Click += new System.EventHandler(this.shareScreenToolStripMenuItem_Click);
             // 
@@ -213,6 +219,27 @@
             this.tstbPassword.ToolTipText = "Password";
             this.tstbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbPassword_KeyPress);
             this.tstbPassword.TextChanged += new System.EventHandler(this.tstbPassword_TextChanged);
+            // 
+            // añadirToolStripMenuItem
+            // 
+            this.añadirToolStripMenuItem.Name = "añadirToolStripMenuItem";
+            this.añadirToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
+            this.añadirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.añadirToolStripMenuItem.Text = "Añadir";
+            this.añadirToolStripMenuItem.Click += new System.EventHandler(this.btAdd_Click);
+            // 
+            // borrarToolStripMenuItem
+            // 
+            this.borrarToolStripMenuItem.Name = "borrarToolStripMenuItem";
+            this.borrarToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.borrarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.borrarToolStripMenuItem.Text = "Borrar";
+            this.borrarToolStripMenuItem.Click += new System.EventHandler(this.btSub_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // Form1
             // 
@@ -259,6 +286,9 @@
         private System.Windows.Forms.ContextMenuStrip cmsGOptions;
         private System.Windows.Forms.ToolStripMenuItem shareScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox tstbPassword;
+        private System.Windows.Forms.ToolStripMenuItem añadirToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem borrarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

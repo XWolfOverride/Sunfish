@@ -459,16 +459,7 @@ namespace XWolf
             return result;
         }
 
-        //private void ReadToEnd(Stream input)
-        //{
-        //    byte[] buf = new byte[10240];
-        //    int readed = 0;
-        //    using (FileStream output = new FileStream("Test POST", FileMode.Create, FileAccess.Write))
-        //    {
-        //        while ((readed = input.Read(buf, 0, buf.Length)) > 0)
-        //            output.Write(buf, 0, readed);
-        //    }
-        //}
+        public Dictionary<string, HttpPostFile> File { get { return files; } }
     }
 
     public class HttpPostFile

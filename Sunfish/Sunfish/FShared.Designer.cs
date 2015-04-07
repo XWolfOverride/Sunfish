@@ -104,7 +104,6 @@
             // cbUpl
             // 
             this.cbUpl.AutoSize = true;
-            this.cbUpl.Enabled = false;
             this.cbUpl.Location = new System.Drawing.Point(15, 114);
             this.cbUpl.Name = "cbUpl";
             this.cbUpl.Size = new System.Drawing.Size(91, 17);

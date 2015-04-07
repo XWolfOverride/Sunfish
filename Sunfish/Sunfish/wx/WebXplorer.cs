@@ -27,6 +27,7 @@ namespace DolphinWebXplorer2.wx
         public static byte[] res_rename;
         public static byte[] res_screen;
         public static byte[] res_folder;
+        public static byte[] res_upload;
         private static int port = 90;
         private static bool sharedScreen = false;
         private static string sharedScreenPwd;
@@ -47,6 +48,7 @@ namespace DolphinWebXplorer2.wx
             res_rename = GetImageData(Resources.rename, ImageFormat.Png);
             res_screen = GetImageData(Resources.screen, ImageFormat.Png);
             res_folder = GetImageData(Resources.foldericon, ImageFormat.Png);
+            res_upload = GetImageData(Resources.upload, ImageFormat.Png);
             Win32.DestroyIcon(Win32.GetIcon(".").hIcon);
             string letters = "abcdefghikjlmnopqrstuvwxyz1234567890";
             Random rnd=new Random();
@@ -124,7 +126,7 @@ namespace DolphinWebXplorer2.wx
             YN[true] = "Y";
             YN[false] = "N";
             List<string> data = new List<string>();
-            data.Add("#Sunfish WebXplorer V" + Program.VERSION + " (The new Dolphin WebXplorer) (C) XWolf 2014-2015");
+            data.Add("#Sunfish WebXplorer V" + Program.VERSION + " (The new Dolphin WebXplorer) (C) XWolfOverride@gmail.com 2007-2015");
             data.Add("Active: " + YN[Active]);
             data.Add("Port: " + port);
             data.Add("SharedScreen:" + YN[sharedScreen]);
@@ -283,6 +285,12 @@ namespace DolphinWebXplorer2.wx
                         case "MKDDO":
                             PageCreateFolderDo(sh, rpath);
                             break;
+                        case "UPL":
+                            PageUpload(sh, rpath);
+                            break;
+                        case "UPLDO":
+                            PageUploadDo(sh, rpath);
+                            break;
                     }
                 }
                 else
@@ -317,6 +325,9 @@ namespace DolphinWebXplorer2.wx
                     break;
                 case "folder":
                     BinaryOut(WebXplorer.res_folder, "image/png");
+                    break;
+                case "upload":
+                    BinaryOut(WebXplorer.res_upload, "image/png");
                     break;
                 case "/Sunfish.exe":
                     BinaryOut(GetMyself(), "application/x-msdownload");
@@ -514,6 +525,7 @@ namespace DolphinWebXplorer2.wx
         {
             if (mimetype != null)
                 Response.Headers[HttpResponseHeader.ContentType] = mimetype;
+            Response.ContentLength64 = fs.Length;
             byte[] buffer = new byte[1024 * 64];
             int readed = buffer.Length;
             while (readed == buffer.Length)
@@ -595,6 +607,8 @@ namespace DolphinWebXplorer2.wx
             }
         }
 
+        private const string RESETURL="<script>document.location.href=document.location.href.split('?')[0];</script>";
+
         private void PageRename(WShared sh, string path)
         {
             Header(sh.Name, sh, path.Split('/'));
@@ -625,7 +639,7 @@ namespace DolphinWebXplorer2.wx
             if (!sh.AllowRename)
                 Error("Forbidden", "Renaming is not allowed on this site");
             else if (!WebXplorer.CheckACode("R" + path,GET["acode"]))
-                Error("Auth code error", "<script>history.go(-2);</script>");
+                Error("Auth code error", RESETURL);
             else
             {
                 string dir = System.IO.Path.GetDirectoryName(path);
@@ -640,7 +654,7 @@ namespace DolphinWebXplorer2.wx
                         try
                         {
                             File.Move(path, dir + nname);
-                            Out.WriteLine("<script>history.go(-2);</script>");
+                            Out.WriteLine(RESETURL);
                         }
                         catch (Exception e)
                         {
@@ -660,7 +674,7 @@ namespace DolphinWebXplorer2.wx
                 try
                 {
                     System.Diagnostics.Process.Start(path);
-                    Out.WriteLine("<script>history.back();</script>");
+                    Out.WriteLine(RESETURL);
                 }
                 catch (Exception e)
                 {
@@ -698,13 +712,13 @@ namespace DolphinWebXplorer2.wx
             if (!sh.AllowDeletion)
                 Error("Forbidden", "Deletion is not allowed on this site");
             else if (!WebXplorer.CheckACode("D" + path, GET["acode"]))
-                Error("Auth code error", "<script>history.go(-2);</script>");
+                Error("Auth code error", RESETURL);
             else
             {
                 try
                 {
                     File.Delete(sh.GetLocalPath(path));
-                    Out.WriteLine("<script>history.go(-2);</script>");
+                    Out.WriteLine(RESETURL);
                 }
                 catch (Exception e)
                 {
@@ -743,7 +757,7 @@ namespace DolphinWebXplorer2.wx
             if (!sh.AllowNewFolder)
                 Error("Forbidden", "Folder creation is not allowed on this site");
             else if (!WebXplorer.CheckACode("C" + path, GET["acode"]))
-                Error("Auth code error", "<script>history.go(-2);</script>");
+                Error("Auth code error", RESETURL);
             else
             {
                 string dname = GET["dirname"];
@@ -755,12 +769,62 @@ namespace DolphinWebXplorer2.wx
                 try
                 {
                     Directory.CreateDirectory(sh.GetLocalPath(dir + dname));
-                    Out.WriteLine("<script>history.go(-2);</script>");
+                    Out.WriteLine(RESETURL);
                 }
                 catch (Exception e)
                 {
                     Error(e);
                 }
+            }
+            Footer();
+        }
+
+        private void PageUpload(WShared sh, string path)
+        {
+            Header(sh.Name, sh, path.Split('/'));
+            if (!sh.AllowUpload)
+                Error("Forbidden", "File upload is not allowed on this site");
+            else
+            {
+                string oname = System.IO.Path.GetFileName(path);
+                string acode = WebXplorer.CreateACode("U" + path);
+                Out.Write("<div class='activity'><form action='?Action=UPLDO' method='post' enctype='multipart/form-data'>");
+                Out.Write("<input type='hidden' name='acode' value='");
+                Out.Write(acode);
+                Out.Write("'>");
+                Out.Write("Upload file: ");
+                Out.Write("<br/><input name='file' type='file'><input type='button' value='Cancel' onclick='history.back();'><input type='submit' value='Ok'>");
+                Out.Write("</form></div>");
+            }
+            Footer();
+        }
+
+        private void PageUploadDo(WShared sh, string path)
+        {
+            Header(sh.Name, sh, path.Split('/'));
+            if (!sh.AllowUpload)
+                Error("Forbidden", "File upload is not allowed on this site");
+            else if (!WebXplorer.CheckACode("U" + path, GET["acode"]))
+                Error("Auth code error", RESETURL);
+            else if (Post == null)
+                Error("Communication error", "Error uploading file");
+            else
+            {
+                HttpPostFile file = Post.File["file"];
+                string fname = file.Filename;
+                string dir = path.Replace('/', System.IO.Path.DirectorySeparatorChar);
+                string dest = sh.GetLocalPath(dir + file.Filename);
+                if (File.Exists(dest))
+                    Error("Upload error", "Destination file exists, rename file before upload. Or delete destination if you have rights.");
+                else try
+                    {
+                        File.WriteAllBytes(dest, file.Data);
+                        Out.WriteLine(RESETURL);
+                    }
+                    catch (Exception e)
+                    {
+                        Error(e);
+                    }
             }
             Footer();
         }
@@ -822,6 +886,8 @@ namespace DolphinWebXplorer2.wx
             }
             Out.Write("</div>");
             Out.Write("<div id='headtoolbox'>");
+            if (sh != null && sh.AllowUpload)
+                Out.Write("<button class='htool' title='Upload File' onclick='location.href+=\"?Action=UPL\"'><img src='/·upload' width='16' height='16'></button>");
             if (sh != null && sh.AllowNewFolder)
                 Out.Write("<button class='htool' title='New Folder' onclick='location.href+=\"?Action=MKD\"'><img src='/·folder' width='16' height='16'></button>");
             if (WebXplorer.SharedScreen)

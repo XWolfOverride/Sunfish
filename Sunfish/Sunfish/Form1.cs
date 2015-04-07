@@ -91,7 +91,17 @@ namespace DolphinWebXplorer2
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            WShared sh = new WShared("NewShared",@"C:\");
+            WShared sh;
+            string clip = Clipboard.GetText();
+            if ((Path.DirectorySeparatorChar == '/' ? clip.Length > 0 && clip[0] == '/' : clip.Length > 2 && clip[1] == ':' && clip[2] == '\\')
+                 && (Directory.Exists(clip) || File.Exists(clip)))
+            {
+                if (File.Exists(clip))
+                    clip = Path.GetDirectoryName(clip);
+                sh = new WShared(Path.GetFileName(clip), clip);
+            }
+            else
+                sh = new WShared("NewShared", @"C:\");
             sh.Enabled = true;
             if (FShared.Execute(sh))
             {
@@ -162,14 +172,19 @@ namespace DolphinWebXplorer2
                 sb.Append(WebXplorer.Port);
                 sb.Append("\r\n");
             }
-            MessageBox.Show(sb.ToString(),"Network information",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            sb.Append("\r\nSunfish ");
+            sb.Append(Program.VERSION);
+            sb.Append(" (C) XWolfOverride@gmail.com 2007-2015\r\nEasy folder shares");
+            MessageBox.Show(sb.ToString(),"Sunfish information",MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
 
         private void cmsItem_Opening(object sender, CancelEventArgs e)
         {
             WShared sh = lbPaths.SelectedItem as WShared;            
             editarToolStripMenuItem.Enabled = sh != null;
-            while (cmsItem.Items.Count > 1)
+            borrarToolStripMenuItem.Enabled = sh != null;
+            toolStripSeparator1.Visible = sh != null;
+            while (cmsItem.Items.Count > 4)
                 cmsItem.Items.RemoveAt(cmsItem.Items.Count - 1);
             if (sh == null)
                 return;

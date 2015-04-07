@@ -160,6 +160,7 @@
     <None Include="Resources\sunfishWebServer.ico" />
     <None Include="Resources\sws.png" />
     <None Include="Resources\site1.css" />
+    <None Include="Resources\upload.png" />
     <Content Include="sunfishWebServer.ico" />
   </ItemGroup>
   <ItemGroup>

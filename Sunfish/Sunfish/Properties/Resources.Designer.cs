@@ -141,7 +141,24 @@ namespace DolphinWebXplorer2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to var shs = new (function () {
+        ///    var xmlhttp = new XMLHttpRequest();
+        ///    var byId = function (name) {
+        ///        return document.getElementById(name);
+        ///    }
+        ///    var sfifo = [];
+        ///    var sending = false;
+        ///    var send = function (code, cmd, important) {
+        ///        if (sending) {
+        ///            if (important)
+        ///                sfifo.push(cmd);
+        ///            return;
+        ///        }
+        ///        sending = true;
+        ///        if (cmd == null) {
+        ///            cmd = sfifo.shift();
+        ///        }
+        ///        xmlhttp.open(&quot;GET&quot;, &quot;$screencmd? [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ShScreen {
             get {
@@ -207,11 +224,24 @@ namespace DolphinWebXplorer2.Properties {
         ///
         ///div#main {
         /// background: #FFF;
-        /// box-shadow: 0 2px 5px #555;
-        /// border: 1px solid #000;
+        /// box-shadow: 0 2px 7px #999;
+        /// border: 0px;
+        /// border-radius:4px;
         /// font-family:verdana;
         /// font-size:12px;
         /// padding:0;
+        /// overflow:hidden;
+        ///}
+        ///
+        ///div#frm {
+        /// padding:10px;
+        ///}
+        ///
+        ///img#scr {
+        ////*
+        /// max-width:100%;
+        /// max-height:100%;
+        ///*/
         ///}.
         /// </summary>
         internal static string siteblack {
@@ -256,6 +286,16 @@ namespace DolphinWebXplorer2.Properties {
         internal static System.Drawing.Bitmap t_execute {
             get {
                 object obj = ResourceManager.GetObject("t_execute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap upload {
+            get {
+                object obj = ResourceManager.GetObject("upload", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -128,7 +128,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAq
-        AQAAAk1TRnQBSQFMAgEBAgEAAUABAAFAAQABEAEAARABAAT/AQUBAAj/AUIBTQF2BwABdgMAASgDAAFA
+        AQAAAk1TRnQBSQFMAgEBAgEAAUgBAAFIAQABEAEAARABAAT/AQUBAAj/AUIBTQF2BwABdgMAASgDAAFA
         AwABEAMAAQEBAAEEBgABAhgAAYACAAGAAwACgAEAAYADAAGAAQABgAEAAoACAAPAAQADgAMAAf8CAAH/
         AwAC/wEAAf8DAAH/AQAB/wEAAv8CAAP//wD/AAMAAUIBTQE+BwABPgMAASgDAAFAAwABEAMAAQEBAAEB
         BQABgBcAA/8BAAT/BAAE/wQABP8EAAH8AT8C/wQAAfwBPwL/BAAB/AE/Av8EAAHgAQcB4AEHBAAB4AEH
@@ -136,6 +136,9 @@
         BAAL
 </value>
   </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <metadata name="cmsItem.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>185, 17</value>
   </metadata>
