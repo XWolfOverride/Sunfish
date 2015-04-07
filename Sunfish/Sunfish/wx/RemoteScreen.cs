@@ -49,6 +49,16 @@ namespace DolphinWebXplorer2.wx
 
         public static byte[] GetScreen()
         {
+            long diff = DateTime.Now.Ticks - lastTime;
+            long q;
+            if (diff > 25000000L)
+                q = 15;
+            else
+            {
+                q = 80-(diff / 100000L);
+                if (q < 15)
+                    q = 15;
+            }
             Screen scr = Program.MAINFORM.MyScreen;
             MemoryStream ms = new MemoryStream();
             using (Bitmap bmp = new Bitmap(scr.Bounds.Width, scr.Bounds.Height, PixelFormat.Format16bppRgb565))
@@ -57,7 +67,7 @@ namespace DolphinWebXplorer2.wx
                 g.CopyFromScreen(scr.Bounds.X, scr.Bounds.Y, 0, 0, scr.Bounds.Size);
                 System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
                 EncoderParameters myEncoderParameters = new EncoderParameters(1);
-                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 17L);
+                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, q);
                 myEncoderParameters.Param[0] = myEncoderParameter;
                 bmp.Save(ms, jpegEncoder, myEncoderParameters);
                 ms.Close();
