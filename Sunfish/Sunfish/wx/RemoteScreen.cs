@@ -32,18 +32,21 @@ namespace DolphinWebXplorer2.wx
         private const int MOUSEEVENTF_RIGHTDOWN = 0x0008; /* left button down */
         private const int MOUSEEVENTF_RIGHTUP = 0x0010; /* left button up */
         private const int MOUSEEVENTF_WHEEL = 0x0800; /* The wheel has been moved, if the mouse has a wheel. The amount of movement is specified in dwData */
+        private const int KEYEVENTF_KEYDN = 0x0000;
+        private const int KEYEVENTF_EXTENDEDKEY = 0x0001;
+        private const int KEYEVENTF_KEYUP = 0x0002;
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
         [DllImport("user32.dll")]
         static extern uint keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
         public static void KeyDown(System.Windows.Forms.Keys key)
         {
-            keybd_event((byte)key, 0, 0, 0);
+            keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYDN, 0);
         }
 
         public static void KeyUp(System.Windows.Forms.Keys key)
         {
-            keybd_event((byte)key, 0, 0x7F, 0);
+            keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP /* 0x7F*/, 0);
         }
         #endregion
 
