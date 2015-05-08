@@ -22,14 +22,14 @@ namespace DolphinWebXplorer2
         {
             InitializeComponent();
             itembrushgray = new SolidBrush(Color.Gray);
-            smallfont = new Font(Font.FontFamily,7, FontStyle.Regular);
+            smallfont = new Font(Font.FontFamily, 7, FontStyle.Regular);
             Icon = Resources.sunfishWebServer;
             if (File.Exists(conffile))
             {
                 WebXplorer.Load(conffile);
             }
             PopulateData();
-            Text += " "+Program.VERSION;
+            Text += " " + Program.VERSION;
             myscreen = Screen.FromControl(this);
         }
 
@@ -37,12 +37,12 @@ namespace DolphinWebXplorer2
         {
             Enabled = false;
             nudPort.Value = WebXplorer.Port;
-            cbActive.Checked=WebXplorer.Active;
+            cbActive.Checked = WebXplorer.Active;
             shareScreenToolStripMenuItem.Checked = WebXplorer.SharedScreen;
             tstbPassword.Text = WebXplorer.SharedScreenPassword;
             lbPaths.Items.Clear();
             foreach (WShared sh in WebXplorer.Shares)
-               lbPaths.Items.Add(sh);
+                lbPaths.Items.Add(sh);
             Enabled = true;
         }
 
@@ -86,7 +86,7 @@ namespace DolphinWebXplorer2
         {
             if (!Enabled)
                 return;
-            WebXplorer.Port = (int) nudPort.Value;
+            WebXplorer.Port = (int)nudPort.Value;
         }
 
         private void btAdd_Click(object sender, EventArgs e)
@@ -113,7 +113,7 @@ namespace DolphinWebXplorer2
         private void clbPaths_DoubleClick(object sender, EventArgs e)
         {
             WShared sh = (WShared)lbPaths.SelectedItem;
-            if (sh==null)
+            if (sh == null)
                 return;
             if (FShared.Execute(sh))
                 lbPaths.Update();
@@ -126,8 +126,8 @@ namespace DolphinWebXplorer2
             if (e.Index < 0)
                 return;
             WShared sh = (WShared)lbPaths.Items[e.Index];
-            Graphics g=e.Graphics;
-            int y=e.Bounds.Top+2;
+            Graphics g = e.Graphics;
+            int y = e.Bounds.Top + 2;
             using (Brush itembrush = new SolidBrush(e.ForeColor))
             {
                 g.DrawImage(sh.Enabled ? Resources.foldericon : Resources.foldericond, 1, y, 24, 24);
@@ -148,7 +148,7 @@ namespace DolphinWebXplorer2
         private void btSub_Click(object sender, EventArgs e)
         {
             WShared sh = (WShared)lbPaths.SelectedItem;
-            if (sh==null)
+            if (sh == null)
                 return;
             if (MessageBox.Show("Delete access " + sh.Name + "? Can not be undone!", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
@@ -159,7 +159,7 @@ namespace DolphinWebXplorer2
 
         private void btShowIp_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder(WebXplorer.Active?"A":"ina");
+            StringBuilder sb = new StringBuilder(WebXplorer.Active ? "A" : "ina");
             sb.Append("ctive.\r\n");
             foreach (IpInfo ip in ListInterfacesIPs())
             {
@@ -175,12 +175,12 @@ namespace DolphinWebXplorer2
             sb.Append("\r\nSunfish ");
             sb.Append(Program.VERSION);
             sb.Append(" (C) XWolfOverride@gmail.com 2007-2015\r\nEasy folder shares");
-            MessageBox.Show(sb.ToString(),"Sunfish information",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            MessageBox.Show(sb.ToString(), "Sunfish information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void cmsItem_Opening(object sender, CancelEventArgs e)
         {
-            WShared sh = lbPaths.SelectedItem as WShared;            
+            WShared sh = lbPaths.SelectedItem as WShared;
             editarToolStripMenuItem.Enabled = sh != null;
             borrarToolStripMenuItem.Enabled = sh != null;
             toolStripSeparator1.Visible = sh != null;
@@ -229,6 +229,37 @@ namespace DolphinWebXplorer2
         {
             lock (this)
                 myscreen = Screen.FromControl(this);
+        }
+
+        private void lbPaths_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void lbPaths_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files != null)
+            {
+                foreach (string file in files)
+                {
+                    WShared sh;
+                    string fil = file;
+                    if (!Directory.Exists(file))
+                        fil = Path.GetDirectoryName(fil);
+                    sh = new WShared(Path.GetFileName(fil), fil);
+                    sh.Enabled = true;
+                    if (FShared.Execute(sh))
+                    {
+                        WebXplorer.Add(sh);
+                        lbPaths.Items.Add(sh);
+                    }
+                }
+                Activate();
+            }
         }
     }
 }

@@ -38,16 +38,16 @@
             this.btSub = new System.Windows.Forms.Button();
             this.lbPaths = new System.Windows.Forms.ListBox();
             this.cmsItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.añadirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btShowIp = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btGeneralOptions = new System.Windows.Forms.Button();
             this.cmsGOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.shareScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tstbPassword = new System.Windows.Forms.ToolStripTextBox();
-            this.añadirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.borrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             this.cmsItem.SuspendLayout();
             this.cmsGOptions.SuspendLayout();
@@ -136,6 +136,7 @@
             // 
             // lbPaths
             // 
+            this.lbPaths.AllowDrop = true;
             this.lbPaths.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -150,6 +151,8 @@
             this.lbPaths.TabIndex = 7;
             this.lbPaths.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbPaths_DrawItem);
             this.lbPaths.SelectedIndexChanged += new System.EventHandler(this.lbPaths_SelectedIndexChanged);
+            this.lbPaths.DragDrop += new System.Windows.Forms.DragEventHandler(this.lbPaths_DragDrop);
+            this.lbPaths.DragEnter += new System.Windows.Forms.DragEventHandler(this.lbPaths_DragEnter);
             this.lbPaths.DoubleClick += new System.EventHandler(this.clbPaths_DoubleClick);
             // 
             // cmsItem
@@ -160,15 +163,36 @@
             this.borrarToolStripMenuItem,
             this.toolStripSeparator1});
             this.cmsItem.Name = "cmsItem";
-            this.cmsItem.Size = new System.Drawing.Size(153, 98);
+            this.cmsItem.Size = new System.Drawing.Size(132, 76);
             this.cmsItem.Opening += new System.ComponentModel.CancelEventHandler(this.cmsItem_Opening);
+            // 
+            // añadirToolStripMenuItem
+            // 
+            this.añadirToolStripMenuItem.Name = "añadirToolStripMenuItem";
+            this.añadirToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
+            this.añadirToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.añadirToolStripMenuItem.Text = "Añadir";
+            this.añadirToolStripMenuItem.Click += new System.EventHandler(this.btAdd_Click);
             // 
             // editarToolStripMenuItem
             // 
             this.editarToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.editarToolStripMenuItem.Name = "editarToolStripMenuItem";
-            this.editarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editarToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.editarToolStripMenuItem.Text = "Editar";
+            // 
+            // borrarToolStripMenuItem
+            // 
+            this.borrarToolStripMenuItem.Name = "borrarToolStripMenuItem";
+            this.borrarToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.borrarToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.borrarToolStripMenuItem.Text = "Borrar";
+            this.borrarToolStripMenuItem.Click += new System.EventHandler(this.btSub_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(128, 6);
             // 
             // btShowIp
             // 
@@ -219,27 +243,6 @@
             this.tstbPassword.ToolTipText = "Password";
             this.tstbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbPassword_KeyPress);
             this.tstbPassword.TextChanged += new System.EventHandler(this.tstbPassword_TextChanged);
-            // 
-            // añadirToolStripMenuItem
-            // 
-            this.añadirToolStripMenuItem.Name = "añadirToolStripMenuItem";
-            this.añadirToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
-            this.añadirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.añadirToolStripMenuItem.Text = "Añadir";
-            this.añadirToolStripMenuItem.Click += new System.EventHandler(this.btAdd_Click);
-            // 
-            // borrarToolStripMenuItem
-            // 
-            this.borrarToolStripMenuItem.Name = "borrarToolStripMenuItem";
-            this.borrarToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.borrarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.borrarToolStripMenuItem.Text = "Borrar";
-            this.borrarToolStripMenuItem.Click += new System.EventHandler(this.btSub_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // Form1
             // 

@@ -8,7 +8,7 @@ namespace DolphinWebXplorer2
 {
     static class Program
     {
-        public static string VERSION = "1.0";
+        public static string VERSION = "1.0a";
         private static Form1 mainform;
         /// <summary>
         /// Punto de entrada principal para la aplicación.
