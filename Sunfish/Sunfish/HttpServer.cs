@@ -45,7 +45,6 @@ namespace XWolf
             }
             loop = new Thread(ServerLoop);
             loop.Start();
-            fwRule = WindowsFirewall.Allow(port);
             return true;
         }
 
@@ -106,7 +105,6 @@ namespace XWolf
             }
             finally
             {
-                WindowsFirewall.Remove(fwRule);
             }
             return true;
         }
@@ -266,16 +264,13 @@ namespace XWolf
 
     public class LogError
     {
-        private DateTime time = DateTime.Now;
-        private Exception e;
-
         public LogError(Exception e)
         {
-            this.e = e;
+            Exception = e;
         }
 
-        public DateTime Time { get { return time; } }
-        public Exception Exception { get { return e; } }
+        public DateTime Time { get; } = DateTime.Now;
+        public Exception Exception { get; }
     }
 
     public class HttpPost

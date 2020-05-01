@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DolphinWebXplorer2.wx;
+using System;
 using System.Windows.Forms;
-using DolphinWebXplorer2.wx;
 
 namespace DolphinWebXplorer2
 {
@@ -20,7 +18,7 @@ namespace DolphinWebXplorer2
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                Application.Run(mainform=new Form1());
+                Application.Run(mainform = new Form1());
             }
             finally
             {
