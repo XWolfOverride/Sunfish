@@ -16,7 +16,7 @@ namespace DolphinWebXplorer2.Middleware
         private bool multiThread = true;
         private List<Thread> processors = new List<Thread>();
         private List<LogError> errors = new List<LogError>();
-        private WindowsFirewallRule fwRule;
+        //private WindowsFirewallRule fwRule;
         public delegate void ErrorEventHandler(HttpServer server, Exception e);
         public delegate HttpServerProcessor CreateProcessorHandler(HttpServer server);
         public event ErrorEventHandler Error;

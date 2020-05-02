@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Json.Net;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,35 +7,64 @@ using System.Text;
 
 namespace DolphinWebXplorer2
 {
-    class SunfishServiceConfiguration
-    {
-        public string Type { get; set; }
-        public string Name { get; set; }
-        public bool Enabled { get; set; }
-        public Dictionary<string, string> conf { get; set; } = new Dictionary<string, string>();
-    }
-
     class Sunfish
     {
-        public const string DEFAULT_CONF_FILE = "sunfish2";
-        private List<SunfishServiceConfiguration> conf = new List<SunfishServiceConfiguration>();
+        class SunfishConfiguration
+        {
+            public int Port = 90;
+            public bool Active = false;
+            public List<SunfishServiceConfiguration> Services = new List<SunfishServiceConfiguration>();
+        }
 
+        public const string DEFAULT_CONF_FILE = "sunfish2";
+        private static SunfishConfiguration conf = new SunfishConfiguration();
+        private static List<SunfishService> srvs = new List<SunfishService>();
+
+        #region Configuration & Initialization
         static Sunfish()
         {
             Load();
         }
-        
+
         static void Load()
         {
             if (!File.Exists(DEFAULT_CONF_FILE))
                 return;
-            //JsonSerializer
+            string json = File.ReadAllText(DEFAULT_CONF_FILE);
+            conf = JsonNet.Deserialize<SunfishConfiguration>(json);
+            if (conf.Services == null)
+                conf.Services = new List<SunfishServiceConfiguration>();
+            foreach(SunfishServiceConfiguration ssc in conf.Services)
+            {
+                srvs.Add(SunfishService.Instance(ssc));
+            }
         }
 
-        static void Save()
+        public static void Save()
         {
-            //JsonSerializer
+            string json = JsonNet.Serialize(conf);
+            File.WriteAllText(DEFAULT_CONF_FILE, json);
+        }
+        #endregion
+
+        private static void SetActive(bool act)
+        {
+            if (conf.Active == act)
+                return;
+            conf.Active = act;
+            // INIT SERVER HERE
         }
 
+        private static void SetPort(int port)
+        {
+            bool act = Active;
+            Active = false;
+            conf.Port = port;
+            Active = act;
+        }
+
+        public static bool Active { get => conf.Active; set => SetActive(value); }
+        public static int Port { get => conf.Port; set => SetPort(value); }
+        public static SunfishService[] Services => srvs.ToArray();
     }
 }

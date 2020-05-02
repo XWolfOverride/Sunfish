@@ -48,6 +48,7 @@
             this.cmsGOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.shareScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tstbPassword = new System.Windows.Forms.ToolStripTextBox();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             this.cmsItem.SuspendLayout();
             this.cmsGOptions.SuspendLayout();
@@ -254,11 +255,22 @@
             this.tstbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbPassword_KeyPress);
             this.tstbPassword.TextChanged += new System.EventHandler(this.tstbPassword_TextChanged);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(9, 9);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(103, 32);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "Test 2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 558);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.btGeneralOptions);
             this.Controls.Add(this.btShowIp);
             this.Controls.Add(this.lbPaths);
@@ -303,6 +315,7 @@
         private System.Windows.Forms.ToolStripMenuItem añadirToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem borrarToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

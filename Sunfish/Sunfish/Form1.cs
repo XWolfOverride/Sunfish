@@ -14,7 +14,6 @@ namespace DolphinWebXplorer2
 {
     public partial class Form1 : Form
     {
-        public const string conffile = "sunfish";
         public Font smallfont;
         public Brush itembrushgray;
         private Screen myscreen;
@@ -24,10 +23,6 @@ namespace DolphinWebXplorer2
             itembrushgray = new SolidBrush(Color.Gray);
             smallfont = new Font(Font.FontFamily, 7, FontStyle.Regular);
             Icon = Resources.sunfishWebServer;
-            if (File.Exists(conffile))
-            {
-                WebXplorer.Load(conffile);
-            }
             PopulateData();
             Text += " " + Program.VERSION;
             myscreen = Screen.FromControl(this);
@@ -36,10 +31,8 @@ namespace DolphinWebXplorer2
         private void PopulateData()
         {
             Enabled = false;
-            nudPort.Value = WebXplorer.Port;
-            cbActive.Checked = WebXplorer.Active;
-            shareScreenToolStripMenuItem.Checked = WebXplorer.SharedScreen;
-            tstbPassword.Text = WebXplorer.SharedScreenPassword;
+            nudPort.Value = Sunfish.Port;
+            cbActive.Checked = Sunfish.Active;
             lbPaths.Items.Clear();
             foreach (WShared sh in WebXplorer.Shares)
                 lbPaths.Items.Add(sh);
@@ -66,8 +59,7 @@ namespace DolphinWebXplorer2
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            WebXplorer.Save(conffile);
-            WebXplorer.Stop();
+            Sunfish.Active = false;
         }
 
         private void cbActive_CheckedChanged(object sender, EventArgs e)
@@ -262,8 +254,9 @@ namespace DolphinWebXplorer2
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click_1(object sender, EventArgs e)
         {
+            Sunfish.Save();
         }
     }
 }
