@@ -11,6 +11,7 @@ namespace DolphinWebXplorer2
         public string Type { get; set; }
         public string Name { get; set; }
         public bool Enabled { get; set; }
+        public bool BasePath { get; set; }
         public Dictionary<string, string> conf { get; set; } = new Dictionary<string, string>();
     }
 }

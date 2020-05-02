@@ -1,4 +1,5 @@
 ﻿using DolphinWebXplorer2.Services;
+using DolphinWebXplorer2.Services.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,19 +27,19 @@ namespace DolphinWebXplorer2
             ServiceTypes = st.ToArray();
         }
 
-        private static void ScanForServices(Assembly a,List<Type> st)
+        private static void ScanForServices(Assembly a, List<Type> st)
         {
             Type tme = typeof(SunfishService);
-            foreach(Type t in a.GetTypes())
+            foreach (Type t in a.GetTypes())
             {
-                if (tme.IsAssignableFrom(t) && !t.IsAbstract && t!=typeof(ErrorService))
+                if (tme.IsAssignableFrom(t) && !t.IsAbstract && t != typeof(ErrorService))
                     st.Add(t);
             }
         }
 
         public static SunfishService Instance(SunfishServiceConfiguration ssc)
         {
-            Type stype=null;
+            Type stype = null;
             foreach (Type t in ServiceTypes)
                 if (t.Name == ssc.Name)
                     stype = t;
@@ -53,13 +54,17 @@ namespace DolphinWebXplorer2
 
         #endregion
 
-        protected SunfishServiceConfiguration conf;
+        protected SunfishServiceConfiguration ssc;
 
-        public SunfishService(SunfishServiceConfiguration cfg)
+        public SunfishService(SunfishServiceConfiguration ssc)
         {
-            this.conf = cfg;
+            Configuration = ssc;
         }
 
-        public SunfishServiceConfiguration Configuration => conf;
+        protected abstract ConfigurationScreen GetConfigurationScreen();
+
+        public SunfishServiceConfiguration Configuration { get; }
+        public abstract string Description { get; }
+        public ConfigurationScreen ConfigurationScreen => GetConfigurationScreen();
     }
 }

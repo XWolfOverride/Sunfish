@@ -13,6 +13,7 @@ namespace DolphinWebXplorer2
         {
             public int Port = 90;
             public bool Active = false;
+            public bool SunfishRoot = true;
             public List<SunfishServiceConfiguration> Services = new List<SunfishServiceConfiguration>();
         }
 

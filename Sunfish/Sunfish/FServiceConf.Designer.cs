@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lbType = new System.Windows.Forms.Label();
             this.cbType = new System.Windows.Forms.ComboBox();
             this.lbName = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbActive = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // lbType
@@ -52,6 +56,7 @@
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(353, 28);
             this.cbType.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.cbType, "Type of service.");
             // 
             // lbName
             // 
@@ -70,6 +75,7 @@
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(269, 26);
             this.tbName.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.tbName, "Name of the service.\r\n(only for management)");
             // 
             // cbActive
             // 
@@ -82,11 +88,30 @@
             this.cbActive.Text = "Active";
             this.cbActive.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 143);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(74, 20);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Location:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(25, 166);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(353, 26);
+            this.textBox1.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.textBox1, "Document root on the server:\r\nThis works as a virtual directory in the url.");
+            // 
             // FServiceConf
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(401, 408);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.cbActive);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.lbName);
@@ -109,5 +134,8 @@
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.CheckBox cbActive;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

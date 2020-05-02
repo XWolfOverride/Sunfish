@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace DolphinWebXplorer2.Services
 {
-    class WebService : SunfishService
+    class AdminService : SunfishService
     {
-        public WebService(SunfishServiceConfiguration ssc) : base(ssc)
+        public AdminService(SunfishServiceConfiguration ssc) : base(ssc)
         {
+
         }
 
         protected override ConfigurationScreen GetConfigurationScreen()
@@ -24,6 +25,6 @@ namespace DolphinWebXplorer2.Services
             };
         }
 
-        public override string Description => "For Webpages or file sharing";
+        public override string Description => "Allow remote configuration of Sunfish server";
     }
 }
