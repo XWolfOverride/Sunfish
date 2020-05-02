@@ -56,9 +56,10 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(142, 334);
+            this.button1.Location = new System.Drawing.Point(213, 514);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 23);
+            this.button1.Size = new System.Drawing.Size(138, 35);
             this.button1.TabIndex = 1;
             this.button1.Text = "Ok";
             this.toolTip1.SetToolTip(this.button1, "Hide");
@@ -68,14 +69,15 @@
             // nudPort
             // 
             this.nudPort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.nudPort.Location = new System.Drawing.Point(179, 6);
+            this.nudPort.Location = new System.Drawing.Point(268, 9);
+            this.nudPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.nudPort.Maximum = new decimal(new int[] {
             64000,
             0,
             0,
             0});
             this.nudPort.Name = "nudPort";
-            this.nudPort.Size = new System.Drawing.Size(55, 20);
+            this.nudPort.Size = new System.Drawing.Size(82, 26);
             this.nudPort.TabIndex = 3;
             this.toolTip1.SetToolTip(this.nudPort, "Listen port");
             this.nudPort.Value = new decimal(new int[] {
@@ -89,9 +91,10 @@
             // 
             this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbActive.AutoSize = true;
-            this.cbActive.Location = new System.Drawing.Point(77, 8);
+            this.cbActive.Location = new System.Drawing.Point(119, 12);
+            this.cbActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(90, 17);
+            this.cbActive.Size = new System.Drawing.Size(132, 24);
             this.cbActive.TabIndex = 4;
             this.cbActive.Text = "Listen on port";
             this.toolTip1.SetToolTip(this.cbActive, "Enable whole server");
@@ -104,9 +107,10 @@
             this.btAdd.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAdd.ImageIndex = 0;
             this.btAdd.ImageList = this.il16;
-            this.btAdd.Location = new System.Drawing.Point(6, 334);
+            this.btAdd.Location = new System.Drawing.Point(9, 514);
+            this.btAdd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btAdd.Name = "btAdd";
-            this.btAdd.Size = new System.Drawing.Size(23, 23);
+            this.btAdd.Size = new System.Drawing.Size(34, 35);
             this.btAdd.TabIndex = 5;
             this.toolTip1.SetToolTip(this.btAdd, "Add new access");
             this.btAdd.UseVisualStyleBackColor = true;
@@ -126,9 +130,10 @@
             this.btSub.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btSub.ImageKey = "bt_minus.bmp";
             this.btSub.ImageList = this.il16;
-            this.btSub.Location = new System.Drawing.Point(35, 334);
+            this.btSub.Location = new System.Drawing.Point(52, 514);
+            this.btSub.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btSub.Name = "btSub";
-            this.btSub.Size = new System.Drawing.Size(23, 23);
+            this.btSub.Size = new System.Drawing.Size(34, 35);
             this.btSub.TabIndex = 6;
             this.toolTip1.SetToolTip(this.btSub, "Remove >selected access");
             this.btSub.UseVisualStyleBackColor = true;
@@ -145,9 +150,10 @@
             this.lbPaths.FormattingEnabled = true;
             this.lbPaths.IntegralHeight = false;
             this.lbPaths.ItemHeight = 28;
-            this.lbPaths.Location = new System.Drawing.Point(0, 32);
+            this.lbPaths.Location = new System.Drawing.Point(0, 49);
+            this.lbPaths.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lbPaths.Name = "lbPaths";
-            this.lbPaths.Size = new System.Drawing.Size(240, 296);
+            this.lbPaths.Size = new System.Drawing.Size(358, 453);
             this.lbPaths.TabIndex = 7;
             this.lbPaths.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbPaths_DrawItem);
             this.lbPaths.SelectedIndexChanged += new System.EventHandler(this.lbPaths_SelectedIndexChanged);
@@ -157,20 +163,21 @@
             // 
             // cmsItem
             // 
+            this.cmsItem.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmsItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.añadirToolStripMenuItem,
             this.editarToolStripMenuItem,
             this.borrarToolStripMenuItem,
             this.toolStripSeparator1});
             this.cmsItem.Name = "cmsItem";
-            this.cmsItem.Size = new System.Drawing.Size(132, 76);
+            this.cmsItem.Size = new System.Drawing.Size(193, 106);
             this.cmsItem.Opening += new System.ComponentModel.CancelEventHandler(this.cmsItem_Opening);
             // 
             // añadirToolStripMenuItem
             // 
             this.añadirToolStripMenuItem.Name = "añadirToolStripMenuItem";
             this.añadirToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Insert;
-            this.añadirToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.añadirToolStripMenuItem.Size = new System.Drawing.Size(192, 32);
             this.añadirToolStripMenuItem.Text = "Añadir";
             this.añadirToolStripMenuItem.Click += new System.EventHandler(this.btAdd_Click);
             // 
@@ -178,30 +185,31 @@
             // 
             this.editarToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.editarToolStripMenuItem.Name = "editarToolStripMenuItem";
-            this.editarToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.editarToolStripMenuItem.Size = new System.Drawing.Size(192, 32);
             this.editarToolStripMenuItem.Text = "Editar";
             // 
             // borrarToolStripMenuItem
             // 
             this.borrarToolStripMenuItem.Name = "borrarToolStripMenuItem";
             this.borrarToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.borrarToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.borrarToolStripMenuItem.Size = new System.Drawing.Size(192, 32);
             this.borrarToolStripMenuItem.Text = "Borrar";
             this.borrarToolStripMenuItem.Click += new System.EventHandler(this.btSub_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(128, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(189, 6);
             // 
             // btShowIp
             // 
             this.btShowIp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btShowIp.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btShowIp.Image = global::DolphinWebXplorer2.Properties.Resources.messagebox_info;
-            this.btShowIp.Location = new System.Drawing.Point(113, 334);
+            this.btShowIp.Location = new System.Drawing.Point(170, 514);
+            this.btShowIp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btShowIp.Name = "btShowIp";
-            this.btShowIp.Size = new System.Drawing.Size(23, 23);
+            this.btShowIp.Size = new System.Drawing.Size(34, 35);
             this.btShowIp.TabIndex = 8;
             this.toolTip1.SetToolTip(this.btShowIp, "Show network information");
             this.btShowIp.UseVisualStyleBackColor = true;
@@ -212,9 +220,10 @@
             this.btGeneralOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btGeneralOptions.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btGeneralOptions.Image = global::DolphinWebXplorer2.Properties.Resources.run;
-            this.btGeneralOptions.Location = new System.Drawing.Point(84, 334);
+            this.btGeneralOptions.Location = new System.Drawing.Point(126, 514);
+            this.btGeneralOptions.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btGeneralOptions.Name = "btGeneralOptions";
-            this.btGeneralOptions.Size = new System.Drawing.Size(23, 23);
+            this.btGeneralOptions.Size = new System.Drawing.Size(34, 35);
             this.btGeneralOptions.TabIndex = 9;
             this.toolTip1.SetToolTip(this.btGeneralOptions, "General Options");
             this.btGeneralOptions.UseVisualStyleBackColor = true;
@@ -222,33 +231,34 @@
             // 
             // cmsGOptions
             // 
+            this.cmsGOptions.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmsGOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.shareScreenToolStripMenuItem});
             this.cmsGOptions.Name = "cmsGOptions";
-            this.cmsGOptions.Size = new System.Drawing.Size(142, 26);
+            this.cmsGOptions.Size = new System.Drawing.Size(186, 36);
             // 
             // shareScreenToolStripMenuItem
             // 
             this.shareScreenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tstbPassword});
             this.shareScreenToolStripMenuItem.Name = "shareScreenToolStripMenuItem";
-            this.shareScreenToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.shareScreenToolStripMenuItem.Size = new System.Drawing.Size(185, 32);
             this.shareScreenToolStripMenuItem.Text = "Share Screen";
             this.shareScreenToolStripMenuItem.Click += new System.EventHandler(this.shareScreenToolStripMenuItem_Click);
             // 
             // tstbPassword
             // 
             this.tstbPassword.Name = "tstbPassword";
-            this.tstbPassword.Size = new System.Drawing.Size(100, 23);
+            this.tstbPassword.Size = new System.Drawing.Size(100, 31);
             this.tstbPassword.ToolTipText = "Password";
             this.tstbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbPassword_KeyPress);
             this.tstbPassword.TextChanged += new System.EventHandler(this.tstbPassword_TextChanged);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 363);
+            this.ClientSize = new System.Drawing.Size(360, 558);
             this.Controls.Add(this.btGeneralOptions);
             this.Controls.Add(this.btShowIp);
             this.Controls.Add(this.lbPaths);
@@ -257,6 +267,7 @@
             this.Controls.Add(this.cbActive);
             this.Controls.Add(this.nudPort);
             this.Controls.Add(this.button1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sunfish";

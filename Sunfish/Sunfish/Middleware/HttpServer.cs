@@ -1,13 +1,12 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
 using System.Web;
 using System.Threading;
-using DolphinWebXplorer2;
 
-namespace XWolf
+namespace DolphinWebXplorer2.Middleware
 {
     public class HttpServer
     {

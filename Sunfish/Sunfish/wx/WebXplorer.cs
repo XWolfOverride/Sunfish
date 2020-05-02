@@ -6,13 +6,13 @@ using System.Net;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using XWolf;
 using System.Drawing;
 using System.Drawing.Imaging;
 using DolphinWebXplorer2.Properties;
 using System.Reflection;
 using System.Threading;
 using System.Runtime.InteropServices;
+using DolphinWebXplorer2.Middleware;
 
 namespace DolphinWebXplorer2.wx
 {

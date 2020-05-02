@@ -6,7 +6,7 @@ using NetFwTypeLib;
 using System.Reflection;
 using System.Security.Cryptography;
 
-namespace DolphinWebXplorer2
+namespace DolphinWebXplorer2.Middleware
 {
     public class WindowsFirewall
     {
@@ -26,6 +26,7 @@ namespace DolphinWebXplorer2
             firewallRule.Enabled = true;
             firewallRule.InterfaceTypes = "All";
             firewallRule.Name = "SunFish ("+port+") ["+idid(path)+"]";
+            firewallRule.ApplicationName = Assembly.GetExecutingAssembly().Location;
             firewallRule.LocalPorts = port.ToString();
             FirewallPolicy().Rules.Add(firewallRule);
             return new WindowsFirewallRule(firewallRule);

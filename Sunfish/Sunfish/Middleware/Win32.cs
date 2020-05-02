@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.ComponentModel;
 
-namespace DolphinWebXplorer2
+namespace DolphinWebXplorer2.Middleware
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct SHFILEINFO
@@ -94,5 +94,8 @@ namespace DolphinWebXplorer2
                 mimeType = regKey.GetValue("Content Type").ToString();
             return mimeType;
         }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool SetProcessDPIAware();
     }
 }

@@ -1,4 +1,5 @@
-﻿using DolphinWebXplorer2.wx;
+﻿using DolphinWebXplorer2.Middleware;
+using DolphinWebXplorer2.wx;
 using System;
 using System.Windows.Forms;
 
@@ -16,6 +17,7 @@ namespace DolphinWebXplorer2
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Win32.SetProcessDPIAware();
             try
             {
                 Application.Run(mainform = new Form1());
