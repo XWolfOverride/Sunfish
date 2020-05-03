@@ -120,8 +120,19 @@ namespace DolphinWebXplorer2
             return s;
         }
 
+        public static SunfishService GetServiceForPath(string path)
+        {
+            SunfishService candidate = null;
+            foreach (SunfishService s in srvs)
+                if (path.StartsWith(s.Configuration.Location) &&
+                    (candidate == null || (candidate.Configuration.Location.Length < s.Configuration.Location.Length)))
+                        candidate = s;
+            return candidate;
+        }
+
         public static bool Active { get => conf.Active; set => SetActive(value); }
         public static int Port { get => conf.Port; set => SetPort(value); }
+        public static bool RootMenu { get => conf.SunfishRoot; set => conf.SunfishRoot = value; }
         public static SunfishService[] Services => srvs.ToArray();
     }
 }

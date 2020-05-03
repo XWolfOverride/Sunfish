@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Web;
@@ -32,7 +33,14 @@ namespace DolphinWebXplorer2.Middleware
             if (lis != null)
                 return;
             lis = new HttpListener();
+
+            // WARNING: This require the server to be launched as administrative process
+            //  This is very problematic due the actions that the server do are width administrator
+            //  rights, even the (future) embedded execution of C#, the file upload and deletion
+            //  and also the execution of server applications.
+
             lis.Prefixes.Add("http://+:" + port + "/");
+            
             try
             {
                 lis.Start();
@@ -67,10 +75,16 @@ namespace DolphinWebXplorer2.Middleware
             {
                 processors.Add(Thread.CurrentThread);
             }
-            CallNewProcessor((HttpListenerContext)octx);
-            lock (processors)
+            try
             {
-                processors.Remove(Thread.CurrentThread);
+                CallNewProcessor((HttpListenerContext)octx);
+            }
+            finally
+            {
+                lock (processors)
+                {
+                    processors.Remove(Thread.CurrentThread);
+                }
             }
         }
 
@@ -121,14 +135,13 @@ namespace DolphinWebXplorer2.Middleware
         public bool MultiThread { get { return multiThread; } set { multiThread = value; } }
     }
 
-    public abstract class HttpServerProcessor
+    abstract class HttpServerProcessor
     {
         protected HttpListenerRequest Request;
         protected HttpListenerResponse Response;
         protected System.Security.Principal.IPrincipal User;
         protected HttpPost Post;
         private StreamWriter swout;
-        private string path;
         private Dictionary<string, string> getArgs = new Dictionary<string, string>();
         internal HttpServer server;
 
@@ -140,7 +153,7 @@ namespace DolphinWebXplorer2.Middleware
                 Request = ctx.Request;
                 Response = ctx.Response;
                 User = ctx.User;
-                System.Text.Encoding utf8EncoderNoBOM = new System.Text.UTF8Encoding(false);
+                Encoding utf8EncoderNoBOM = new UTF8Encoding(false);
                 swout = new StreamWriter(Response.OutputStream, utf8EncoderNoBOM);
                 Response.Headers[HttpResponseHeader.ContentType] = "text/html";
                 Response.Headers[HttpResponseHeader.ContentEncoding] = "UTF-8";
@@ -175,7 +188,6 @@ namespace DolphinWebXplorer2.Middleware
 
         private void GetHeaders()
         {
-            path = Request.Url.LocalPath;
             string qs = Request.Url.Query;
             if (qs.StartsWith("?"))
                 ReadEncodedArguments(qs.Substring(1));
@@ -235,10 +247,10 @@ namespace DolphinWebXplorer2.Middleware
             OutStream.Write(data, offset, count);
         }
 
-        public string nl2br(string s)
-        {
-            return s.Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>");
-        }
+        //public string nl2br(string s)
+        //{
+        //    return s.Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>");
+        //}
 
         public string UrlEncode(string url)
         {
@@ -254,10 +266,74 @@ namespace DolphinWebXplorer2.Middleware
 
         protected Stream OutStream { get { return Response.OutputStream; } }
         protected StreamWriter Out { get { return swout; } }
-        public string Path { get { return path; } }
         public Dictionary<String, String> GET { get { return getArgs; } }
         public Dictionary<String, String> POST { get { return getArgs; } }
     }
+
+    public class HttpCall
+    {
+        private StreamWriter swout;
+        private Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+        internal HttpCall(HttpListenerContext ctx)
+        {
+            Request = ctx.Request;
+            Response = ctx.Response;
+            User = ctx.User;
+            //if ("POST" == Request.HttpMethod)
+            //Post = new HttpPost(this, Request.InputStream, Request.ContentType, Request.ContentEncoding);
+            //Parameters = parameters;
+        }
+
+        private void GetHeaders()
+        {
+            string qs = Request.Url.Query;
+            if (qs.StartsWith("?"))
+                ReadEncodedParameters(qs.Substring(1), parameters);
+        }
+
+        static void ReadEncodedParameters(string qs, Dictionary<string, string> parameters)
+        {
+            string[] args = qs.Split('&');
+            foreach (string arg in args)
+            {
+                int ppos = arg.IndexOf('=');
+                if (ppos == -1)
+                    parameters[arg] = "true";
+                else
+                {
+                    string aname = arg.Substring(0, ppos);
+                    string aval = arg.Substring(ppos + 1);
+                    parameters[aname] = HttpUtility.UrlDecode(aval);
+                }
+            }
+        }
+
+        public void OpenOutput()
+        {
+            Encoding utf8EncoderNoBOM = new UTF8Encoding(false);
+            swout = new StreamWriter(Response.OutputStream, utf8EncoderNoBOM);
+            Response.Headers[HttpResponseHeader.ContentType] = "text/html";
+            Response.Headers[HttpResponseHeader.ContentEncoding] = "UTF-8";
+        }
+
+        private StreamWriter GetOut()
+        {
+            //if (swout == null)
+            //{
+            //    swout=
+            //}
+            return null;
+        }
+
+        public HttpListenerRequest Request { get; }
+        public HttpListenerResponse Response { get; }
+        public IPrincipal User { get; }
+        public HttpPost Post { get; }
+
+        public StreamWriter Out => GetOut();
+    }
+
 
     public class LogError
     {
@@ -282,10 +358,10 @@ namespace DolphinWebXplorer2.Middleware
         private char[] mimeBoundaryChr;
         private byte[] mimeBoundaryBytes;
 
-        public HttpPost(HttpServerProcessor owner, Stream input, string contentType, Encoding enc)
+        internal HttpPost(HttpServerProcessor owner, Stream input, string contentType, Encoding enc)
         {
             this.owner = owner;
-            this.encoding = enc;
+            encoding = enc;
             string[] cttp = contentType.Split(';');
             this.contentType = cttp[0];
             if (cttp.Length > 1)
@@ -307,7 +383,7 @@ namespace DolphinWebXplorer2.Middleware
         private void ReadPost(Stream input)
         {
             MemoryStream ms = new MemoryStream();
-            byte[] buf = new byte[10240];
+            byte[] buf = new byte[102400];
             int readed = 0;
             while ((readed = input.Read(buf, 0, buf.Length)) > 0)
             {

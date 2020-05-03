@@ -30,8 +30,8 @@ namespace DolphinWebXplorer2.Services
                         IsDirectoiryPath = true,
                         IsFilePath = true,
                     },
-                                        new ConfigurationString(CFG_INDEX,"Default document")
-                                        {
+                    new ConfigurationString(CFG_INDEX,"Default document")
+                    {
                         Tooltip = "Default document for directory path",
                         DefaultValue ="index.html"
                     },
@@ -58,7 +58,8 @@ namespace DolphinWebXplorer2.Services
                     new ConfigurationBool(CFG_EXECUTE,"Allow execute")
                     {
                         Tooltip ="Allow application execution on server."
-                    }
+                    },
+                    new ConfigurationMessage(ConfigurationMessage.MessageType.WARNING,"WARNING: Sunfish is exeuted as elevated process, any antion and process started by sunfish will be also elevated.")
                 },
                 Advanced = AdvancedEditing
             };

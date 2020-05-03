@@ -44,6 +44,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btShowIp = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cbRootList = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             this.cmsItem.SuspendLayout();
             this.SuspendLayout();
@@ -51,7 +52,7 @@
             // btDone
             // 
             this.btDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btDone.Location = new System.Drawing.Point(213, 514);
+            this.btDone.Location = new System.Drawing.Point(238, 521);
             this.btDone.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btDone.Name = "btDone";
             this.btDone.Size = new System.Drawing.Size(138, 35);
@@ -64,7 +65,7 @@
             // nudPort
             // 
             this.nudPort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.nudPort.Location = new System.Drawing.Point(268, 9);
+            this.nudPort.Location = new System.Drawing.Point(293, 9);
             this.nudPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.nudPort.Maximum = new decimal(new int[] {
             64000,
@@ -86,7 +87,7 @@
             // 
             this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbActive.AutoSize = true;
-            this.cbActive.Location = new System.Drawing.Point(119, 12);
+            this.cbActive.Location = new System.Drawing.Point(153, 12);
             this.cbActive.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(132, 24);
@@ -102,7 +103,7 @@
             this.btAdd.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btAdd.ImageIndex = 0;
             this.btAdd.ImageList = this.il16;
-            this.btAdd.Location = new System.Drawing.Point(9, 514);
+            this.btAdd.Location = new System.Drawing.Point(9, 521);
             this.btAdd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btAdd.Name = "btAdd";
             this.btAdd.Size = new System.Drawing.Size(34, 35);
@@ -125,7 +126,7 @@
             this.btSub.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btSub.ImageKey = "bt_minus.bmp";
             this.btSub.ImageList = this.il16;
-            this.btSub.Location = new System.Drawing.Point(52, 514);
+            this.btSub.Location = new System.Drawing.Point(52, 521);
             this.btSub.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btSub.Name = "btSub";
             this.btSub.Size = new System.Drawing.Size(34, 35);
@@ -148,7 +149,7 @@
             this.lbPaths.Location = new System.Drawing.Point(0, 49);
             this.lbPaths.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lbPaths.Name = "lbPaths";
-            this.lbPaths.Size = new System.Drawing.Size(358, 453);
+            this.lbPaths.Size = new System.Drawing.Size(383, 460);
             this.lbPaths.TabIndex = 7;
             this.lbPaths.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbPaths_DrawItem);
             this.lbPaths.SelectedIndexChanged += new System.EventHandler(this.lbPaths_SelectedIndexChanged);
@@ -201,7 +202,7 @@
             this.btShowIp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btShowIp.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btShowIp.Image = global::DolphinWebXplorer2.Properties.Resources.messagebox_info;
-            this.btShowIp.Location = new System.Drawing.Point(170, 514);
+            this.btShowIp.Location = new System.Drawing.Point(195, 521);
             this.btShowIp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btShowIp.Name = "btShowIp";
             this.btShowIp.Size = new System.Drawing.Size(34, 35);
@@ -210,11 +211,25 @@
             this.btShowIp.UseVisualStyleBackColor = true;
             this.btShowIp.Click += new System.EventHandler(this.btShowIp_Click);
             // 
+            // cbRootList
+            // 
+            this.cbRootList.AutoSize = true;
+            this.cbRootList.Location = new System.Drawing.Point(12, 12);
+            this.cbRootList.Name = "cbRootList";
+            this.cbRootList.Size = new System.Drawing.Size(114, 24);
+            this.cbRootList.TabIndex = 9;
+            this.cbRootList.Text = "Root menu";
+            this.toolTip1.SetToolTip(this.cbRootList, "If there is no service located at root sunfish will show a listing page with all " +
+        "availables services and paths.");
+            this.cbRootList.UseVisualStyleBackColor = true;
+            this.cbRootList.CheckedChanged += new System.EventHandler(this.cbRootList_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(360, 558);
+            this.ClientSize = new System.Drawing.Size(385, 565);
+            this.Controls.Add(this.cbRootList);
             this.Controls.Add(this.btShowIp);
             this.Controls.Add(this.lbPaths);
             this.Controls.Add(this.btSub);
@@ -253,6 +268,7 @@
         private System.Windows.Forms.ToolStripMenuItem añadirToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem borrarToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.CheckBox cbRootList;
     }
 }
 

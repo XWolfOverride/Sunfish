@@ -33,6 +33,7 @@ namespace DolphinWebXplorer2
             Enabled = false;
             nudPort.Value = Sunfish.Port;
             cbActive.Checked = Sunfish.Active;
+            cbRootList.Checked = Sunfish.RootMenu;
             lbPaths.Items.Clear();
             foreach (SunfishService s in Sunfish.Services)
                 lbPaths.Items.Add(s);
@@ -243,7 +244,7 @@ namespace DolphinWebXplorer2
                     if (!Directory.Exists(file))
                         fil = Path.GetDirectoryName(fil);
                     ssc.Name = Path.GetFileName(fil);
-                    ssc.Location = Path.GetFileName(fil);
+                    ssc.Location = '/' + Path.GetFileName(fil);
                     ssc.Enabled = true;
                     ssc.Settings[Services.WebServiceConfigurator.CFG_PATH] = fil;
                     ssc.Settings[Services.WebServiceConfigurator.CFG_SHARE] = true;
@@ -254,5 +255,9 @@ namespace DolphinWebXplorer2
             }
         }
 
+        private void cbRootList_CheckedChanged(object sender, EventArgs e)
+        {
+            Sunfish.RootMenu = cbRootList.Checked;
+        }
     }
 }
