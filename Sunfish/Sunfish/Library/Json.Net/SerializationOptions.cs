@@ -4,6 +4,6 @@
     {
         public IJsonConverter[] Converters { get; set; }
 
-        public IPropertyNameTransform PropertyNameTransform { get; set; } 
+        public IPropertyNameTransform PropertyNameTransform { get; set; }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DolphinWebXplorer2.Services
+﻿namespace DolphinWebXplorer2.Services
 {
     [DefineConfigurator(typeof(AdminServiceConfigurator))]
     class AdminService : SunfishService

@@ -1,18 +1,15 @@
-﻿using System;
+﻿using DolphinWebXplorer2.Middleware;
+using DolphinWebXplorer2.Properties;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
-using DolphinWebXplorer2.Properties;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Reflection;
-using System.Threading;
-using System.Runtime.InteropServices;
-using DolphinWebXplorer2.Middleware;
+using System.Text;
+using System.Windows.Forms;
 
 namespace DolphinWebXplorer2.wx
 {
@@ -51,7 +48,7 @@ namespace DolphinWebXplorer2.wx
             res_upload = GetImageData(Resources.upload, ImageFormat.Png);
             Win32.DestroyIcon(Win32.GetIcon(".").hIcon);
             string letters = "abcdefghikjlmnopqrstuvwxyz1234567890";
-            Random rnd=new Random();
+            Random rnd = new Random();
             sharedScreenPwd = "";
             while (sharedScreenPwd.Length < 10)
                 sharedScreenPwd += letters[rnd.Next(letters.Length)];
@@ -156,7 +153,7 @@ namespace DolphinWebXplorer2.wx
             Stop();
             foreach (string l in data)
             {
-                if (l.StartsWith("#") || l.Length==0)
+                if (l.StartsWith("#") || l.Length == 0)
                     continue;
                 int dp = l.IndexOf(':');
                 if (dp < 0)
@@ -209,7 +206,7 @@ namespace DolphinWebXplorer2.wx
             return result;
         }
 
-        public static bool CheckACode(string key,string acode)
+        public static bool CheckACode(string key, string acode)
         {
             if (acodes.ContainsKey(key))
             {
@@ -295,9 +292,9 @@ namespace DolphinWebXplorer2.wx
                 }
                 else
                     if (sh.Enabled)
-                        Shared(sh, rpath);
-                    else
-                        Menu();
+                    Shared(sh, rpath);
+                else
+                    Menu();
             }
         }
 
@@ -503,7 +500,7 @@ namespace DolphinWebXplorer2.wx
         }
 
         #region Action Pages
-        private const string RESETURL="<script>document.location.href=document.location.href.split('?')[0];</script>";
+        private const string RESETURL = "<script>document.location.href=document.location.href.split('?')[0];</script>";
 
         private void PageRename(WShared sh, string path)
         {
@@ -534,13 +531,13 @@ namespace DolphinWebXplorer2.wx
             Header(sh.Name, sh, path.Split('/'));
             if (!sh.AllowRename)
                 Error("Forbidden", "Renaming is not allowed on this site");
-            else if (!WebXplorer.CheckACode("R" + path,GET["acode"]))
+            else if (!WebXplorer.CheckACode("R" + path, GET["acode"]))
                 Error("Auth code error", RESETURL);
             else
             {
                 string dir = System.IO.Path.GetDirectoryName(path);
-                if (!dir.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString()) && !(dir.Length==0))
-                    dir+=System.IO.Path.DirectorySeparatorChar;
+                if (!dir.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString()) && !(dir.Length == 0))
+                    dir += System.IO.Path.DirectorySeparatorChar;
                 string oname = System.IO.Path.GetFileName(path);
                 string nname = GET["newname"];
                 if (oname != nname)
@@ -659,7 +656,7 @@ namespace DolphinWebXplorer2.wx
                 string dname = GET["dirname"];
                 if (dname.Contains("/") || dname.Contains("\\") || dname.Contains(":"))
                     Error("Create directory error", "Path separator char not allowed as file name");
-                string dir = path.Replace('/',System.IO.Path.DirectorySeparatorChar);
+                string dir = path.Replace('/', System.IO.Path.DirectorySeparatorChar);
                 if (!dir.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString()) && !(dir.Length == 0))
                     dir += System.IO.Path.DirectorySeparatorChar;
                 try
@@ -724,7 +721,7 @@ namespace DolphinWebXplorer2.wx
             }
             Footer();
         }
-#endregion
+        #endregion
 
         private void BlackHeader(string title, string script)
         {
@@ -759,7 +756,7 @@ namespace DolphinWebXplorer2.wx
             string fpath = "/";
             if (sh != null)
             {
-                string shared=sh.Name;
+                string shared = sh.Name;
                 fpath += shared + "/";
                 Out.Write("<a href='");
                 Out.Write(UEnc(fpath));

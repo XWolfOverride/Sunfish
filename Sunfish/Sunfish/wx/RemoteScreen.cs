@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -58,7 +55,7 @@ namespace DolphinWebXplorer2.wx
                 q = 15;
             else
             {
-                q = 80-(diff / 100000L);
+                q = 80 - (diff / 100000L);
                 if (q < 15)
                     q = 15;
             }

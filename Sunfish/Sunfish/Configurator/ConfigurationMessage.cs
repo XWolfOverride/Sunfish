@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DolphinWebXplorer2.Configurator
+﻿namespace DolphinWebXplorer2.Configurator
 {
-    class ConfigurationMessage:ConfigurationElement
+    class ConfigurationMessage : ConfigurationElement
     {
         public enum MessageType
         {
-            INFO,WARNING,ERROR
+            INFO, WARNING, ERROR
         }
 
-        public ConfigurationMessage(MessageType t,string message) : base(null)
+        public ConfigurationMessage(MessageType t, string message) : base(null, null)
         {
             Type = t;
             Message = message;

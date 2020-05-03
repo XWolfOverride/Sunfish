@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 namespace DolphinWebXplorer2.wx
@@ -30,12 +28,12 @@ namespace DolphinWebXplorer2.wx
 
         public string GetLocalPath(string path)
         {
-            return this.path + path.Replace('/',System.IO.Path.DirectorySeparatorChar);
+            return this.path + path.Replace('/', System.IO.Path.DirectorySeparatorChar);
         }
 
         public string GetRemotePath(string path)
         {
-            return '/' + name +'/'+ path;
+            return '/' + name + '/' + path;
         }
 
         public string GetFlags()
@@ -53,7 +51,7 @@ namespace DolphinWebXplorer2.wx
 
         public void SetFlags(string flags)
         {
-            allowSubfolders=flags.Contains('S');
+            allowSubfolders = flags.Contains('S');
             allowUpload = flags.Contains('U');
             allowDeletion = flags.Contains('D');
             allowRename = flags.Contains('R');

@@ -44,14 +44,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btShowIp = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.btGeneralOptions = new System.Windows.Forms.Button();
-            this.cmsGOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.shareScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tstbPassword = new System.Windows.Forms.ToolStripTextBox();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).BeginInit();
             this.cmsItem.SuspendLayout();
-            this.cmsGOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -216,62 +210,11 @@
             this.btShowIp.UseVisualStyleBackColor = true;
             this.btShowIp.Click += new System.EventHandler(this.btShowIp_Click);
             // 
-            // btGeneralOptions
-            // 
-            this.btGeneralOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btGeneralOptions.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btGeneralOptions.Image = global::DolphinWebXplorer2.Properties.Resources.run;
-            this.btGeneralOptions.Location = new System.Drawing.Point(126, 514);
-            this.btGeneralOptions.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btGeneralOptions.Name = "btGeneralOptions";
-            this.btGeneralOptions.Size = new System.Drawing.Size(34, 35);
-            this.btGeneralOptions.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.btGeneralOptions, "General Options");
-            this.btGeneralOptions.UseVisualStyleBackColor = true;
-            this.btGeneralOptions.Click += new System.EventHandler(this.btGeneralOptions_Click);
-            // 
-            // cmsGOptions
-            // 
-            this.cmsGOptions.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.cmsGOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.shareScreenToolStripMenuItem});
-            this.cmsGOptions.Name = "cmsGOptions";
-            this.cmsGOptions.Size = new System.Drawing.Size(186, 36);
-            // 
-            // shareScreenToolStripMenuItem
-            // 
-            this.shareScreenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tstbPassword});
-            this.shareScreenToolStripMenuItem.Name = "shareScreenToolStripMenuItem";
-            this.shareScreenToolStripMenuItem.Size = new System.Drawing.Size(185, 32);
-            this.shareScreenToolStripMenuItem.Text = "Share Screen";
-            this.shareScreenToolStripMenuItem.Click += new System.EventHandler(this.shareScreenToolStripMenuItem_Click);
-            // 
-            // tstbPassword
-            // 
-            this.tstbPassword.Name = "tstbPassword";
-            this.tstbPassword.Size = new System.Drawing.Size(100, 31);
-            this.tstbPassword.ToolTipText = "Password";
-            this.tstbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbPassword_KeyPress);
-            this.tstbPassword.TextChanged += new System.EventHandler(this.tstbPassword_TextChanged);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(9, 9);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(103, 32);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Test 2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 558);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.btGeneralOptions);
             this.Controls.Add(this.btShowIp);
             this.Controls.Add(this.lbPaths);
             this.Controls.Add(this.btSub);
@@ -289,7 +232,6 @@
             this.LocationChanged += new System.EventHandler(this.Form1_Activated);
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).EndInit();
             this.cmsItem.ResumeLayout(false);
-            this.cmsGOptions.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -306,16 +248,11 @@
         private System.Windows.Forms.Button btShowIp;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ImageList il16;
-        private System.Windows.Forms.Button btGeneralOptions;
         private System.Windows.Forms.ContextMenuStrip cmsItem;
         private System.Windows.Forms.ToolStripMenuItem editarToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip cmsGOptions;
-        private System.Windows.Forms.ToolStripMenuItem shareScreenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripTextBox tstbPassword;
         private System.Windows.Forms.ToolStripMenuItem añadirToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem borrarToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.Button button2;
     }
 }
 

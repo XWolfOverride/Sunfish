@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DolphinWebXplorer2.Configurator
+﻿namespace DolphinWebXplorer2.Configurator
 {
-    public class ConfigurationString:ConfigurationElement
+    public class ConfigurationString : ConfigurationElement
     {
-        public ConfigurationString(string id) : base(id)
+        public ConfigurationString(string id, string label) : base(id, label)
         {
         }
 

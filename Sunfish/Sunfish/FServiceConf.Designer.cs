@@ -117,7 +117,7 @@
             // btOk
             // 
             this.btOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btOk.Location = new System.Drawing.Point(282, 217);
+            this.btOk.Location = new System.Drawing.Point(282, 227);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(113, 38);
             this.btOk.TabIndex = 7;
@@ -129,7 +129,7 @@
             // 
             this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btCancel.Location = new System.Drawing.Point(408, 217);
+            this.btCancel.Location = new System.Drawing.Point(408, 227);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(82, 38);
             this.btCancel.TabIndex = 8;
@@ -149,7 +149,7 @@
             // btAdv
             // 
             this.btAdv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btAdv.Location = new System.Drawing.Point(12, 217);
+            this.btAdv.Location = new System.Drawing.Point(12, 227);
             this.btAdv.Name = "btAdv";
             this.btAdv.Size = new System.Drawing.Size(196, 38);
             this.btAdv.TabIndex = 10;
@@ -162,7 +162,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
-            this.ClientSize = new System.Drawing.Size(502, 267);
+            this.ClientSize = new System.Drawing.Size(502, 277);
             this.Controls.Add(this.btAdv);
             this.Controls.Add(this.pScreen);
             this.Controls.Add(this.btCancel);

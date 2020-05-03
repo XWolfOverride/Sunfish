@@ -50,8 +50,8 @@ namespace Json.Net
             }
         }
 
-        
-        static Dictionary<Type, Func<object, string>> SerializerCache = 
+
+        static Dictionary<Type, Func<object, string>> SerializerCache =
             new Dictionary<Type, Func<object, string>>();
 
 
@@ -74,17 +74,17 @@ namespace Json.Net
             }
 
             Func<object, string> cnv;
-            Type genericType; 
+            Type genericType;
 
             if (!SerializerCache.TryGetValue(objectType, out cnv))
             {
                 var strConverter = new Func<object, string>(
-                    s => 
+                    s =>
                     {
                         var t = (string)s;
                         var r = "\"";
 
-                        for (var i = 0;i<t.Length;i++)
+                        for (var i = 0; i < t.Length; i++)
                         {
                             var c = t[i];
 
@@ -207,7 +207,7 @@ namespace Json.Net
                             {
                                 Serialize(m.GetValue(obj), options);
                             }
-                            catch(TargetInvocationException)
+                            catch (TargetInvocationException)
                             {
                                 Serialize(null, options);
                             }

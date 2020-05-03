@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Json.Net
 {
@@ -31,7 +29,7 @@ namespace Json.Net
                       (_GlobalMaps = new SerializerMap[0]);
             }
         }
-    
+
 
         public SerializerMap(Type type)
         {
@@ -50,7 +48,7 @@ namespace Json.Net
                         ValueType = ((PropertyInfo)m).PropertyType,
                         GetValue = ((PropertyInfo)m).GetValue,
                         SetValue = ((PropertyInfo)m).SetValue
-                    }:
+                    } :
                     new MemberAccessor
                     {
                         Name = m.Name,
@@ -60,7 +58,7 @@ namespace Json.Net
                     })
                 .ToArray();
         }
-        
+
 
         public static SerializerMap GetSerializerMap(Type type)
         {
@@ -78,7 +76,7 @@ namespace Json.Net
 
                         foreach (var t in result.Members
                                           .Select(v => v.ValueType)
-                                          .Where(t => t != typeof(string) 
+                                          .Where(t => t != typeof(string)
                                                    && (t.IsClass || (t.IsValueType && !t.IsPrimitive)))
                                           .Except(GlobalMaps.Select(m => m.ObjectType))
                                           .Distinct())
@@ -90,6 +88,6 @@ namespace Json.Net
 
             return result;
         }
-        
+
     }
 }

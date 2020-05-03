@@ -1,12 +1,6 @@
 ﻿using DolphinWebXplorer2.Configurator;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DolphinWebXplorer2
@@ -34,7 +28,8 @@ namespace DolphinWebXplorer2
 
         private void LoadData()
         {
-            cbType.SelectedItem = ssc.Type;
+            //cbType.SelectedItem = ssc.Type;
+            cbType.Text = ssc.Type;
             cbActive.Checked = ssc.Enabled;
             tbName.Text = ssc.Name;
             tbLocation.Text = ssc.Name;
@@ -73,14 +68,13 @@ namespace DolphinWebXplorer2
             p.Controls.Add(c);
         }
 
-        private void AddElementMessage(ConfigurationElement ce, Panel p, ref int y)
+        private void AddElementMessage(ConfigurationMessage ce, Panel p, ref int y)
         {
             AddElementLabel(ce, p, ref y);
-            ConfigurationMessage cm = (ConfigurationMessage)ce;
             Label c = new Label();
-            c.Text = cm.Message;
+            c.Text = ce.Message;
             c.BorderStyle = BorderStyle.FixedSingle;
-            switch (cm.Type)
+            switch (ce.Type)
             {
                 case ConfigurationMessage.MessageType.ERROR:
                     c.BackColor = Color.FromArgb(255, 200, 200);
@@ -99,17 +93,26 @@ namespace DolphinWebXplorer2
             FinishElement(c, ce, p, ref y);
         }
 
-        private void AddElementString(ConfigurationElement ce, Panel p, ref int y)
+        private void AddElementString(ConfigurationString ce, Panel p, ref int y)
         {
             AddElementLabel(ce, p, ref y);
-            ConfigurationString cs = (ConfigurationString)ce;
             TextBox c = new TextBox();
-            c.Text = ssc.GetConf(ce.Id, cs.DefaultValue);
+            c.Text = ssc.GetConf(ce.Id, ce.DefaultValue);
             c.Left = 14;
             c.Width = p.ClientSize.Width - 28;
-            if (cs.IsPassword)
+            if (ce.IsPassword)
                 c.PasswordChar = '*';
             //TODO: Handle isDirectory and IsFile properties
+            FinishElement(c, ce, p, ref y);
+        }
+
+        private void AddElementBool(ConfigurationBool ce, Panel p, ref int y)
+        {
+            CheckBox c = new CheckBox();
+            c.Text = ce.Label;
+            c.Checked = ssc.GetConf<bool>(ce.Id);
+            c.Left = 14;
+            c.Width = p.ClientSize.Width - 28;
             FinishElement(c, ce, p, ref y);
         }
 
@@ -131,9 +134,11 @@ namespace DolphinWebXplorer2
             foreach (ConfigurationElement ce in cs.Elements)
             {
                 if (ce is ConfigurationMessage)
-                    AddElementMessage(ce, pScreen, ref y);
+                    AddElementMessage((ConfigurationMessage)ce, pScreen, ref y);
                 else if (ce is ConfigurationString)
-                    AddElementString(ce, pScreen, ref y);
+                    AddElementString((ConfigurationString)ce, pScreen, ref y);
+                else if (ce is ConfigurationBool)
+                    AddElementBool((ConfigurationBool)ce, pScreen, ref y);
             }
             ClientSize = new Size(ClientSize.Width, y + pScreen.Top + panelOffset);
         }

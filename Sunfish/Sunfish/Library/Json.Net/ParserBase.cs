@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Json.Net
 {
@@ -11,7 +8,7 @@ namespace Json.Net
         TextReader Reader;
 
         char[] ReaderBuffer;
-        
+
         string Buffer;
         int BufferIndex;
 
@@ -131,8 +128,8 @@ namespace Json.Net
             while (IsWhite)
                 ReadNext();
         }
-        
-        
+
+
         protected void Match(string s)
         {
             foreach (var c in s)

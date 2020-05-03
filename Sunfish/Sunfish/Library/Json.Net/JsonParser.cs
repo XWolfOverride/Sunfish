@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 
 namespace Json.Net
@@ -17,7 +17,7 @@ namespace Json.Net
         IJsonConverter[] Converters;
         IPropertyNameTransform PropertyNameTransform;
 
-        static Dictionary<char, char> EscapeMap = 
+        static Dictionary<char, char> EscapeMap =
             new Dictionary<char, char>()
             {
                 { 'b', (char)8 },
@@ -62,7 +62,7 @@ namespace Json.Net
             PropertyNameTransform = options.PropertyNameTransform;
             return this;
         }
-        
+
 
         StringBuilder text = new StringBuilder();
 
@@ -92,7 +92,7 @@ namespace Json.Net
 
                 var mIndex = 0;
 
-                while (NextChar!='}')
+                while (NextChar != '}')
                 {
                     var name = (string)FromJson(nameType);
 
@@ -142,7 +142,7 @@ namespace Json.Net
 
                     break;
                 }
-                
+
                 Match("}");
 
                 return result;
@@ -255,7 +255,7 @@ namespace Json.Net
                 if (type == typeof(DateTimeOffset)
                  || type == typeof(DateTimeOffset?))
                     return DateTimeOffset.Parse((string)result, CultureInfo.InvariantCulture);
-                
+
                 if (type == typeof(TimeSpan)
                  || type == typeof(TimeSpan?))
                     return TimeSpan.Parse((string)result, CultureInfo.InvariantCulture);

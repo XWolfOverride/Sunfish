@@ -1,14 +1,14 @@
-﻿using System;
+﻿using DolphinWebXplorer2.Properties;
+using DolphinWebXplorer2.wx;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using DolphinWebXplorer2.wx;
-using DolphinWebXplorer2.Properties;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text;
+using System.Windows.Forms;
 
 namespace DolphinWebXplorer2
 {
@@ -50,6 +50,29 @@ namespace DolphinWebXplorer2
             return result;
         }
 
+        private void EditConfiguration(SunfishServiceConfiguration ssc, SunfishService oldService)
+        {
+            if (FServiceConf.Execute(ssc))
+            {
+                if (oldService == null) try
+                    {
+                        lbPaths.Items.Add(Sunfish.AddService(ssc));
+                        Sunfish.Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Show();
+                    }
+                else
+                {
+                    //oldService
+                    //TODO: How to update service according to configuration changes?
+                    //Sunfish.
+                    lbPaths.Update();
+                }
+            }
+        }
+
         public Screen MyScreen { get { lock (this) return myscreen; } }
 
         private void button1_Click(object sender, EventArgs e)
@@ -89,35 +112,7 @@ namespace DolphinWebXplorer2
         private void btAdd_Click(object sender, EventArgs e)
         {
             SunfishServiceConfiguration ssc = new SunfishServiceConfiguration();
-            if (FServiceConf.Execute(ssc))
-            {
-                try
-                {
-                    lbPaths.Items.Add(Sunfish.AddService(ssc));
-                    Sunfish.Save();
-                }
-                catch (Exception ex)
-                {
-                    ex.Show();
-                }
-            }
-            //WShared sh;
-            //string clip = Clipboard.GetText();
-            //if ((Path.DirectorySeparatorChar == '/' ? clip.Length > 0 && clip[0] == '/' : clip.Length > 2 && clip[1] == ':' && clip[2] == '\\')
-            //     && (Directory.Exists(clip) || File.Exists(clip)))
-            //{
-            //    if (File.Exists(clip))
-            //        clip = Path.GetDirectoryName(clip);
-            //    sh = new WShared(Path.GetFileName(clip), clip);
-            //}
-            //else
-            //    sh = new WShared("NewShared", @"C:\");
-            //sh.Enabled = true;
-            //if (FShared.Execute(sh))
-            //{
-            //    WebXplorer.Add(sh);
-            //    lbPaths.Items.Add(sh);
-            //}
+            EditConfiguration(ssc, null);
         }
 
         private void clbPaths_DoubleClick(object sender, EventArgs e)
@@ -125,11 +120,7 @@ namespace DolphinWebXplorer2
             SunfishService s = (SunfishService)lbPaths.SelectedItem;
             if (s == null)
                 return;
-            if (FServiceConf.Execute(s.Configuration))
-            {
-                //TODO: How to update service according to configuration changes?
-                lbPaths.Update();
-            }
+            EditConfiguration(s.Configuration, s);
         }
 
         private void lbPaths_DrawItem(object sender, DrawItemEventArgs e)
@@ -217,22 +208,6 @@ namespace DolphinWebXplorer2
             Clipboard.SetText(tsi.Tag.ToString());
         }
 
-        private void btGeneralOptions_Click(object sender, EventArgs e)
-        {
-            cmsGOptions.Show(btGeneralOptions, new Point(0, btGeneralOptions.Height));
-        }
-
-        private void shareScreenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WebXplorer.SharedScreen = !WebXplorer.SharedScreen;
-            shareScreenToolStripMenuItem.Checked = WebXplorer.SharedScreen;
-        }
-
-        private void tstbPassword_TextChanged(object sender, EventArgs e)
-        {
-            WebXplorer.SharedScreenPassword = tstbPassword.Text;
-        }
-
         private void tstbPassword_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.KeyChar = char.ToLower(e.KeyChar);
@@ -259,25 +234,20 @@ namespace DolphinWebXplorer2
             {
                 foreach (string file in files)
                 {
-                    WShared sh;
+                    SunfishServiceConfiguration ssc = new SunfishServiceConfiguration();
+                    ssc.Type = "WebService";
                     string fil = file;
                     if (!Directory.Exists(file))
                         fil = Path.GetDirectoryName(fil);
-                    sh = new WShared(Path.GetFileName(fil), fil);
-                    sh.Enabled = true;
-                    if (FShared.Execute(sh))
-                    {
-                        WebXplorer.Add(sh);
-                        lbPaths.Items.Add(sh);
-                    }
+                    ssc.Name = Path.GetFileName(fil);
+                    ssc.Location = Path.GetFileName(fil);
+                    ssc.Enabled = true;
+                    ssc.Settings[Services.WebServiceConfigurator.CFG_PATH] = fil;
+                    EditConfiguration(ssc, null);
                 }
                 Activate();
             }
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            Sunfish.Save();
-        }
     }
 }

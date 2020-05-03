@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurator\ConfigurationBool.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -87,12 +88,6 @@
     </Compile>
     <Compile Include="FServiceConf.Designer.cs">
       <DependentUpon>FServiceConf.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FShared.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FShared.Designer.cs">
-      <DependentUpon>FShared.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\Json.Net\IJsonConverter.cs" />
     <Compile Include="Library\Json.Net\IPropertyNameTransform.cs" />
@@ -114,9 +109,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FServiceConf.resx">
       <DependentUpon>FServiceConf.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FShared.resx">
-      <DependentUpon>FShared.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

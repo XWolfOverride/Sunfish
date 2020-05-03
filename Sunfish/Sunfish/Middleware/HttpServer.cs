@@ -1,10 +1,10 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Net;
-using System.Web;
+using System.Text;
 using System.Threading;
+using System.Web;
 
 namespace DolphinWebXplorer2.Middleware
 {
@@ -276,7 +276,7 @@ namespace DolphinWebXplorer2.Middleware
     {
         private string contentType;
         private Dictionary<string, string> parms;
-        private Dictionary<string, HttpPostFile> files=new Dictionary<string,HttpPostFile>();
+        private Dictionary<string, HttpPostFile> files = new Dictionary<string, HttpPostFile>();
         private HttpServerProcessor owner;
         private Encoding encoding;
         private static char[] CRLF = { '\r', '\n' };
@@ -303,7 +303,7 @@ namespace DolphinWebXplorer2.Middleware
                 ReadMultipart(input);
             else
                 if ("application/x-www-form-urlencoded".Equals(cttp[0], StringComparison.InvariantCultureIgnoreCase))
-                    ReadPost(input);
+                ReadPost(input);
         }
 
         private void ReadPost(Stream input)
@@ -324,7 +324,7 @@ namespace DolphinWebXplorer2.Middleware
 
         private void ReadMultipart(Stream input)
         {
-            mimeBoundary = "--"+parms["boundary"];
+            mimeBoundary = "--" + parms["boundary"];
             BinaryReader br = new BinaryReader(input, encoding);
             string bnd = ReadLine(br);
             if (bnd == mimeBoundary + "--")
@@ -359,7 +359,7 @@ namespace DolphinWebXplorer2.Middleware
                     bool eq = true;
                     for (int i = 0; i < signal.Length; i++)
                     {
-                        if (signal[i]!=chars[(chars.Count-signal.Length)+i])
+                        if (signal[i] != chars[(chars.Count - signal.Length) + i])
                         {
                             eq = false;
                             break;
@@ -368,7 +368,7 @@ namespace DolphinWebXplorer2.Middleware
                     if (eq)
                     {
                         char[] chs = chars.ToArray();
-                        return new string(chs,0,chs.Length-signal.Length);
+                        return new string(chs, 0, chs.Length - signal.Length);
                     }
                 }
             }
@@ -418,7 +418,7 @@ namespace DolphinWebXplorer2.Middleware
             {
                 byte[] data = ReadUntil(br, mimeBoundaryBytes);
                 string fname = cdisp["filename"];
-                if (fname.Length>0)
+                if (fname.Length > 0)
                     files[cdisp["name"]] = new HttpPostFile(fname, data);
             }
             else
@@ -435,16 +435,17 @@ namespace DolphinWebXplorer2.Middleware
             throw new Exception("Error reading multipart (" + ch1 + ch2 + ")");
         }
 
-        private Dictionary<string,string> GetContentDisposition(Dictionary<string, string> hdrs)
+        private Dictionary<string, string> GetContentDisposition(Dictionary<string, string> hdrs)
         {
             if (!hdrs.ContainsKey("Content-Disposition"))
                 return null;
             Dictionary<string, string> result = new Dictionary<string, string>();
-            foreach (string cd in hdrs["Content-Disposition"].Split(';')){
+            foreach (string cd in hdrs["Content-Disposition"].Split(';'))
+            {
                 int pos = cd.IndexOf("=");
                 if (pos < 0)
                     continue;
-                string name = cd.Substring(1, pos-1);
+                string name = cd.Substring(1, pos - 1);
                 string var = cd.Substring(pos + 1);
                 if (var.Length > 0 && var[0] == '"')
                     var = var.Substring(1, var.Length - 2);
