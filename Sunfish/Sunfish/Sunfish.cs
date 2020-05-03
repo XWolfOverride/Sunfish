@@ -35,7 +35,7 @@ namespace DolphinWebXplorer2
             conf = JsonNet.Deserialize<SunfishConfiguration>(json);
             if (conf.Services == null)
                 conf.Services = new List<SunfishServiceConfiguration>();
-            foreach(SunfishServiceConfiguration ssc in conf.Services)
+            foreach (SunfishServiceConfiguration ssc in conf.Services)
             {
                 srvs.Add(SunfishService.Instance(ssc));
             }
@@ -52,8 +52,8 @@ namespace DolphinWebXplorer2
         {
             if (conf.Active == act)
                 return;
-            conf.Active = act;
             // INIT SERVER HERE
+            conf.Active = act;
         }
 
         private static void SetPort(int port)
@@ -62,6 +62,13 @@ namespace DolphinWebXplorer2
             Active = false;
             conf.Port = port;
             Active = act;
+        }
+
+        public static SunfishService AddService(SunfishServiceConfiguration ssc)
+        {
+            SunfishService s;
+            srvs.Add(s = SunfishService.Instance(ssc));
+            return s;
         }
 
         public static bool Active { get => conf.Active; set => SetActive(value); }

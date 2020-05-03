@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Services.UI
+namespace DolphinWebXplorer2.Configurator
 {
     public abstract class ConfigurationElement
     {
@@ -15,5 +15,6 @@ namespace DolphinWebXplorer2.Services.UI
 
         public string Id { get; }
         public string Label { get; set; }
+        public string Tooltip { get; set; }
     }
 }

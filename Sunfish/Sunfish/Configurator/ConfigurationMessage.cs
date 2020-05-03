@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Services.UI
+namespace DolphinWebXplorer2.Configurator
 {
     class ConfigurationMessage:ConfigurationElement
     {

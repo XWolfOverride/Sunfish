@@ -1,5 +1,5 @@
-﻿using DolphinWebXplorer2.Services;
-using DolphinWebXplorer2.Services.UI;
+﻿using DolphinWebXplorer2.Configurator;
+using DolphinWebXplorer2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DolphinWebXplorer2
 {
-    abstract class SunfishService
+    public abstract class SunfishService
     {
         #region Static / Type management
 
@@ -37,14 +37,20 @@ namespace DolphinWebXplorer2
             }
         }
 
-        public static SunfishService Instance(SunfishServiceConfiguration ssc)
+        private static Type GetServiceTypeOf(string type)
         {
             Type stype = null;
             foreach (Type t in ServiceTypes)
-                if (t.Name == ssc.Name)
+                if (t.Name == type)
                     stype = t;
             if (stype == null)
                 stype = typeof(ErrorService);
+            return stype;
+        }
+
+        internal static SunfishService Instance(SunfishServiceConfiguration ssc)
+        {
+            Type stype = GetServiceTypeOf(ssc.Type);
             try
             {
                 return (SunfishService)stype.GetConstructor(new Type[] { typeof(SunfishServiceConfiguration) }).Invoke(new Object[] { ssc });
@@ -52,19 +58,50 @@ namespace DolphinWebXplorer2
             catch { return new ErrorService(ssc); }
         }
 
+        public static SunfishServiceConfigurator GetConfigurator(string type)
+        {
+            return SunfishServiceConfigurator.GetConfiguratorForService(GetServiceTypeOf(type));
+        }
+
+        public static string[] GetTypes()
+        {
+            List<string> lresult = new List<string>();
+            foreach (Type t in ServiceTypes)
+                lresult.Add(t.Name);
+            return lresult.ToArray();
+        }
+
         #endregion
 
-        protected SunfishServiceConfiguration ssc;
+        private SunfishServiceConfigurator configurator;
 
         public SunfishService(SunfishServiceConfiguration ssc)
         {
             Configuration = ssc;
+            configurator = SunfishServiceConfigurator.GetConfiguratorForService(GetType());
         }
 
-        protected abstract ConfigurationScreen GetConfigurationScreen();
+        protected abstract void Start();
+        protected abstract void Stop();
+
+        #region GET/SET
+
+        private void SetEnabled(bool enabled)
+        {
+            if (Enabled == enabled)
+                return;
+            if (enabled)
+                Start();
+            else
+                Stop();
+            Configuration.Enabled = enabled;
+        }
+
+        #endregion
 
         public SunfishServiceConfiguration Configuration { get; }
         public abstract string Description { get; }
-        public ConfigurationScreen ConfigurationScreen => GetConfigurationScreen();
+        internal protected SunfishServiceConfigurator Configurator => configurator;
+        public bool Enabled { get => Configuration.Enabled; set => SetEnabled(value); }
     }
 }

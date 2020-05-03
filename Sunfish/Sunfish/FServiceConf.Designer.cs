@@ -35,14 +35,18 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbActive = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbLocation = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btOk = new System.Windows.Forms.Button();
+            this.btCancel = new System.Windows.Forms.Button();
+            this.pScreen = new System.Windows.Forms.Panel();
+            this.btAdv = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbType
             // 
             this.lbType.AutoSize = true;
-            this.lbType.Location = new System.Drawing.Point(12, 9);
+            this.lbType.Location = new System.Drawing.Point(11, 9);
             this.lbType.Name = "lbType";
             this.lbType.Size = new System.Drawing.Size(47, 20);
             this.lbType.TabIndex = 0;
@@ -50,13 +54,16 @@
             // 
             // cbType
             // 
+            this.cbType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
             this.cbType.Location = new System.Drawing.Point(25, 32);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(353, 28);
+            this.cbType.Size = new System.Drawing.Size(451, 28);
             this.cbType.TabIndex = 1;
             this.toolTip1.SetToolTip(this.cbType, "Type of service.");
+            this.cbType.SelectedIndexChanged += new System.EventHandler(this.cbType_SelectedIndexChanged);
             // 
             // lbName
             // 
@@ -73,7 +80,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbName.Location = new System.Drawing.Point(25, 100);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(269, 26);
+            this.tbName.Size = new System.Drawing.Size(370, 26);
             this.tbName.TabIndex = 3;
             this.toolTip1.SetToolTip(this.tbName, "Name of the service.\r\n(only for management)");
             // 
@@ -81,7 +88,7 @@
             // 
             this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbActive.AutoSize = true;
-            this.cbActive.Location = new System.Drawing.Point(300, 102);
+            this.cbActive.Location = new System.Drawing.Point(401, 102);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(78, 24);
             this.cbActive.TabIndex = 4;
@@ -97,20 +104,70 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Location:";
             // 
-            // textBox1
+            // tbLocation
             // 
-            this.textBox1.Location = new System.Drawing.Point(25, 166);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(353, 26);
-            this.textBox1.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.textBox1, "Document root on the server:\r\nThis works as a virtual directory in the url.");
+            this.tbLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbLocation.Location = new System.Drawing.Point(25, 166);
+            this.tbLocation.Name = "tbLocation";
+            this.tbLocation.Size = new System.Drawing.Size(451, 26);
+            this.tbLocation.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.tbLocation, "Document root on the server:\r\nThis works as a virtual directory in the url.");
+            // 
+            // btOk
+            // 
+            this.btOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btOk.Location = new System.Drawing.Point(282, 217);
+            this.btOk.Name = "btOk";
+            this.btOk.Size = new System.Drawing.Size(113, 38);
+            this.btOk.TabIndex = 7;
+            this.btOk.Text = "Ok";
+            this.btOk.UseVisualStyleBackColor = true;
+            this.btOk.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btCancel
+            // 
+            this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btCancel.Location = new System.Drawing.Point(408, 217);
+            this.btCancel.Name = "btCancel";
+            this.btCancel.Size = new System.Drawing.Size(82, 38);
+            this.btCancel.TabIndex = 8;
+            this.btCancel.Text = "Cancel";
+            this.btCancel.UseVisualStyleBackColor = true;
+            // 
+            // pScreen
+            // 
+            this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pScreen.Location = new System.Drawing.Point(12, 210);
+            this.pScreen.Name = "pScreen";
+            this.pScreen.Size = new System.Drawing.Size(478, 1);
+            this.pScreen.TabIndex = 9;
+            // 
+            // btAdv
+            // 
+            this.btAdv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btAdv.Location = new System.Drawing.Point(12, 217);
+            this.btAdv.Name = "btAdv";
+            this.btAdv.Size = new System.Drawing.Size(196, 38);
+            this.btAdv.TabIndex = 10;
+            this.btAdv.Text = "Advanced Settings";
+            this.btAdv.UseVisualStyleBackColor = true;
             // 
             // FServiceConf
             // 
+            this.AcceptButton = this.btOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(401, 408);
-            this.Controls.Add(this.textBox1);
+            this.CancelButton = this.btCancel;
+            this.ClientSize = new System.Drawing.Size(502, 267);
+            this.Controls.Add(this.btAdv);
+            this.Controls.Add(this.pScreen);
+            this.Controls.Add(this.btCancel);
+            this.Controls.Add(this.btOk);
+            this.Controls.Add(this.tbLocation);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbActive);
             this.Controls.Add(this.tbName);
@@ -122,6 +179,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Service";
+            this.Load += new System.EventHandler(this.FServiceConf_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,6 +194,10 @@
         private System.Windows.Forms.CheckBox cbActive;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbLocation;
+        private System.Windows.Forms.Button btOk;
+        private System.Windows.Forms.Button btCancel;
+        private System.Windows.Forms.Panel pScreen;
+        private System.Windows.Forms.Button btAdv;
     }
 }

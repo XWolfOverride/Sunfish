@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,12 +139,17 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Middleware\Win32.cs" />
+    <Compile Include="Services\AdminServiceConfigurator.cs" />
     <Compile Include="Services\AdminService.cs" />
+    <Compile Include="DefineConfigurator.cs" />
+    <Compile Include="Configurator\SunfishServiceConfigurator.cs" />
+    <Compile Include="Services\ErrorServiceConfigurator.cs" />
     <Compile Include="Services\ErrorService.cs" />
-    <Compile Include="Services\UI\ConfigurationElement.cs" />
-    <Compile Include="Services\UI\ConfigurationMessage.cs" />
-    <Compile Include="Services\UI\ConfigurationScreen.cs" />
-    <Compile Include="Services\UI\ConfigurationString.cs" />
+    <Compile Include="Configurator\ConfigurationElement.cs" />
+    <Compile Include="Configurator\ConfigurationMessage.cs" />
+    <Compile Include="Configurator\ConfigurationScreen.cs" />
+    <Compile Include="Configurator\ConfigurationString.cs" />
+    <Compile Include="Services\WebServiceConfigurator.cs" />
     <Compile Include="Services\WebService.cs" />
     <Compile Include="SunfishService.cs" />
     <Compile Include="Sunfish.cs" />

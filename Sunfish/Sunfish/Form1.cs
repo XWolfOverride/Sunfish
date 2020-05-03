@@ -34,8 +34,8 @@ namespace DolphinWebXplorer2
             nudPort.Value = Sunfish.Port;
             cbActive.Checked = Sunfish.Active;
             lbPaths.Items.Clear();
-            foreach (WShared sh in WebXplorer.Shares)
-                lbPaths.Items.Add(sh);
+            foreach (SunfishService s in Sunfish.Services)
+                lbPaths.Items.Add(s);
             Enabled = true;
         }
 
@@ -67,48 +67,69 @@ namespace DolphinWebXplorer2
             nudPort.Enabled = !cbActive.Checked;
             if (!Enabled)
                 return;
-            if (cbActive.Checked)
-                WebXplorer.Start();
-            else
-                WebXplorer.Stop();
-            cbActive.Checked = WebXplorer.Active;
+            try
+            {
+                Sunfish.Active = cbActive.Checked;
+            }
+            catch (Exception ex)
+            {
+                ex.Show();
+            }
+            cbActive.Checked = Sunfish.Active;
         }
 
         private void nudPort_ValueChanged(object sender, EventArgs e)
         {
             if (!Enabled)
                 return;
-            WebXplorer.Port = (int)nudPort.Value;
+            Sunfish.Port = (int)nudPort.Value;
+            cbActive.Checked = Sunfish.Active;
         }
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            WShared sh;
-            string clip = Clipboard.GetText();
-            if ((Path.DirectorySeparatorChar == '/' ? clip.Length > 0 && clip[0] == '/' : clip.Length > 2 && clip[1] == ':' && clip[2] == '\\')
-                 && (Directory.Exists(clip) || File.Exists(clip)))
+            SunfishServiceConfiguration ssc = new SunfishServiceConfiguration();
+            if (FServiceConf.Execute(ssc))
             {
-                if (File.Exists(clip))
-                    clip = Path.GetDirectoryName(clip);
-                sh = new WShared(Path.GetFileName(clip), clip);
+                try
+                {
+                    lbPaths.Items.Add(Sunfish.AddService(ssc));
+                    Sunfish.Save();
+                }
+                catch (Exception ex)
+                {
+                    ex.Show();
+                }
             }
-            else
-                sh = new WShared("NewShared", @"C:\");
-            sh.Enabled = true;
-            if (FShared.Execute(sh))
-            {
-                WebXplorer.Add(sh);
-                lbPaths.Items.Add(sh);
-            }
+            //WShared sh;
+            //string clip = Clipboard.GetText();
+            //if ((Path.DirectorySeparatorChar == '/' ? clip.Length > 0 && clip[0] == '/' : clip.Length > 2 && clip[1] == ':' && clip[2] == '\\')
+            //     && (Directory.Exists(clip) || File.Exists(clip)))
+            //{
+            //    if (File.Exists(clip))
+            //        clip = Path.GetDirectoryName(clip);
+            //    sh = new WShared(Path.GetFileName(clip), clip);
+            //}
+            //else
+            //    sh = new WShared("NewShared", @"C:\");
+            //sh.Enabled = true;
+            //if (FShared.Execute(sh))
+            //{
+            //    WebXplorer.Add(sh);
+            //    lbPaths.Items.Add(sh);
+            //}
         }
 
         private void clbPaths_DoubleClick(object sender, EventArgs e)
         {
-            WShared sh = (WShared)lbPaths.SelectedItem;
-            if (sh == null)
+            SunfishService s = (SunfishService)lbPaths.SelectedItem;
+            if (s == null)
                 return;
-            if (FShared.Execute(sh))
+            if (FServiceConf.Execute(s.Configuration))
+            {
+                //TODO: How to update service according to configuration changes?
                 lbPaths.Update();
+            }
         }
 
         private void lbPaths_DrawItem(object sender, DrawItemEventArgs e)
@@ -117,18 +138,18 @@ namespace DolphinWebXplorer2
             e.DrawFocusRectangle();
             if (e.Index < 0)
                 return;
-            WShared sh = (WShared)lbPaths.Items[e.Index];
+            SunfishService s = (SunfishService)lbPaths.Items[e.Index];
             Graphics g = e.Graphics;
             int y = e.Bounds.Top + 2;
             using (Brush itembrush = new SolidBrush(e.ForeColor))
             {
-                g.DrawImage(sh.Enabled ? Resources.foldericon : Resources.foldericond, 1, y, 24, 24);
-                g.DrawString(sh.Name, lbPaths.Font, itembrush, 28, y);
-                g.DrawString(sh.Path, smallfont, itembrushgray, 33, y + 12);
-                if (sh.AllowSubfolders)
-                    g.DrawImage(Resources.osubf, 16, y + 13);
-                if (sh.AllowUpload)
-                    g.DrawImage(Resources.ouplo, 3, y + 13);
+                g.DrawImage(s.Enabled ? Resources.foldericon : Resources.foldericond, 1, y, 24, 24);
+                g.DrawString(s.Configuration.Name, lbPaths.Font, itembrush, 28, y);
+                g.DrawString(s.Configuration.Location, smallfont, itembrushgray, 33, y + 12);
+                //if (sh.AllowSubfolders)
+                //    g.DrawImage(Resources.osubf, 16, y + 13);
+                //if (sh.AllowUpload)
+                //    g.DrawImage(Resources.ouplo, 3, y + 13);
             }
         }
 
@@ -151,7 +172,7 @@ namespace DolphinWebXplorer2
 
         private void btShowIp_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder(WebXplorer.Active ? "A" : "ina");
+            StringBuilder sb = new StringBuilder(Sunfish.Active ? "A" : "Ina");
             sb.Append("ctive.\r\n");
             foreach (IpInfo ip in ListInterfacesIPs())
             {
@@ -166,24 +187,24 @@ namespace DolphinWebXplorer2
             }
             sb.Append("\r\nSunfish ");
             sb.Append(Program.VERSION);
-            sb.Append(" (C) XWolfOverride@gmail.com 2007-2015\r\nEasy folder shares");
+            sb.Append(" (C) XWolfOverride@gmail.com 2007-2020\r\nEasy folder shares");
             MessageBox.Show(sb.ToString(), "Sunfish information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void cmsItem_Opening(object sender, CancelEventArgs e)
         {
-            WShared sh = lbPaths.SelectedItem as WShared;
-            editarToolStripMenuItem.Enabled = sh != null;
-            borrarToolStripMenuItem.Enabled = sh != null;
-            toolStripSeparator1.Visible = sh != null;
+            SunfishService s = lbPaths.SelectedItem as SunfishService;
+            editarToolStripMenuItem.Enabled = s != null;
+            borrarToolStripMenuItem.Enabled = s != null;
+            toolStripSeparator1.Visible = s != null;
             while (cmsItem.Items.Count > 4)
                 cmsItem.Items.RemoveAt(cmsItem.Items.Count - 1);
-            if (sh == null)
+            if (s == null)
                 return;
             foreach (IpInfo ip in ListInterfacesIPs())
             {
                 ToolStripItem tsi = cmsItem.Items.Add("Copy url for " + ip.Address + " (" + ip.InterfaceName + ", " + ip.InterfaceType + ")");
-                tsi.Tag = "http://" + ip.Address + ":" + WebXplorer.Port + "/" + sh.Name + "/";
+                tsi.Tag = "http://" + ip.Address + ":" + WebXplorer.Port + "/" + s.Configuration.Location + "/";
                 tsi.Click += tsi_Click;
             }
         }
