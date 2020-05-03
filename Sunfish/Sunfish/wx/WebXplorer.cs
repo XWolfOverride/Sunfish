@@ -94,8 +94,7 @@ namespace DolphinWebXplorer2.wx
             server = new HttpServer(port);
             server.CreateProcessor += new HttpServer.CreateProcessorHandler(server_CreateProcessor);
             server.Error += new HttpServer.ErrorEventHandler(server_Error);
-            if (!server.Start())
-                server = null;
+            server.Start();
         }
 
         static void server_Error(HttpServer server, Exception e)

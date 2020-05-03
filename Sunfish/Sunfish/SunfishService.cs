@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace DolphinWebXplorer2
 {
-    public abstract class SunfishService
+    public abstract class SunfishService:IDisposable
     {
         #region Static / Type management
 
@@ -76,6 +76,11 @@ namespace DolphinWebXplorer2
         {
             Configuration = ssc;
             configurator = SunfishServiceConfigurator.GetConfiguratorForService(GetType());
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
 
         protected abstract void Start();

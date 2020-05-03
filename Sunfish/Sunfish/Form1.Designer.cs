@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.button1 = new System.Windows.Forms.Button();
+            this.btDone = new System.Windows.Forms.Button();
             this.nudPort = new System.Windows.Forms.NumericUpDown();
             this.cbActive = new System.Windows.Forms.CheckBox();
             this.btAdd = new System.Windows.Forms.Button();
@@ -48,18 +48,18 @@
             this.cmsItem.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // btDone
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(213, 514);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(138, 35);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Ok";
-            this.toolTip1.SetToolTip(this.button1, "Hide");
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btDone.Location = new System.Drawing.Point(213, 514);
+            this.btDone.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btDone.Name = "btDone";
+            this.btDone.Size = new System.Drawing.Size(138, 35);
+            this.btDone.TabIndex = 1;
+            this.btDone.Text = "Ok";
+            this.toolTip1.SetToolTip(this.btDone, "Hide");
+            this.btDone.UseVisualStyleBackColor = true;
+            this.btDone.Click += new System.EventHandler(this.button1_Click);
             // 
             // nudPort
             // 
@@ -221,7 +221,7 @@
             this.Controls.Add(this.btAdd);
             this.Controls.Add(this.cbActive);
             this.Controls.Add(this.nudPort);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btDone);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -239,7 +239,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btDone;
         private System.Windows.Forms.NumericUpDown nudPort;
         private System.Windows.Forms.CheckBox cbActive;
         private System.Windows.Forms.Button btAdd;

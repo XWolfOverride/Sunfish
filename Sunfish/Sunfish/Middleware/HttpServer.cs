@@ -8,7 +8,7 @@ using System.Web;
 
 namespace DolphinWebXplorer2.Middleware
 {
-    public class HttpServer
+    class HttpServer
     {
         private int port;
         private HttpListener lis = null;
@@ -27,10 +27,10 @@ namespace DolphinWebXplorer2.Middleware
             this.port = port;
         }
 
-        public bool Start()
+        public void Start()
         {
             if (lis != null)
-                return false;
+                return;
             lis = new HttpListener();
             lis.Prefixes.Add("http://+:" + port + "/");
             try
@@ -40,11 +40,11 @@ namespace DolphinWebXplorer2.Middleware
             catch (HttpListenerException e)
             {
                 lis = null;
-                return false;
+                throw e;
             }
             loop = new Thread(ServerLoop);
             loop.Start();
-            return true;
+            //fwRule = WindowsFirewall.Allow(port);
         }
 
         private void ServerLoop()
@@ -76,7 +76,7 @@ namespace DolphinWebXplorer2.Middleware
 
         private void CallNewProcessor(HttpListenerContext ctx)
         {
-            HttpServerProcessor proc = CreateProcessor == null ? new HttpServerProcessor() : CreateProcessor(this);
+            HttpServerProcessor proc = CreateProcessor(this);
             proc.server = this;
             proc.Process(ctx);
         }
@@ -104,6 +104,7 @@ namespace DolphinWebXplorer2.Middleware
             }
             finally
             {
+                //WindowsFirewall.Remove(fwRule);
             }
             return true;
         }
@@ -120,7 +121,7 @@ namespace DolphinWebXplorer2.Middleware
         public bool MultiThread { get { return multiThread; } set { multiThread = value; } }
     }
 
-    public class HttpServerProcessor
+    public abstract class HttpServerProcessor
     {
         protected HttpListenerRequest Request;
         protected HttpListenerResponse Response;
@@ -249,10 +250,7 @@ namespace DolphinWebXplorer2.Middleware
             return HttpUtility.UrlDecode(url);
         }
 
-        virtual protected void Process()
-        {
-            Error404();
-        }
+        protected abstract void Process();
 
         protected Stream OutStream { get { return Response.OutputStream; } }
         protected StreamWriter Out { get { return swout; } }

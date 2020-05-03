@@ -60,7 +60,7 @@
             this.cbType.FormattingEnabled = true;
             this.cbType.Location = new System.Drawing.Point(25, 32);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(451, 28);
+            this.cbType.Size = new System.Drawing.Size(380, 28);
             this.cbType.TabIndex = 1;
             this.toolTip1.SetToolTip(this.cbType, "Type of service.");
             this.cbType.SelectedIndexChanged += new System.EventHandler(this.cbType_SelectedIndexChanged);
@@ -80,7 +80,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbName.Location = new System.Drawing.Point(25, 100);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(370, 26);
+            this.tbName.Size = new System.Drawing.Size(299, 26);
             this.tbName.TabIndex = 3;
             this.toolTip1.SetToolTip(this.tbName, "Name of the service.\r\n(only for management)");
             // 
@@ -88,7 +88,7 @@
             // 
             this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbActive.AutoSize = true;
-            this.cbActive.Location = new System.Drawing.Point(401, 102);
+            this.cbActive.Location = new System.Drawing.Point(330, 102);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(78, 24);
             this.cbActive.TabIndex = 4;
@@ -110,14 +110,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbLocation.Location = new System.Drawing.Point(25, 166);
             this.tbLocation.Name = "tbLocation";
-            this.tbLocation.Size = new System.Drawing.Size(451, 26);
+            this.tbLocation.Size = new System.Drawing.Size(380, 26);
             this.tbLocation.TabIndex = 6;
             this.toolTip1.SetToolTip(this.tbLocation, "Document root on the server:\r\nThis works as a virtual directory in the url.");
             // 
             // btOk
             // 
             this.btOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btOk.Location = new System.Drawing.Point(282, 227);
+            this.btOk.Location = new System.Drawing.Point(211, 227);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(113, 38);
             this.btOk.TabIndex = 7;
@@ -129,7 +129,7 @@
             // 
             this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btCancel.Location = new System.Drawing.Point(408, 227);
+            this.btCancel.Location = new System.Drawing.Point(337, 227);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(82, 38);
             this.btCancel.TabIndex = 8;
@@ -143,7 +143,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pScreen.Location = new System.Drawing.Point(12, 210);
             this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(478, 1);
+            this.pScreen.Size = new System.Drawing.Size(407, 1);
             this.pScreen.TabIndex = 9;
             // 
             // btAdv
@@ -151,7 +151,7 @@
             this.btAdv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btAdv.Location = new System.Drawing.Point(12, 227);
             this.btAdv.Name = "btAdv";
-            this.btAdv.Size = new System.Drawing.Size(196, 38);
+            this.btAdv.Size = new System.Drawing.Size(167, 38);
             this.btAdv.TabIndex = 10;
             this.btAdv.Text = "Advanced Settings";
             this.btAdv.UseVisualStyleBackColor = true;
@@ -162,7 +162,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
-            this.ClientSize = new System.Drawing.Size(502, 277);
+            this.ClientSize = new System.Drawing.Size(431, 277);
             this.Controls.Add(this.btAdv);
             this.Controls.Add(this.pScreen);
             this.Controls.Add(this.btCancel);

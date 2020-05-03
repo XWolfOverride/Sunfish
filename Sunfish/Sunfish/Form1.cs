@@ -54,21 +54,24 @@ namespace DolphinWebXplorer2
         {
             if (FServiceConf.Execute(ssc))
             {
-                if (oldService == null) try
-                    {
-                        lbPaths.Items.Add(Sunfish.AddService(ssc));
-                        Sunfish.Save();
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.Show();
-                    }
-                else
+                try
                 {
-                    //oldService
-                    //TODO: How to update service according to configuration changes?
-                    //Sunfish.
-                    lbPaths.Update();
+                    if (oldService == null)
+                        lbPaths.Items.Add(Sunfish.AddService(ssc));
+                    else
+                    {
+                        SunfishService s = Sunfish.ReplaceService(oldService, ssc);
+                        int idx = lbPaths.Items.IndexOf(oldService);
+                        if (idx < 0)
+                            lbPaths.Items.Add(s);
+                        else
+                            lbPaths.Items[idx] = s;
+                    }
+                    Sunfish.Save();
+                }
+                catch (Exception ex)
+                {
+                    ex.Show();
                 }
             }
         }
@@ -243,6 +246,8 @@ namespace DolphinWebXplorer2
                     ssc.Location = Path.GetFileName(fil);
                     ssc.Enabled = true;
                     ssc.Settings[Services.WebServiceConfigurator.CFG_PATH] = fil;
+                    ssc.Settings[Services.WebServiceConfigurator.CFG_SHARE] = true;
+                    ssc.Settings[Services.WebServiceConfigurator.CFG_NAVIGATION] = true;
                     EditConfiguration(ssc, null);
                 }
                 Activate();

@@ -14,6 +14,7 @@ namespace DolphinWebXplorer2
         {
             InitializeComponent();
             panelOffset = ClientSize.Height - pScreen.Top;
+            cbType.Items.AddRange(SunfishService.GetTypes());
         }
 
         public static bool Execute(SunfishServiceConfiguration ssc)
@@ -28,8 +29,16 @@ namespace DolphinWebXplorer2
 
         private void LoadData()
         {
-            //cbType.SelectedItem = ssc.Type;
-            cbType.Text = ssc.Type;
+            if (ssc.Type != null)
+                for (int i = 0; i < cbType.Items.Count; i++)
+                {
+                    object o = cbType.Items[i];
+                    if (o != null && o.ToString() == ssc.Type)
+                    {
+                        cbType.SelectedIndex = i;
+                        break;
+                    }
+                }
             cbActive.Checked = ssc.Enabled;
             tbName.Text = ssc.Name;
             tbLocation.Text = ssc.Name;
@@ -145,7 +154,6 @@ namespace DolphinWebXplorer2
 
         private void FServiceConf_Load(object sender, EventArgs e)
         {
-            cbType.Items.AddRange(SunfishService.GetTypes());
         }
 
         private void button1_Click(object sender, EventArgs e)
