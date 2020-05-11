@@ -141,7 +141,7 @@ namespace DolphinWebXplorer2.Middleware
     public class HttpCall
     {
         private static char[] CRLF = { '\r', '\n' };
-
+        private BufferedStream bs;
         private StreamWriter swout;
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
         private Dictionary<string, HttpPostFile> files = new Dictionary<string, HttpPostFile>();
@@ -186,7 +186,8 @@ namespace DolphinWebXplorer2.Middleware
                 encoding = new UTF8Encoding(false);
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrWhiteSpace(contentType))
                 contentType = "text/html";
-            swout = new StreamWriter(Response.OutputStream, encoding);
+            bs = new BufferedStream(Response.OutputStream);
+            swout = new StreamWriter(bs, encoding);
             Response.Headers[HttpResponseHeader.ContentType] = contentType;
             Response.Headers[HttpResponseHeader.ContentEncoding] = encoding.WebName;
         }
@@ -197,6 +198,7 @@ namespace DolphinWebXplorer2.Middleware
             string[] cttp = contentType.Split(';');
             string ctype = cttp[0];
             Dictionary<string, string> cttParams = null;
+            BufferedStream bfs = new BufferedStream(input,1024*1024);
             if (cttp.Length > 1)
             {
                 cttParams = new Dictionary<string, string>();
@@ -207,9 +209,11 @@ namespace DolphinWebXplorer2.Middleware
                 }
             }
             if ("multipart/form-data".Equals(ctype, StringComparison.InvariantCultureIgnoreCase))
-                ReadPostMultipart(input, cttParams, enc);
+                ReadPostMultipart(bfs, cttParams, enc);
             else if ("application/x-www-form-urlencoded".Equals(ctype, StringComparison.InvariantCultureIgnoreCase))
-                ReadPostForm(input, enc);
+                ReadPostForm(bfs, enc);
+            bfs.Close();
+            input.Close();
         }
 
         private void ReadPostForm(Stream input, Encoding encoding)
@@ -317,62 +321,32 @@ namespace DolphinWebXplorer2.Middleware
 
         private static byte[] ReadUntil(BinaryReader br, byte[] signal)
         {
-            List<byte> bytes = new List<byte>();
+            MemoryStream ms = new MemoryStream(10240);
+            int signalIdx = 0;
+            long end = 0;
+            byte[] onebyte = new byte[1];
+            byte b;
 
             while (true)
             {
-                byte by = br.ReadByte();
-                bytes.Add(by);
-
-                if (bytes.Count >= signal.Length)
+                b=onebyte[0] = br.ReadByte();
+                ms.Write(onebyte, 0, 1);
+                if (b == signal[signalIdx])
                 {
-                    bool eq = true;
-                    for (int i = 0; i < signal.Length; i++)
+                    signalIdx++;
+                    if (signalIdx == signal.Length)
                     {
-                        if (signal[i] != bytes[(bytes.Count - signal.Length) + i])
-                        {
-                            eq = false;
-                            break;
-                        }
+                        ms.SetLength(end);
+                        return ms.ToArray();
                     }
-                    if (eq)
-                    {
-                        return bytes.ToArray();
-                    }
+                }
+                else
+                {
+                    end += signalIdx + 1;
+                    signalIdx = 0;
                 }
             }
         }
-
-        //private static byte[] ReadUntil(BinaryReader br, byte[] signal)
-        //{
-        //    MemoryStream ms = new MemoryStream(10240);
-        //    int signalIdx = 0;
-        //    long end = 0;
-        //    byte[] onebyte = new byte[1];
-
-        //    while (true)
-        //    {
-        //        onebyte[0] = br.ReadByte();
-        //        ms.Write(onebyte, 0, 1);
-
-        //        if (bytes.Count >= signal.Length)
-        //        {
-        //            bool eq = true;
-        //            for (int i = 0; i < signal.Length; i++)
-        //            {
-        //                if (signal[i] != bytes[(bytes.Count - signal.Length) + i])
-        //                {
-        //                    eq = false;
-        //                    break;
-        //                }
-        //            }
-        //            if (eq)
-        //            {
-        //                return bytes.ToArray();
-        //            }
-        //        }
-        //    }
-        //}
 
         private static Dictionary<string, string> GetContentDisposition(Dictionary<string, string> hdrs)
         {
