@@ -155,12 +155,12 @@ namespace DolphinWebXplorer2
 
         private void btSub_Click(object sender, EventArgs e)
         {
-            WShared sh = (WShared)lbPaths.SelectedItem;
+            SunfishService sh = (SunfishService)lbPaths.SelectedItem;
             if (sh == null)
                 return;
-            if (MessageBox.Show("Delete access " + sh.Name + "? Can not be undone!", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Delete access " + sh.Configuration.Name + "? Can not be undone!", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                WebXplorer.Delete(sh);
+                Sunfish.DeleteService(sh);
                 lbPaths.Items.Remove(sh);
             }
         }
@@ -177,7 +177,7 @@ namespace DolphinWebXplorer2
                 sb.Append("): ");
                 sb.Append(ip.Address);
                 sb.Append(":");
-                sb.Append(WebXplorer.Port);
+                sb.Append(Sunfish.Port);
                 sb.Append("\r\n");
             }
             sb.Append("\r\nSunfish ");
@@ -199,7 +199,7 @@ namespace DolphinWebXplorer2
             foreach (IpInfo ip in ListInterfacesIPs())
             {
                 ToolStripItem tsi = cmsItem.Items.Add("Copy url for " + ip.Address + " (" + ip.InterfaceName + ", " + ip.InterfaceType + ")");
-                tsi.Tag = "http://" + ip.Address + ":" + WebXplorer.Port + "/" + s.Configuration.Location + "/";
+                tsi.Tag = "http://" + ip.Address + ":" + Sunfish.Port + "/" + s.Configuration.Location + "/";
                 tsi.Click += tsi_Click;
             }
         }

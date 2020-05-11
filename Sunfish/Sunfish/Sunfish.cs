@@ -7,7 +7,7 @@ using System.Net;
 
 namespace DolphinWebXplorer2
 {
-    class Sunfish
+    static class Sunfish
     {
         class SunfishConfiguration
         {
@@ -55,8 +55,7 @@ namespace DolphinWebXplorer2
                 return;
             if (act)
             {
-                server = new HttpServer(conf.Port);
-                server.CreateProcessor += server_CreateProcessor;
+                server = new HttpServer(conf.Port, server_CreateProcessor);
                 server.Error += server_Error;
                 try
                 {
@@ -79,13 +78,14 @@ namespace DolphinWebXplorer2
             conf.Active = act;
         }
 
-        static HttpServerProcessor server_CreateProcessor(HttpServer server)
+        static void server_CreateProcessor(HttpServer server, HttpCall call)
         {
-            return new SunfishServerProcessor();
+            new SunfishServerProcessor(call);
         }
 
         static void server_Error(HttpServer server, Exception e)
         {
+            //TODO: Log
             //if (!(e is ObjectDisposedException) && !(e is HttpListenerException))
             //    MessageBox.Show(e.Message + "\r\n" + e.StackTrace, e.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -120,13 +120,18 @@ namespace DolphinWebXplorer2
             return s;
         }
 
+        public static void DeleteService(SunfishService srv)
+        {
+
+        }
+
         public static SunfishService GetServiceForPath(string path)
         {
             SunfishService candidate = null;
             foreach (SunfishService s in srvs)
                 if (path.StartsWith(s.Configuration.Location) &&
                     (candidate == null || (candidate.Configuration.Location.Length < s.Configuration.Location.Length)))
-                        candidate = s;
+                    candidate = s;
             return candidate;
         }
 

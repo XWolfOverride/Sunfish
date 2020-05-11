@@ -24,7 +24,7 @@ namespace DolphinWebXplorer2
             }
             finally
             {
-                WebXplorer.Stop();
+                Sunfish.Active = false;
             }
         }
 

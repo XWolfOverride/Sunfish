@@ -14,18 +14,18 @@ namespace DolphinWebXplorer2.Middleware
         private int port;
         private HttpListener lis = null;
         private Thread loop = null;
-        private bool multiThread = true;
         private List<Thread> processors = new List<Thread>();
         private List<LogError> errors = new List<LogError>();
+        private Processor prc;
         //private WindowsFirewallRule fwRule;
         public delegate void ErrorEventHandler(HttpServer server, Exception e);
-        public delegate HttpServerProcessor CreateProcessorHandler(HttpServer server);
+        public delegate void Processor(HttpServer server, HttpCall call);
         public event ErrorEventHandler Error;
-        public event CreateProcessorHandler CreateProcessor;
 
-        public HttpServer(int port)
+        public HttpServer(int port, Processor prc)
         {
             this.port = port;
+            this.prc = prc;
         }
 
         public void Start()
@@ -40,7 +40,7 @@ namespace DolphinWebXplorer2.Middleware
             //  and also the execution of server applications.
 
             lis.Prefixes.Add("http://+:" + port + "/");
-            
+
             try
             {
                 lis.Start();
@@ -60,12 +60,7 @@ namespace DolphinWebXplorer2.Middleware
             for (; ; )
             {
                 HttpListenerContext ctx = lis.GetContext();
-                if (multiThread)
-                {
-                    new Thread(new ParameterizedThreadStart(MultithreadCall)).Start(ctx);
-                }
-                else
-                    CallNewProcessor(ctx);
+                new Thread(new ParameterizedThreadStart(MultithreadCall)).Start(ctx);
             }
         }
 
@@ -79,6 +74,10 @@ namespace DolphinWebXplorer2.Middleware
             {
                 CallNewProcessor((HttpListenerContext)octx);
             }
+            catch (Exception e)
+            {
+                LogError(e);
+            }
             finally
             {
                 lock (processors)
@@ -90,9 +89,15 @@ namespace DolphinWebXplorer2.Middleware
 
         private void CallNewProcessor(HttpListenerContext ctx)
         {
-            HttpServerProcessor proc = CreateProcessor(this);
-            proc.server = this;
-            proc.Process(ctx);
+            HttpCall call = new HttpCall(ctx);
+            try
+            {
+                prc(this, call);
+            }
+            finally
+            {
+                call.Close();
+            }
         }
 
         public bool Stop()
@@ -126,173 +131,39 @@ namespace DolphinWebXplorer2.Middleware
         internal void LogError(Exception e)
         {
             errors.Add(new LogError(e));
-            if (Error != null)
-                Error(this, e);
+            Error?.Invoke(this, e);
         }
 
         public bool Up { get { return lis != null; } }
         public int Port { get { return port; } set { port = value; } }
-        public bool MultiThread { get { return multiThread; } set { multiThread = value; } }
-    }
-
-    abstract class HttpServerProcessor
-    {
-        protected HttpListenerRequest Request;
-        protected HttpListenerResponse Response;
-        protected System.Security.Principal.IPrincipal User;
-        protected HttpPost Post;
-        private StreamWriter swout;
-        private Dictionary<string, string> getArgs = new Dictionary<string, string>();
-        internal HttpServer server;
-
-        internal void Process(HttpListenerContext ctx)
-        {
-            Exception error = null;
-            try
-            {
-                Request = ctx.Request;
-                Response = ctx.Response;
-                User = ctx.User;
-                Encoding utf8EncoderNoBOM = new UTF8Encoding(false);
-                swout = new StreamWriter(Response.OutputStream, utf8EncoderNoBOM);
-                Response.Headers[HttpResponseHeader.ContentType] = "text/html";
-                Response.Headers[HttpResponseHeader.ContentEncoding] = "UTF-8";
-                getArgs.Clear();
-                if ("POST" == Request.HttpMethod)
-                {
-                    Post = new HttpPost(this, Request.InputStream, Request.ContentType, Request.ContentEncoding);
-                }
-                GetHeaders();
-                Process();
-                Out.Close();
-            }
-            catch (Exception e)
-            {
-                error = e;
-                try
-                {
-                    Out.Close();
-                }
-                catch { };
-            }
-            try
-            {
-                ctx.Response.Close();
-            }
-            catch { };
-            if (error != null && server != null)
-            {
-                server.LogError(error);
-            }
-        }
-
-        private void GetHeaders()
-        {
-            string qs = Request.Url.Query;
-            if (qs.StartsWith("?"))
-                ReadEncodedArguments(qs.Substring(1));
-        }
-
-        internal void ReadEncodedArguments(string qs)
-        {
-            string[] args = qs.Split('&');
-            foreach (string arg in args)
-            {
-                int ppos = arg.IndexOf('=');
-                if (ppos == -1)
-                    getArgs[arg] = "true";
-                else
-                {
-                    string aname = arg.Substring(0, ppos);
-                    string aval = arg.Substring(ppos + 1);
-                    getArgs[aname] = HttpUtility.UrlDecode(aval);
-                }
-            }
-        }
-
-        internal void SetArgument(string name, string value)
-        {
-            getArgs[name] = value;
-        }
-
-        public HttpListenerResponse GetResponse() { return Response; }
-
-        protected void Error404()
-        {
-            Response.StatusCode = 404;
-            Response.StatusDescription = "Not found";
-        }
-
-        public void Write(String s)
-        {
-            if (s != null)
-                swout.Write(s);
-        }
-
-        public void Write(object o)
-        {
-            if (o != null)
-                swout.Write(o);
-        }
-
-        public void Write(byte[] data)
-        {
-            swout.Flush();
-            OutStream.Write(data, 0, data.Length);
-        }
-
-        public void Write(byte[] data, int offset, int count)
-        {
-            swout.Flush();
-            OutStream.Write(data, offset, count);
-        }
-
-        //public string nl2br(string s)
-        //{
-        //    return s.Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>");
-        //}
-
-        public string UrlEncode(string url)
-        {
-            return HttpUtility.UrlEncode(url);
-        }
-
-        public string UrlDecode(string url)
-        {
-            return HttpUtility.UrlDecode(url);
-        }
-
-        protected abstract void Process();
-
-        protected Stream OutStream { get { return Response.OutputStream; } }
-        protected StreamWriter Out { get { return swout; } }
-        public Dictionary<String, String> GET { get { return getArgs; } }
-        public Dictionary<String, String> POST { get { return getArgs; } }
     }
 
     public class HttpCall
     {
+        private static char[] CRLF = { '\r', '\n' };
+
         private StreamWriter swout;
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
+        private Dictionary<string, HttpPostFile> files = new Dictionary<string, HttpPostFile>();
 
         internal HttpCall(HttpListenerContext ctx)
         {
             Request = ctx.Request;
             Response = ctx.Response;
             User = ctx.User;
-            //if ("POST" == Request.HttpMethod)
-            //Post = new HttpPost(this, Request.InputStream, Request.ContentType, Request.ContentEncoding);
-            //Parameters = parameters;
+            if ("POST" == Request.HttpMethod)
+                ProcessPost(Request.InputStream, Request.ContentType, Request.ContentEncoding);
+            GetHeaders();
         }
 
         private void GetHeaders()
         {
             string qs = Request.Url.Query;
             if (qs.StartsWith("?"))
-                ReadEncodedParameters(qs.Substring(1), parameters);
+                ReadEncodedParameters(qs.Substring(1));
         }
 
-        static void ReadEncodedParameters(string qs, Dictionary<string, string> parameters)
+        private void ReadEncodedParameters(string qs)
         {
             string[] args = qs.Split('&');
             foreach (string arg in args)
@@ -309,78 +180,39 @@ namespace DolphinWebXplorer2.Middleware
             }
         }
 
-        public void OpenOutput()
+        public void OpenOutput(string contentType = null, Encoding encoding = null)
         {
-            Encoding utf8EncoderNoBOM = new UTF8Encoding(false);
-            swout = new StreamWriter(Response.OutputStream, utf8EncoderNoBOM);
-            Response.Headers[HttpResponseHeader.ContentType] = "text/html";
-            Response.Headers[HttpResponseHeader.ContentEncoding] = "UTF-8";
+            if (encoding == null)
+                encoding = new UTF8Encoding(false);
+            if (string.IsNullOrEmpty(contentType) || string.IsNullOrWhiteSpace(contentType))
+                contentType = "text/html";
+            swout = new StreamWriter(Response.OutputStream, encoding);
+            Response.Headers[HttpResponseHeader.ContentType] = contentType;
+            Response.Headers[HttpResponseHeader.ContentEncoding] = encoding.WebName;
         }
 
-        private StreamWriter GetOut()
+        #region POST
+        private void ProcessPost(Stream input, string contentType, Encoding enc)
         {
-            //if (swout == null)
-            //{
-            //    swout=
-            //}
-            return null;
-        }
-
-        public HttpListenerRequest Request { get; }
-        public HttpListenerResponse Response { get; }
-        public IPrincipal User { get; }
-        public HttpPost Post { get; }
-
-        public StreamWriter Out => GetOut();
-    }
-
-
-    public class LogError
-    {
-        public LogError(Exception e)
-        {
-            Exception = e;
-        }
-
-        public DateTime Time { get; } = DateTime.Now;
-        public Exception Exception { get; }
-    }
-
-    public class HttpPost
-    {
-        private string contentType;
-        private Dictionary<string, string> parms;
-        private Dictionary<string, HttpPostFile> files = new Dictionary<string, HttpPostFile>();
-        private HttpServerProcessor owner;
-        private Encoding encoding;
-        private static char[] CRLF = { '\r', '\n' };
-        private string mimeBoundary;
-        private char[] mimeBoundaryChr;
-        private byte[] mimeBoundaryBytes;
-
-        internal HttpPost(HttpServerProcessor owner, Stream input, string contentType, Encoding enc)
-        {
-            this.owner = owner;
-            encoding = enc;
             string[] cttp = contentType.Split(';');
-            this.contentType = cttp[0];
+            string ctype = cttp[0];
+            Dictionary<string, string> cttParams = null;
             if (cttp.Length > 1)
             {
-                parms = new Dictionary<string, string>();
+                cttParams = new Dictionary<string, string>();
                 for (int i = 1; i < cttp.Length; i++)
                 {
                     string[] s = cttp[i].Trim().Split('=');
-                    parms[s[0]] = s.Length > 1 ? s[1] : "X";
+                    cttParams[s[0]] = s.Length > 1 ? s[1] : "X";
                 }
             }
-            if ("multipart/form-data".Equals(cttp[0], StringComparison.InvariantCultureIgnoreCase))
-                ReadMultipart(input);
-            else
-                if ("application/x-www-form-urlencoded".Equals(cttp[0], StringComparison.InvariantCultureIgnoreCase))
-                ReadPost(input);
+            if ("multipart/form-data".Equals(ctype, StringComparison.InvariantCultureIgnoreCase))
+                ReadPostMultipart(input, cttParams, enc);
+            else if ("application/x-www-form-urlencoded".Equals(ctype, StringComparison.InvariantCultureIgnoreCase))
+                ReadPostForm(input, enc);
         }
 
-        private void ReadPost(Stream input)
+        private void ReadPostForm(Stream input, Encoding encoding)
         {
             MemoryStream ms = new MemoryStream();
             byte[] buf = new byte[102400];
@@ -393,12 +225,12 @@ namespace DolphinWebXplorer2.Middleware
             }
             ms.Close();
             string args = encoding.GetString(ms.ToArray());
-            owner.ReadEncodedArguments(args);
+            ReadEncodedParameters(args);
         }
 
-        private void ReadMultipart(Stream input)
+        private void ReadPostMultipart(Stream input, Dictionary<string, string> cttParams, Encoding encoding)
         {
-            mimeBoundary = "--" + parms["boundary"];
+            string mimeBoundary = "--" + cttParams["boundary"];
             BinaryReader br = new BinaryReader(input, encoding);
             string bnd = ReadLine(br);
             if (bnd == mimeBoundary + "--")
@@ -406,22 +238,57 @@ namespace DolphinWebXplorer2.Middleware
             if (bnd != mimeBoundary)
                 throw new Exception("form-data boundary error.");
             mimeBoundary = "\r\n" + mimeBoundary;
-            mimeBoundaryChr = mimeBoundary.ToCharArray();
-            mimeBoundaryBytes = Encoding.ASCII.GetBytes(mimeBoundary);
-            while (ReadFormData(br)) ;
+            char[] mimeBoundaryChr = mimeBoundary.ToCharArray();
+            byte[] mimeBoundaryBytes = Encoding.ASCII.GetBytes(mimeBoundary);
+            while (ReadFormData(br, mimeBoundaryChr, mimeBoundaryBytes)) ;
         }
 
-        private string ReadLine(BinaryReader br)
+        private bool ReadFormData(BinaryReader br, char[] mimeBoundaryChr, byte[] mimeBoundaryBytes)
+        {
+            Dictionary<string, string> hdrs = new Dictionary<string, string>();
+            while (true)
+            {
+                string line = ReadLine(br);
+                if (line.Length == 0)
+                    break;
+                int dp = line.IndexOf(':');
+                if (dp < 0)
+                    throw new Exception("multipart form data error");
+                hdrs[line.Substring(0, dp)] = line.Substring(dp + 2); //jump ':' and space
+            }
+            Dictionary<string, string> cdisp = GetContentDisposition(hdrs);
+            if (hdrs.ContainsKey("Content-Type") || cdisp.ContainsKey("filename"))
+            {
+                byte[] data = ReadUntil(br, mimeBoundaryBytes); //TODO: Slow
+                string fname = cdisp["filename"];
+                if (fname.Length > 0)
+                    files[cdisp["name"]] = new HttpPostFile(fname, data, hdrs["Content-Type"]);
+            }
+            else
+            {
+                string data = ReadStringToBoundary(br, mimeBoundaryChr);
+                parameters[cdisp["name"]] = data;
+            }
+            char ch1 = br.ReadChar();
+            char ch2 = br.ReadChar();
+            if (ch1 == '\r' && ch2 == '\n')
+                return true;
+            if (ch1 == '-' && ch2 == '-')
+                return false;
+            throw new Exception("Error reading multipart (" + ch1 + ch2 + ")");
+        }
+
+        private static string ReadLine(BinaryReader br)
         {
             return ReadUntil(br, CRLF);
         }
 
-        private string ReadStringToBoundary(BinaryReader br)
+        private static string ReadStringToBoundary(BinaryReader br, char[] mimeBoundaryChr)
         {
             return ReadUntil(br, mimeBoundaryChr);
         }
 
-        private string ReadUntil(BinaryReader br, char[] signal)
+        private static string ReadUntil(BinaryReader br, char[] signal)
         {
             List<char> chars = new List<char>();
             while (true)
@@ -448,13 +315,15 @@ namespace DolphinWebXplorer2.Middleware
             }
         }
 
-        private byte[] ReadUntil(BinaryReader br, byte[] signal)
+        private static byte[] ReadUntil(BinaryReader br, byte[] signal)
         {
             List<byte> bytes = new List<byte>();
+
             while (true)
             {
                 byte by = br.ReadByte();
                 bytes.Add(by);
+
                 if (bytes.Count >= signal.Length)
                 {
                     bool eq = true;
@@ -474,42 +343,38 @@ namespace DolphinWebXplorer2.Middleware
             }
         }
 
-        private bool ReadFormData(BinaryReader br)
-        {
-            Dictionary<string, string> hdrs = new Dictionary<string, string>();
-            while (true)
-            {
-                string line = ReadLine(br);
-                if (line.Length == 0)
-                    break;
-                int dp = line.IndexOf(':');
-                if (dp < 0)
-                    throw new Exception("multipart form data error");
-                hdrs[line.Substring(0, dp)] = line.Substring(dp + 1);
-            }
-            Dictionary<string, string> cdisp = GetContentDisposition(hdrs);
-            if (hdrs.ContainsKey("Content-Type") || cdisp.ContainsKey("filename"))
-            {
-                byte[] data = ReadUntil(br, mimeBoundaryBytes);
-                string fname = cdisp["filename"];
-                if (fname.Length > 0)
-                    files[cdisp["name"]] = new HttpPostFile(fname, data);
-            }
-            else
-            {
-                string data = ReadStringToBoundary(br);
-                owner.SetArgument(cdisp["name"], data);
-            }
-            char ch1 = br.ReadChar();
-            char ch2 = br.ReadChar();
-            if (ch1 == '\r' && ch2 == '\n')
-                return true;
-            if (ch1 == '-' && ch2 == '-')
-                return false;
-            throw new Exception("Error reading multipart (" + ch1 + ch2 + ")");
-        }
+        //private static byte[] ReadUntil(BinaryReader br, byte[] signal)
+        //{
+        //    MemoryStream ms = new MemoryStream(10240);
+        //    int signalIdx = 0;
+        //    long end = 0;
+        //    byte[] onebyte = new byte[1];
 
-        private Dictionary<string, string> GetContentDisposition(Dictionary<string, string> hdrs)
+        //    while (true)
+        //    {
+        //        onebyte[0] = br.ReadByte();
+        //        ms.Write(onebyte, 0, 1);
+
+        //        if (bytes.Count >= signal.Length)
+        //        {
+        //            bool eq = true;
+        //            for (int i = 0; i < signal.Length; i++)
+        //            {
+        //                if (signal[i] != bytes[(bytes.Count - signal.Length) + i])
+        //                {
+        //                    eq = false;
+        //                    break;
+        //                }
+        //            }
+        //            if (eq)
+        //            {
+        //                return bytes.ToArray();
+        //            }
+        //        }
+        //    }
+        //}
+
+        private static Dictionary<string, string> GetContentDisposition(Dictionary<string, string> hdrs)
         {
             if (!hdrs.ContainsKey("Content-Disposition"))
                 return null;
@@ -527,22 +392,100 @@ namespace DolphinWebXplorer2.Middleware
             }
             return result;
         }
+        #endregion
 
-        public Dictionary<string, HttpPostFile> File { get { return files; } }
+        #region Output
+        protected void Error404()
+        {
+            Response.StatusCode = 404;
+            Response.StatusDescription = "Not found";
+        }
+
+        public void Write(string s)
+        {
+            if (s != null)
+                GetOut().Write(s);
+        }
+
+        public void Write(object o)
+        {
+            if (o != null)
+                GetOut().Write(o);
+        }
+
+        public void Write(byte[] data)
+        {
+            GetOut().Flush();
+            GetOut().BaseStream.Write(data, 0, data.Length);
+        }
+
+        public void Write(byte[] data, int offset, int count)
+        {
+            GetOut().Flush();
+            GetOut().BaseStream.Write(data, offset, count);
+        }
+
+        public void Close()
+        {
+            if (swout != null)
+                swout.Close();
+        }
+
+        #endregion
+
+        private StreamWriter GetOut()
+        {
+            if (swout == null)
+                OpenOutput();
+            return swout;
+        }
+
+        public HttpListenerRequest Request { get; }
+        public HttpListenerResponse Response { get; }
+        public IPrincipal User { get; }
+        public StreamWriter Out => GetOut();
+    }
+
+    public class LogError
+    {
+        public LogError(Exception e)
+        {
+            Exception = e;
+        }
+
+        public DateTime Time { get; } = DateTime.Now;
+        public Exception Exception { get; }
     }
 
     public class HttpPostFile
     {
-        private string filename;
-        private byte[] data;
-
-        internal HttpPostFile(string filename, byte[] data)
+        internal HttpPostFile(string filename, byte[] data, string mimeType)
         {
-            this.filename = filename;
-            this.data = data;
+            Filename = filename;
+            MimeType = mimeType;
+            Data = data;
         }
 
-        public string Filename { get { return filename; } }
-        public byte[] Data { get { return data; } }
+        public string Filename { get; }
+        public string MimeType { get; }
+        public byte[] Data { get; }
+    }
+
+    public static class HttpTools
+    {
+        public static string nl2br(string s)
+        {
+            return s.Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>");
+        }
+
+        public static string UrlEncode(string url)
+        {
+            return HttpUtility.UrlEncode(url);
+        }
+
+        public static string UrlDecode(string url)
+        {
+            return HttpUtility.UrlDecode(url);
+        }
     }
 }

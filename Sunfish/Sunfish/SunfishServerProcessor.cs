@@ -8,26 +8,33 @@ using System.Threading.Tasks;
 
 namespace DolphinWebXplorer2
 {
-    class SunfishServerProcessor : HttpServerProcessor
+    class SunfishServerProcessor
     {
-        protected override void Process()
+        private HttpCall call;
+
+        public SunfishServerProcessor(HttpCall call)
         {
-            SunfishService s = Sunfish.GetServiceForPath(Request.Url.LocalPath);
-            Response.Headers[HttpResponseHeader.ContentType] = "text/plain";
-            Out.WriteLine("<html><body>Sunfish here</body></html>");
+            this.call = call;
+            Process();
+        }
+        private void Process()
+        {
+            //SunfishService s = Sunfish.GetServiceForPath(Request.Url.LocalPath);
+            //Response.Headers[HttpResponseHeader.ContentType] = "text/plain";
+            //call.OpenOutput();
+            call.Out.WriteLine("<html><body>Sunfish here</body></html>");
             return;
-            if (s == null)
-                if (Sunfish.RootMenu)
-                {
-                    Error404();
-                    return;
-                }
-                else
-                {
-                    Error404();
-                    return;
-                }
-            //WebCall c = new WebCall(Request, Response, User, Post, GET);
+            //if (s == null)
+            //    if (Sunfish.RootMenu)
+            //    {
+            //        Error404();
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        Error404();
+            //        return;
+            //    }
         }
     }
 }
