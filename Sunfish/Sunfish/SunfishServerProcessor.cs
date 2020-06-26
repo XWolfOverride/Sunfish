@@ -19,10 +19,9 @@ namespace DolphinWebXplorer2
         }
         private void Process()
         {
-            //SunfishService s = Sunfish.GetServiceForPath(Request.Url.LocalPath);
+            SunfishService s = Sunfish.GetServiceForPath(call.Request.Url.LocalPath);
             //Response.Headers[HttpResponseHeader.ContentType] = "text/plain";
             //call.OpenOutput();
-            call.Out.WriteLine("<html><body>Sunfish here</body></html>");
             return;
             //if (s == null)
             //    if (Sunfish.RootMenu)
