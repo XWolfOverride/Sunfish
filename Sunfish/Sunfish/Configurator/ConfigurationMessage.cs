@@ -1,4 +1,7 @@
-﻿namespace DolphinWebXplorer2.Configurator
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace DolphinWebXplorer2.Configurator
 {
     class ConfigurationMessage : ConfigurationElement
     {
@@ -13,7 +16,19 @@
             Message = message;
         }
 
+        public override bool isEmpty(Control c)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override object getValue(Control c)
+        {
+            return null;
+        }
+
         public MessageType Type { get; }
         public string Message { get; }
+
+        public override Color UIMandatoryColor => throw new System.NotImplementedException();
     }
 }

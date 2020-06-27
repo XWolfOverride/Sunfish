@@ -46,9 +46,10 @@
             // lbType
             // 
             this.lbType.AutoSize = true;
-            this.lbType.Location = new System.Drawing.Point(11, 9);
+            this.lbType.Location = new System.Drawing.Point(7, 6);
+            this.lbType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbType.Name = "lbType";
-            this.lbType.Size = new System.Drawing.Size(47, 20);
+            this.lbType.Size = new System.Drawing.Size(34, 13);
             this.lbType.TabIndex = 0;
             this.lbType.Text = "Type:";
             // 
@@ -58,9 +59,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
-            this.cbType.Location = new System.Drawing.Point(25, 32);
+            this.cbType.Location = new System.Drawing.Point(17, 21);
+            this.cbType.Margin = new System.Windows.Forms.Padding(2);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(380, 28);
+            this.cbType.Size = new System.Drawing.Size(255, 21);
             this.cbType.TabIndex = 1;
             this.toolTip1.SetToolTip(this.cbType, "Type of service.");
             this.cbType.SelectedIndexChanged += new System.EventHandler(this.cbType_SelectedIndexChanged);
@@ -68,9 +70,10 @@
             // lbName
             // 
             this.lbName.AutoSize = true;
-            this.lbName.Location = new System.Drawing.Point(12, 77);
+            this.lbName.Location = new System.Drawing.Point(8, 50);
+            this.lbName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbName.Name = "lbName";
-            this.lbName.Size = new System.Drawing.Size(55, 20);
+            this.lbName.Size = new System.Drawing.Size(38, 13);
             this.lbName.TabIndex = 2;
             this.lbName.Text = "Name:";
             // 
@@ -78,9 +81,11 @@
             // 
             this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbName.Location = new System.Drawing.Point(25, 100);
+            this.tbName.BackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.tbName.Location = new System.Drawing.Point(17, 65);
+            this.tbName.Margin = new System.Windows.Forms.Padding(2);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(299, 26);
+            this.tbName.Size = new System.Drawing.Size(199, 20);
             this.tbName.TabIndex = 3;
             this.toolTip1.SetToolTip(this.tbName, "Name of the service.\r\n(only for management)");
             // 
@@ -88,9 +93,10 @@
             // 
             this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbActive.AutoSize = true;
-            this.cbActive.Location = new System.Drawing.Point(330, 102);
+            this.cbActive.Location = new System.Drawing.Point(223, 67);
+            this.cbActive.Margin = new System.Windows.Forms.Padding(2);
             this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(78, 24);
+            this.cbActive.Size = new System.Drawing.Size(56, 17);
             this.cbActive.TabIndex = 4;
             this.cbActive.Text = "Active";
             this.cbActive.UseVisualStyleBackColor = true;
@@ -98,9 +104,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 143);
+            this.label1.Location = new System.Drawing.Point(8, 93);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 20);
+            this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Location:";
             // 
@@ -108,18 +115,21 @@
             // 
             this.tbLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbLocation.Location = new System.Drawing.Point(25, 166);
+            this.tbLocation.BackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.tbLocation.Location = new System.Drawing.Point(17, 108);
+            this.tbLocation.Margin = new System.Windows.Forms.Padding(2);
             this.tbLocation.Name = "tbLocation";
-            this.tbLocation.Size = new System.Drawing.Size(380, 26);
+            this.tbLocation.Size = new System.Drawing.Size(255, 20);
             this.tbLocation.TabIndex = 6;
             this.toolTip1.SetToolTip(this.tbLocation, "Document root on the server:\r\nThis works as a virtual directory in the url.");
             // 
             // btOk
             // 
             this.btOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btOk.Location = new System.Drawing.Point(211, 227);
+            this.btOk.Location = new System.Drawing.Point(141, 148);
+            this.btOk.Margin = new System.Windows.Forms.Padding(2);
             this.btOk.Name = "btOk";
-            this.btOk.Size = new System.Drawing.Size(113, 38);
+            this.btOk.Size = new System.Drawing.Size(75, 25);
             this.btOk.TabIndex = 7;
             this.btOk.Text = "Ok";
             this.btOk.UseVisualStyleBackColor = true;
@@ -129,9 +139,10 @@
             // 
             this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btCancel.Location = new System.Drawing.Point(337, 227);
+            this.btCancel.Location = new System.Drawing.Point(225, 148);
+            this.btCancel.Margin = new System.Windows.Forms.Padding(2);
             this.btCancel.Name = "btCancel";
-            this.btCancel.Size = new System.Drawing.Size(82, 38);
+            this.btCancel.Size = new System.Drawing.Size(55, 25);
             this.btCancel.TabIndex = 8;
             this.btCancel.Text = "Cancel";
             this.btCancel.UseVisualStyleBackColor = true;
@@ -141,17 +152,19 @@
             this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pScreen.Location = new System.Drawing.Point(12, 210);
+            this.pScreen.Location = new System.Drawing.Point(8, 136);
+            this.pScreen.Margin = new System.Windows.Forms.Padding(2);
             this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(407, 1);
+            this.pScreen.Size = new System.Drawing.Size(271, 1);
             this.pScreen.TabIndex = 9;
             // 
             // btAdv
             // 
             this.btAdv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btAdv.Location = new System.Drawing.Point(12, 227);
+            this.btAdv.Location = new System.Drawing.Point(8, 148);
+            this.btAdv.Margin = new System.Windows.Forms.Padding(2);
             this.btAdv.Name = "btAdv";
-            this.btAdv.Size = new System.Drawing.Size(167, 38);
+            this.btAdv.Size = new System.Drawing.Size(111, 25);
             this.btAdv.TabIndex = 10;
             this.btAdv.Text = "Advanced Settings";
             this.btAdv.UseVisualStyleBackColor = true;
@@ -159,10 +172,10 @@
             // FServiceConf
             // 
             this.AcceptButton = this.btOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
-            this.ClientSize = new System.Drawing.Size(431, 277);
+            this.ClientSize = new System.Drawing.Size(287, 180);
             this.Controls.Add(this.btAdv);
             this.Controls.Add(this.pScreen);
             this.Controls.Add(this.btCancel);
@@ -175,6 +188,7 @@
             this.Controls.Add(this.cbType);
             this.Controls.Add(this.lbType);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FServiceConf";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

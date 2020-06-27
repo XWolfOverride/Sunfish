@@ -170,7 +170,6 @@
     <None Include="Resources\run.png" />
     <None Include="Resources\share.png" />
     <Content Include="Resources\ShScreen.js" />
-    <None Include="Resources\sh.js.txt" />
     <Content Include="Resources\site.css" />
     <None Include="Resources\sunfishWebServer.ico" />
     <None Include="Resources\sws.png" />

@@ -41,8 +41,28 @@ namespace DolphinWebXplorer2
                 }
             cbActive.Checked = ssc.Enabled;
             tbName.Text = ssc.Name;
-            tbLocation.Text = ssc.Name;
+            tbLocation.Text = ssc.Location;
             LoadScreen();
+        }
+
+        private bool ValidateData()
+        {
+            bool valid = true;
+            if (string.IsNullOrWhiteSpace(tbName.Text))
+            {
+                valid = false;
+                tbName.BackColor = Color.LightCoral;
+            }
+            else
+                tbName.BackColor = Color.LightGoldenrodYellow;
+            if (string.IsNullOrWhiteSpace(tbLocation.Text))
+            {
+                valid = false;
+                tbLocation.BackColor = Color.LightCoral;
+            }
+            else
+                tbLocation.BackColor = Color.LightGoldenrodYellow;
+            return valid & ValidateDynamicScreen();
         }
 
         private void SaveData()
@@ -51,9 +71,10 @@ namespace DolphinWebXplorer2
             ssc.Enabled = cbActive.Checked;
             ssc.Name = tbName.Text;
             ssc.Location = tbLocation.Text;
-            // TODO Save from dynamic screen
+            SaveDynamicScreen();
         }
 
+        #region Dynamic properties
         private void AddElementLabel(ConfigurationElement ce, Panel p, ref int y)
         {
             if (string.IsNullOrEmpty(ce.Label))
@@ -63,8 +84,8 @@ namespace DolphinWebXplorer2
             l.Text = ce.Label;
             l.Top = y;
             l.AutoSize = true;
-            y += l.Height + 3;
             p.Controls.Add(l);
+            y += l.Height + 3;
         }
 
         private void FinishElement(Control c, ConfigurationElement ce, Panel p, ref int y)
@@ -72,9 +93,9 @@ namespace DolphinWebXplorer2
             if (!string.IsNullOrEmpty(ce.Tooltip))
                 toolTip1.SetToolTip(c, ce.Tooltip);
             c.Top = y;
-            y += c.Height + 3;
             c.Tag = ce;
             p.Controls.Add(c);
+            y += c.Height + 3;
         }
 
         private void AddElementMessage(ConfigurationMessage ce, Panel p, ref int y)
@@ -83,6 +104,11 @@ namespace DolphinWebXplorer2
             Label c = new Label();
             c.Text = ce.Message;
             c.BorderStyle = BorderStyle.FixedSingle;
+            c.MaximumSize = new Size(p.ClientSize.Width - 28, int.MaxValue);
+            c.MinimumSize = new Size(c.MaximumSize.Width, 0);
+            c.Left = 14;
+            c.AutoSize = true;
+            FinishElement(c, ce, p, ref y);
             switch (ce.Type)
             {
                 case ConfigurationMessage.MessageType.ERROR:
@@ -92,14 +118,9 @@ namespace DolphinWebXplorer2
                     c.BackColor = Color.FromArgb(255, 255, 255);
                     break;
                 case ConfigurationMessage.MessageType.WARNING:
-                    c.BackColor = Color.WhiteSmoke;
+                    c.BackColor = Color.PaleGoldenrod;
                     break;
             }
-            c.MaximumSize = new Size(p.ClientSize.Width - 28, int.MaxValue);
-            c.MinimumSize = new Size(c.MaximumSize.Width, 0);
-            c.Left = 14;
-            c.AutoSize = true;
-            FinishElement(c, ce, p, ref y);
         }
 
         private void AddElementString(ConfigurationString ce, Panel p, ref int y)
@@ -107,10 +128,13 @@ namespace DolphinWebXplorer2
             AddElementLabel(ce, p, ref y);
             TextBox c = new TextBox();
             c.Text = ssc.GetConf(ce.Id, ce.DefaultValue);
-            c.Left = 14;
-            c.Width = p.ClientSize.Width - 28;
+            // WARNING: Values for standard DPI
+            c.Left = 9;
+            c.Width = p.ClientSize.Width - 16;
             if (ce.IsPassword)
                 c.PasswordChar = '*';
+            if (ce.Mandatory)
+                c.BackColor = ce.UIMandatoryColor;
             //TODO: Handle isDirectory and IsFile properties
             FinishElement(c, ce, p, ref y);
         }
@@ -119,7 +143,7 @@ namespace DolphinWebXplorer2
         {
             CheckBox c = new CheckBox();
             c.Text = ce.Label;
-            c.Checked = ssc.GetConf<bool>(ce.Id);
+            c.Checked = ssc.GetConf<bool>(ce.Id, ce.DefaultValue);
             c.Left = 14;
             c.Width = p.ClientSize.Width - 28;
             FinishElement(c, ce, p, ref y);
@@ -127,6 +151,7 @@ namespace DolphinWebXplorer2
 
         private void LoadScreen()
         {
+            int height = Height;
             // Remove all
             pScreen.Controls.Clear();
             string type = cbType.SelectedItem == null ? null : cbType.SelectedItem.ToString();
@@ -149,8 +174,44 @@ namespace DolphinWebXplorer2
                 else if (ce is ConfigurationBool)
                     AddElementBool((ConfigurationBool)ce, pScreen, ref y);
             }
-            ClientSize = new Size(ClientSize.Width, y + pScreen.Top + panelOffset);
+            ClientSize = new Size(ClientSize.Width, y + pScreen.Top + panelOffset + 5);
+            if (Visible)
+                Top -= (Height - height) / 2;
         }
+
+        private bool ValidateDynamicScreen()
+        {
+            bool valid = true;
+            foreach (Control c in pScreen.Controls)
+            {
+                ConfigurationElement ce = c.Tag as ConfigurationElement;
+                if (ce == null || !ce.Mandatory)
+                    continue;
+                if (ce.isEmpty(c))
+                {
+                    valid = false;
+                    c.BackColor = Color.LightCoral;
+                }
+                else
+                {
+                    c.BackColor = ce.UIMandatoryColor;
+                }
+            }
+            return valid;
+        }
+
+        private void SaveDynamicScreen()
+        {
+            foreach (Control c in pScreen.Controls)
+            {
+                ConfigurationElement ce = c.Tag as ConfigurationElement;
+                if (ce == null || ce.Id == null)
+                    continue;
+                ssc.Settings[ce.Id] = ce.getValue(c);
+            }
+        }
+
+        #endregion
 
         private void FServiceConf_Load(object sender, EventArgs e)
         {
@@ -158,6 +219,8 @@ namespace DolphinWebXplorer2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (!ValidateData())
+                return;
             SaveData();
             DialogResult = DialogResult.OK;
         }

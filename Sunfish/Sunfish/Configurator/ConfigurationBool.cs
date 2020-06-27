@@ -1,4 +1,7 @@
-﻿namespace DolphinWebXplorer2.Configurator
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace DolphinWebXplorer2.Configurator
 {
     public class ConfigurationBool : ConfigurationElement
     {
@@ -6,6 +9,21 @@
         {
         }
 
+        public override bool isEmpty(Control c)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override object getValue(Control c)
+        {
+            CheckBox cb = c as CheckBox;
+            if (cb == null)
+                return null;
+            return cb.Checked;
+        }
+
         public bool DefaultValue { get; set; }
+
+        public override Color UIMandatoryColor => throw new System.NotImplementedException();
     }
 }

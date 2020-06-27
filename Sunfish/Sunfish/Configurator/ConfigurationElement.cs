@@ -1,4 +1,7 @@
-﻿namespace DolphinWebXplorer2.Configurator
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace DolphinWebXplorer2.Configurator
 {
     public abstract class ConfigurationElement
     {
@@ -8,8 +11,15 @@
             Label = label;
         }
 
+        public abstract bool isEmpty(Control c);
+
+        public abstract object getValue(Control c);
+
         public string Id { get; }
         public string Label { get; }
         public string Tooltip { get; set; }
+        public bool Mandatory { get; set; }
+
+        public abstract Color UIMandatoryColor { get; }
     }
 }
