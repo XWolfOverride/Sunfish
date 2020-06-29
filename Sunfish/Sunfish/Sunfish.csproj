@@ -71,6 +71,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Web" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -105,7 +106,9 @@
     <Compile Include="Library\Json.Net\TitleToCamelCase.cs" />
     <Compile Include="Middleware\HttpServer.cs" />
     <Compile Include="IpInfo.cs" />
-    <Compile Include="SunfishServerProcessor.cs" />
+    <Compile Include="Middleware\VFS.cs" />
+    <Compile Include="Middleware\VFSFolder.cs" />
+    <Compile Include="Middleware\VFSFolderFileSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

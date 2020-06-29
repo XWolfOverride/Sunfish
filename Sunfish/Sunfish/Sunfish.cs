@@ -1,4 +1,5 @@
 ﻿using DolphinWebXplorer2.Middleware;
+using DolphinWebXplorer2.Services;
 using Json.Net;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace DolphinWebXplorer2
                 return;
             if (act)
             {
-                server = new HttpServer(conf.Port, server_CreateProcessor);
+                server = new HttpServer(conf.Port, server_Process);
                 server.Error += server_Error;
                 try
                 {
@@ -78,9 +79,15 @@ namespace DolphinWebXplorer2
             conf.Active = act;
         }
 
-        static void server_CreateProcessor(HttpServer server, HttpCall call)
+        static void server_Process(HttpServer server, HttpCall call)
         {
-            new SunfishServerProcessor(call);
+            var path = call.Request.Url.LocalPath;
+            SunfishService s = GetServiceForPath(ref path);
+            if (s == null || !s.Enabled)
+                ErrorService.Process404(call);
+            else
+                s.Process(path,call);
+            call.Close();
         }
 
         static void server_Error(HttpServer server, Exception e)
@@ -122,16 +129,23 @@ namespace DolphinWebXplorer2
 
         public static void DeleteService(SunfishService srv)
         {
-
+            conf.Services.Remove(srv.Configuration);
         }
 
-        public static SunfishService GetServiceForPath(string path)
+        public static SunfishService GetServiceForPath(ref string path)
         {
+            string candidateRelativePath="";
             SunfishService candidate = null;
             foreach (SunfishService s in srvs)
                 if (path.StartsWith(s.Configuration.Location) &&
                     (candidate == null || (candidate.Configuration.Location.Length < s.Configuration.Location.Length)))
+                {
                     candidate = s;
+                    candidateRelativePath = path.Substring(s.Configuration.Location.Length);
+                }
+            path = candidateRelativePath;
+            if (string.IsNullOrWhiteSpace(path))
+                path = "/";
             return candidate;
         }
 

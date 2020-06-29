@@ -42,12 +42,23 @@ namespace DolphinWebXplorer2
             cbActive.Checked = ssc.Enabled;
             tbName.Text = ssc.Name;
             tbLocation.Text = ssc.Location;
+            if (string.IsNullOrWhiteSpace(tbName.Text))
+                tbName.Text = "new service";
+            if (string.IsNullOrWhiteSpace(tbLocation.Text))
+                tbLocation.Text = "/nsrv";
             LoadScreen();
         }
 
         private bool ValidateData()
         {
             bool valid = true;
+            if (cbType.SelectedItem == null)
+            {
+                valid = false;
+                lbType.ForeColor = Color.LightCoral;
+            }
+            else
+                lbType.ForeColor = SystemColors.ControlText;
             if (string.IsNullOrWhiteSpace(tbName.Text))
             {
                 valid = false;
@@ -71,6 +82,8 @@ namespace DolphinWebXplorer2
             ssc.Enabled = cbActive.Checked;
             ssc.Name = tbName.Text;
             ssc.Location = tbLocation.Text;
+            if (ssc.Location.Length > 0 && ssc.Location[0] != '/')
+                ssc.Location = '/' + ssc.Location;
             SaveDynamicScreen();
         }
 

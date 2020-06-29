@@ -1,12 +1,18 @@
-﻿namespace DolphinWebXplorer2.Services
+﻿using DolphinWebXplorer2.Middleware;
+
+namespace DolphinWebXplorer2.Services
 {
     [DefineConfigurator(typeof(AdminServiceConfigurator))]
     class AdminService : SunfishService
     {
-        private const string CFG_ADMIN_PWD = "adminPwd";
         public AdminService(SunfishServiceConfiguration ssc) : base(ssc)
         {
 
+        }
+
+        public override void Process(string path, HttpCall call)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override void Start()

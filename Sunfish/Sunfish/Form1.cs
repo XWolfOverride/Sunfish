@@ -68,7 +68,6 @@ namespace DolphinWebXplorer2
                         else
                             lbPaths.Items[idx] = s;
                     }
-                    Sunfish.Save();
                 }
                 catch (Exception ex)
                 {
@@ -86,6 +85,11 @@ namespace DolphinWebXplorer2
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            try
+            {
+                Sunfish.Save();
+            }
+            catch { };
             Sunfish.Active = false;
         }
 

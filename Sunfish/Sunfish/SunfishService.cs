@@ -1,4 +1,5 @@
 ﻿using DolphinWebXplorer2.Configurator;
+using DolphinWebXplorer2.Middleware;
 using DolphinWebXplorer2.Services;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Reflection;
 
 namespace DolphinWebXplorer2
 {
-    public abstract class SunfishService:IDisposable
+    public abstract class SunfishService : IDisposable
     {
         #region Static / Type management
 
@@ -71,6 +72,7 @@ namespace DolphinWebXplorer2
         #endregion
 
         private SunfishServiceConfigurator configurator;
+        protected VFS vfs = new VFS();
 
         public SunfishService(SunfishServiceConfiguration ssc)
         {
@@ -82,6 +84,8 @@ namespace DolphinWebXplorer2
         {
             Stop();
         }
+
+        public abstract void Process(string path, HttpCall call);
 
         protected abstract void Start();
         protected abstract void Stop();
