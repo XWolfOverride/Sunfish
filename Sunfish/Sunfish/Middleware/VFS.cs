@@ -11,7 +11,7 @@ namespace DolphinWebXplorer2.Middleware
     {
         private Dictionary<string, VFSFolder> vf = new Dictionary<string, VFSFolder>();
 
-        public void AddVirtualFolder(string path,VFSFolder folder)
+        public void AddVirtualFolder(string path, VFSFolder folder)
         {
             if (string.IsNullOrWhiteSpace(path))
                 path = "/";
@@ -24,24 +24,63 @@ namespace DolphinWebXplorer2.Middleware
             vf[path] = folder;
         }
 
+        private VFSFolder LocateFolder(ref string path)
+        {
+            VFSFolder candidate = null;
+            string candidatePath = null;
+            string candidateRelativePath = null;
+            foreach (string k in vf.Keys)
+            {
+                if (candidate == null ||
+                    (path.StartsWith(k) && k.Length > candidatePath.Length))
+                {
+                    candidate = vf[k];
+                    candidatePath = k;
+                    candidateRelativePath = path.Substring(k.Length);
+                }
+            }
+            path = candidateRelativePath;
+            return candidate;
+        }
+
         public Stream OpenRead(string path)
         {
-            return null;
+            VFSFolder folder = LocateFolder(ref path);
+            if (folder == null)
+                return null;
+            return folder.OpenRead(path);
         }
 
         public Stream OpenWrite(string path)
         {
-            return null;
+            VFSFolder folder = LocateFolder(ref path);
+            if (folder == null)
+                return null;
+            return folder.OpenWrite(path);
+        }
+
+        public VFSItem GetItem(string path)
+        {
+            VFSFolder folder = LocateFolder(ref path);
+            if (folder == null)
+                return null;
+            return folder.GetItem(path);
         }
 
         public string[] ListFiles(string path)
         {
-            return null;
+            VFSFolder folder = LocateFolder(ref path);
+            if (folder == null)
+                return null;
+            return folder.ListFiles(path);
         }
 
         public string[] ListDirectories(string path)
         {
-            return null;
+            VFSFolder folder = LocateFolder(ref path);
+            if (folder == null)
+                return null;
+            return folder.ListDirectories(path);
         }
     }
 }

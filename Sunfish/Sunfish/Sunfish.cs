@@ -41,6 +41,12 @@ namespace DolphinWebXplorer2
             {
                 srvs.Add(SunfishService.Instance(ssc));
             }
+            if (conf.Active)
+            {
+                //Bypass set active check
+                conf.Active = false;
+                SetActive(true);
+            }
         }
 
         public static void Save()

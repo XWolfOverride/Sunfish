@@ -109,6 +109,7 @@
     <Compile Include="Middleware\VFS.cs" />
     <Compile Include="Middleware\VFSFolder.cs" />
     <Compile Include="Middleware\VFSFolderFileSystem.cs" />
+    <Compile Include="Middleware\VFSItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

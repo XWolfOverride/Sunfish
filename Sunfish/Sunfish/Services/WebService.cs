@@ -19,20 +19,71 @@ namespace DolphinWebXplorer2.Services
             allowSubfolderNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_NAVIGATION);
         }
 
+        private void ErrorPage(int code, HttpCall call, string text)
+        {
+            call.Response.StatusCode = code;
+            call.Write(text);
+        }
+
+        private void Error500(HttpCall call, string text)
+        {
+            ErrorPage(500, call, text);
+        }
+
+        private void DownloadAt(string path, HttpCall call)
+        {
+            using (Stream s = vfs.OpenRead(path))
+            {
+                if (s == null)
+                {
+                    Error500(call, "Problem transfering file");
+                    return;
+                }
+                call.Out.BaseStream.TransferFrom(s);
+            }
+        }
+
+        private void DownloadAt(VFSItem item, HttpCall call)
+        {
+            using (Stream s = item.OpenRead())
+            {
+                if (s == null)
+                {
+                    Error500(call, "Problem transfering file");
+                    return;
+                }
+                call.Out.BaseStream.TransferFrom(s);
+            }
+        }
+
         public override void Process(string path, HttpCall call)
         {
             if (path.EndsWith("/"))
             {
                 //Directory entry, go for index file or navigation
+                if (index != null)
+                {
+                    VFSItem idx = vfs.GetItem(path + index);
+                    if (idx != null)
+                        DownloadAt(idx, call);
+                }
+                //allowNavigation
+                DownloadAt("/$sunfish/index.html", call);
             }
             else
             {
-                using (Stream s = vfs.OpenRead(path))
+                VFSItem idx = vfs.GetItem(path);
+                if (idx != null)
                 {
-                    //call.Out.
+                    if (idx.Folder)
+                        call.Redirect(path + "/");
+                    else
+                        DownloadAt(idx, call);
                 }
+                else
+                    call.NotFound();
+                    //DownloadAt("/$sunfish/404.html", call);
             }
-            call.Write("PoFale!!");
         }
 
         protected override void Start()

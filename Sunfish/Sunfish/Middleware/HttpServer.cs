@@ -198,7 +198,7 @@ namespace DolphinWebXplorer2.Middleware
             string[] cttp = contentType.Split(';');
             string ctype = cttp[0];
             Dictionary<string, string> cttParams = null;
-            BufferedStream bfs = new BufferedStream(input,1024*1024);
+            BufferedStream bfs = new BufferedStream(input, 1024 * 1024);
             if (cttp.Length > 1)
             {
                 cttParams = new Dictionary<string, string>();
@@ -329,7 +329,7 @@ namespace DolphinWebXplorer2.Middleware
 
             while (true)
             {
-                b=onebyte[0] = br.ReadByte();
+                b = onebyte[0] = br.ReadByte();
                 ms.Write(onebyte, 0, 1);
                 if (b == signal[signalIdx])
                 {
@@ -369,10 +369,16 @@ namespace DolphinWebXplorer2.Middleware
         #endregion
 
         #region Output
-        protected void Error404()
+        public void NotFound()
         {
             Response.StatusCode = 404;
             Response.StatusDescription = "Not found";
+        }
+
+        public void Redirect(string to)
+        {
+            Response.StatusCode = 307; //Temporary Redirect
+            Response.Headers["Location"] = to;
         }
 
         public void Write(string s)
@@ -401,8 +407,9 @@ namespace DolphinWebXplorer2.Middleware
 
         public void Close()
         {
-            if (swout != null)
-                swout.Close();
+            if (swout == null)
+                GetOut();
+            swout.Close();
         }
 
         #endregion
