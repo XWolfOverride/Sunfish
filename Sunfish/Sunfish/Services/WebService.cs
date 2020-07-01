@@ -1,4 +1,6 @@
 ﻿using DolphinWebXplorer2.Middleware;
+using Json.Net;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DolphinWebXplorer2.Services
@@ -18,6 +20,19 @@ namespace DolphinWebXplorer2.Services
             allowNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_SHARE);
             allowSubfolderNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_NAVIGATION);
         }
+
+        #region ChildClasses
+        class WebServiceData
+        {
+            public List<WebServiceFile> Files { get; set; }
+            public string AppTitle => "Sunfish "+Program.VERSION;
+        }
+
+        class WebServiceFile
+        {
+
+        }
+        #endregion
 
         private void ErrorPage(int code, HttpCall call, string text)
         {
@@ -58,17 +73,37 @@ namespace DolphinWebXplorer2.Services
 
         public override void Process(string path, HttpCall call)
         {
-            if (path.EndsWith("/"))
+            if (path.StartsWith("/|") && allowNavigation)
             {
+                path = path.Substring(2);
+                switch (path)
+                {
+                    case "data":
+                        call.Write(JsonNet.Serialize(new WebServiceData()
+                        {
+                            Files = new List<WebServiceFile>()
+                        }));
+                        break;
+                }
+            }
+            else if (path.EndsWith("/"))
+            {
+                VFSItem idx = vfs.GetItem(path + index);
                 //Directory entry, go for index file or navigation
                 if (index != null)
                 {
-                    VFSItem idx = vfs.GetItem(path + index);
                     if (idx != null)
                         DownloadAt(idx, call);
                 }
-                //allowNavigation
-                DownloadAt("/$sunfish/index.html", call);
+                if (allowNavigation)
+                {
+                    if (idx != null && idx.Folder)
+                        DownloadAt("/$sunfish/index.html", call);
+                    else
+                        call.NotFound();
+                }
+                else
+                    call.Forbidden();
             }
             else
             {
@@ -82,7 +117,7 @@ namespace DolphinWebXplorer2.Services
                 }
                 else
                     call.NotFound();
-                    //DownloadAt("/$sunfish/404.html", call);
+                //DownloadAt("/$sunfish/404.html", call);
             }
         }
 

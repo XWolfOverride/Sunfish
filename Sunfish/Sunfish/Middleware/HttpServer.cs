@@ -369,16 +369,23 @@ namespace DolphinWebXplorer2.Middleware
         #endregion
 
         #region Output
-        public void NotFound()
-        {
-            Response.StatusCode = 404;
-            Response.StatusDescription = "Not found";
-        }
 
         public void Redirect(string to)
         {
             Response.StatusCode = 307; //Temporary Redirect
             Response.Headers["Location"] = to;
+        }
+
+        public void Forbidden()
+        {
+            Response.StatusCode = 402;
+            Response.StatusDescription = "Forbidden";
+        }
+
+        public void NotFound()
+        {
+            Response.StatusCode = 404;
+            Response.StatusDescription = "Not found";
         }
 
         public void Write(string s)

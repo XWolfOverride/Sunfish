@@ -10,8 +10,7 @@ namespace DolphinWebXplorer2.Middleware
     public class VFSItem
     {
         private VFSFolder vfolder;
-        private string name;
-
+        
         public VFSItem(VFSFolder vfolder, string path, bool isFolder)
         {
             this.vfolder = vfolder;
@@ -23,6 +22,11 @@ namespace DolphinWebXplorer2.Middleware
         public Stream OpenRead()
         {
             return vfolder.OpenRead(Path);
+        }
+
+        public Stream OpenWrite()
+        {
+            return vfolder.OpenWrite(Path);
         }
 
         public string Path { get; }
