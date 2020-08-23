@@ -29,6 +29,16 @@ namespace DolphinWebXplorer2.Middleware
             return vfolder.OpenWrite(Path);
         }
 
+        public string[] ListDirectories()
+        {
+            return vfolder.ListDirectories(Path);
+        }
+
+        public string[] ListFiles()
+        {
+            return vfolder.ListFiles(Path);
+        }
+
         public string Path { get; }
         public string Name { get; }
         public bool Folder { get; }

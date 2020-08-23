@@ -61,6 +61,8 @@ namespace DolphinWebXplorer2.Middleware
 
         public VFSItem GetItem(string path)
         {
+            while (path.EndsWith("/"))
+                path = path.Substring(0, path.Length - 1);
             VFSFolder folder = LocateFolder(ref path);
             if (folder == null)
                 return null;

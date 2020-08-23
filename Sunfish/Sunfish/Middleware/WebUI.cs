@@ -11,7 +11,7 @@ namespace DolphinWebXplorer2.Middleware
     {
         static WebUI()
         {
-           // InitResources();
+           InitResources();
         }
 
         #region Frontend Resources
@@ -75,6 +75,17 @@ namespace DolphinWebXplorer2.Middleware
             call.Write(File.ReadAllBytes(Path.Combine(rpath, path)));
         }
 
+        public static string FBytes(double lng)
+        {
+            string[] tail = { " bytes", "Kb", "Mb", "Gb", "Tb", "Pb", "Yb" };
+            int taili = 0;
+            while (lng > 1024)
+            {
+                lng /= 1024;
+                taili++;
+            }
+            return lng.ToString("#0.00") + (taili >= tail.Length ? "^b" : tail[taili]);
+        }
 
     }
 

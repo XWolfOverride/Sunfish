@@ -42,17 +42,27 @@ namespace DolphinWebXplorer2.Middleware
             DirectoryInfo di = new DirectoryInfo(fpath);
             if (!fi.Exists && !di.Exists)
                 return null;
-            return new VFSItem(this,fpath,di.Exists);
+            return new VFSItem(this,path,di.Exists);
         }
 
         public override string[] ListDirectories(string path)
         {
-            throw new NotImplementedException();
+            string fpath = Path.Combine(basePath, path);
+            List<string> lst = new List<string>();
+            foreach (string d in Directory.GetDirectories(fpath))
+                lst.Add(d.Substring(fpath.Length+1));
+            lst.Sort();
+            return lst.ToArray();
         }
 
         public override string[] ListFiles(string path)
         {
-            throw new NotImplementedException();
+            string fpath = Path.Combine(basePath, path);
+            List<string> lst = new List<string>();
+            foreach (string d in Directory.GetFiles(fpath))
+                lst.Add(d.Substring(fpath.Length + 1));
+            lst.Sort();
+            return lst.ToArray();
         }
 
     }

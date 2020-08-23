@@ -22,15 +22,6 @@ namespace DolphinWebXplorer2.Services
             allowSubfolderNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_NAVIGATION);
         }
 
-        #region ChildClasses
-        class WebServiceData
-        {
-            public string[] Files { get; set; }
-            public string ServicePath { get; set; }
-            public string AppTitle => "Sunfish " + Program.VERSION;
-        }
-        #endregion
-
         private void ErrorPage(int code, HttpCall call, string text)
         {
             call.Response.StatusCode = code;
@@ -68,43 +59,9 @@ namespace DolphinWebXplorer2.Services
             }
         }
 
-        private object GetWebServiceData(string path)
-        {
-            WebServiceData wsd = new WebServiceData();
-            if (path != null)
-            {
-                List<string> fileList = new List<string>();
-                VFSItem itm = vfs.GetItem(path);
-                if (itm != null)
-                {
-                    foreach (string d in vfs.ListDirectories(path))
-                        fileList.Add(d + "/");
-                    fileList.Sort();
-                    List<string> lfls = new List<string>(vfs.ListFiles(path));
-                    lfls.Sort();
-                    fileList.AddRange(lfls);
-                    wsd.Files = fileList.ToArray();
-                }
-            }
-            wsd.ServicePath = Configuration.Location;
-            if (!wsd.ServicePath.EndsWith("/"))
-                wsd.ServicePath = wsd.ServicePath + "/";
-            return wsd;
-        }
-
         public override void Process(string path, HttpCall call)
         {
-            if (allowNavigation && path.Contains("/|"))
-            {
-                path = path.Substring(path.IndexOf("/|") + 2);
-                switch (path)
-                {
-                    case "data":
-                        call.Write(JsonNet.Serialize(GetWebServiceData(call.Parameters.GetValue("path", null))));
-                        break;
-                }
-            }
-            else if (path.EndsWith("/"))
+            if (path.EndsWith("/"))
             {
                 VFSItem idx = vfs.GetItem(path + index);
                 //Directory entry, go for index file or navigation
@@ -119,8 +76,8 @@ namespace DolphinWebXplorer2.Services
                 if (allowNavigation)
                 {
                     idx = vfs.GetItem(path);
-                    if (idx != null && idx.Folder)// WHY?
-                        DownloadAt("/$sunfish/index.html", call);
+                    if (idx != null && idx.Folder)
+                        WriteIndex(idx, call);
                     else
                         call.NotFound();
                 }
@@ -139,8 +96,43 @@ namespace DolphinWebXplorer2.Services
                 }
                 else
                     call.NotFound();
-                //DownloadAt("/$sunfish/404.html", call);
             }
+        }
+
+        private void WriteIndex(VFSItem dir, HttpCall call)
+        {
+            WebUI.InitResources();
+            WebUI.WriteHeader(call);
+            List<string> fileList = new List<string>();
+            if (allowSubfolderNavigation)
+            {
+                foreach (string d in dir.ListDirectories())
+                    fileList.Add(d);
+                fileList.Sort();
+                foreach (string d in fileList)
+                {
+                    WebUI.WriteItem(new WebUIListItem()
+                    {
+                        Name = d,
+                        Description = "Directory",
+                        Link = d + "/"
+                    }, call);
+                }
+                fileList.Clear();
+            }
+            foreach (string d in dir.ListFiles())
+                fileList.Add(d);
+            fileList.Sort();
+            foreach (string d in fileList)
+            {
+                WebUI.WriteItem(new WebUIListItem()
+                {
+                    Name = d,
+                    Description = "File",
+                    Link = d
+                }, call);
+            }
+            WebUI.WriteFooter(call);
         }
 
         protected override void Start()
