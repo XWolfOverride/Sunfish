@@ -30,7 +30,7 @@ namespace DolphinWebXplorer2
             Type tme = typeof(SunfishService);
             foreach (Type t in a.GetTypes())
             {
-                if (tme.IsAssignableFrom(t) && !t.IsAbstract && t != typeof(ErrorService))
+                if (tme.IsAssignableFrom(t) && !t.IsAbstract && t != typeof(ErrorService) && t != typeof(RootService))
                     st.Add(t);
             }
         }

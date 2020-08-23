@@ -106,10 +106,14 @@
     <Compile Include="Library\Json.Net\TitleToCamelCase.cs" />
     <Compile Include="Middleware\HttpServer.cs" />
     <Compile Include="IpInfo.cs" />
+    <Compile Include="Middleware\SunfishServerPage.cs" />
+    <Compile Include="Middleware\SunfishServerPages.cs" />
+    <Compile Include="Middleware\Templater.cs" />
     <Compile Include="Middleware\VFS.cs" />
     <Compile Include="Middleware\VFSFolder.cs" />
     <Compile Include="Middleware\VFSFolderFileSystem.cs" />
     <Compile Include="Middleware\VFSItem.cs" />
+    <Compile Include="Middleware\WebUI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -140,6 +144,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Middleware\Win32.cs" />
+    <Compile Include="Services\RootServiceConfigurator.cs" />
+    <Compile Include="Services\RootService.cs" />
     <Compile Include="Services\AdminServiceConfigurator.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="DefineConfigurator.cs" />
@@ -173,11 +179,8 @@
     <None Include="Resources\bt_plus.bmp" />
     <None Include="Resources\run.png" />
     <None Include="Resources\share.png" />
-    <Content Include="Resources\ShScreen.js" />
-    <Content Include="Resources\site.css" />
     <None Include="Resources\sunfishWebServer.ico" />
     <None Include="Resources\sws.png" />
-    <None Include="Resources\site1.css" />
     <None Include="Resources\upload.png" />
     <Content Include="sunfishWebServer.ico" />
   </ItemGroup>

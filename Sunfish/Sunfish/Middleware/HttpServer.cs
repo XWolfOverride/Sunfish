@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Security.Principal;
@@ -96,6 +97,7 @@ namespace DolphinWebXplorer2.Middleware
             }
             finally
             {
+                call.Response.StatusCode = 500;
                 call.Close();
             }
         }
@@ -185,9 +187,12 @@ namespace DolphinWebXplorer2.Middleware
             if (encoding == null)
                 encoding = new UTF8Encoding(false);
             if (string.IsNullOrEmpty(contentType) || string.IsNullOrWhiteSpace(contentType))
+                contentType = Response.ContentType;
+            if (string.IsNullOrEmpty(contentType) || string.IsNullOrWhiteSpace(contentType))
                 contentType = "text/html";
             bs = new BufferedStream(Response.OutputStream);
             swout = new StreamWriter(bs, encoding);
+            Response.ContentType = contentType;
             Response.Headers[HttpResponseHeader.ContentType] = contentType;
             Response.Headers[HttpResponseHeader.ContentEncoding] = encoding.WebName;
         }
@@ -412,6 +417,22 @@ namespace DolphinWebXplorer2.Middleware
             GetOut().BaseStream.Write(data, offset, count);
         }
 
+        public void Write(Stream s)
+        {
+            GetOut().Flush();
+            GetOut().BaseStream.TransferFrom(s);
+        }
+
+        public void Write(Icon image)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms);
+                ms.Position = 0;
+                Write(ms);
+            }
+        }
+
         public void Close()
         {
             if (swout == null)
@@ -432,6 +453,8 @@ namespace DolphinWebXplorer2.Middleware
         public HttpListenerResponse Response { get; }
         public IPrincipal User { get; }
         public StreamWriter Out => GetOut();
+
+        public Dictionary<string, string> Parameters => parameters;
     }
 
     public class LogError

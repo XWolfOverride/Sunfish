@@ -21,6 +21,7 @@ namespace DolphinWebXplorer2
         public const string DEFAULT_CONF_FILE = "sunfish2";
         private static SunfishConfiguration conf = new SunfishConfiguration();
         private static List<SunfishService> srvs = new List<SunfishService>();
+        private static RootService sroot = new RootService();
         private static HttpServer server;
 
         #region Configuration & Initialization
@@ -33,10 +34,12 @@ namespace DolphinWebXplorer2
         {
             if (!File.Exists(DEFAULT_CONF_FILE))
                 return;
+
             string json = File.ReadAllText(DEFAULT_CONF_FILE);
             conf = JsonNet.Deserialize<SunfishConfiguration>(json);
             if (conf.Services == null)
                 conf.Services = new List<SunfishServiceConfiguration>();
+            sroot.ShowMenu = conf.SunfishRoot;
             foreach (SunfishServiceConfiguration ssc in conf.Services)
             {
                 srvs.Add(SunfishService.Instance(ssc));
@@ -89,10 +92,15 @@ namespace DolphinWebXplorer2
         {
             var path = call.Request.Url.LocalPath;
             SunfishService s = GetServiceForPath(ref path);
-            if (s == null || !s.Enabled)
-                ErrorService.Process404(call);
+            if (string.IsNullOrWhiteSpace(path))
+                call.Redirect(call.Request.Url.LocalPath + "/");
             else
-                s.Process(path,call);
+            {
+                if (s == null || !s.Enabled)
+                    ErrorService.Process404(call);
+                else
+                    s.Process(path, call);
+            }
             call.Close();
         }
 
@@ -140,18 +148,24 @@ namespace DolphinWebXplorer2
 
         public static SunfishService GetServiceForPath(ref string path)
         {
-            string candidateRelativePath="";
+            if (string.IsNullOrEmpty(path) || path == "/" || path.StartsWith("/$sunfish"))
+                return sroot;
+            string candidateRelativePath = "";
             SunfishService candidate = null;
             foreach (SunfishService s in srvs)
-                if (path.StartsWith(s.Configuration.Location) &&
+            {
+                string plb = s.Configuration.Location;
+                if (!plb.EndsWith("/"))
+                    plb = plb + "/";
+                if ((path == s.Configuration.Location || path.StartsWith(plb)) &&
                     (candidate == null || (candidate.Configuration.Location.Length < s.Configuration.Location.Length)))
                 {
                     candidate = s;
                     candidateRelativePath = path.Substring(s.Configuration.Location.Length);
                 }
-            path = candidateRelativePath;
-            if (string.IsNullOrWhiteSpace(path))
-                path = "/";
+            }
+            if (candidate != null)
+                path = candidateRelativePath;
             return candidate;
         }
 

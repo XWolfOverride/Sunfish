@@ -2,6 +2,7 @@
 using Json.Net;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace DolphinWebXplorer2.Services
 {
@@ -24,13 +25,9 @@ namespace DolphinWebXplorer2.Services
         #region ChildClasses
         class WebServiceData
         {
-            public List<WebServiceFile> Files { get; set; }
-            public string AppTitle => "Sunfish "+Program.VERSION;
-        }
-
-        class WebServiceFile
-        {
-
+            public string[] Files { get; set; }
+            public string ServicePath { get; set; }
+            public string AppTitle => "Sunfish " + Program.VERSION;
         }
         #endregion
 
@@ -71,18 +68,39 @@ namespace DolphinWebXplorer2.Services
             }
         }
 
+        private object GetWebServiceData(string path)
+        {
+            WebServiceData wsd = new WebServiceData();
+            if (path != null)
+            {
+                List<string> fileList = new List<string>();
+                VFSItem itm = vfs.GetItem(path);
+                if (itm != null)
+                {
+                    foreach (string d in vfs.ListDirectories(path))
+                        fileList.Add(d + "/");
+                    fileList.Sort();
+                    List<string> lfls = new List<string>(vfs.ListFiles(path));
+                    lfls.Sort();
+                    fileList.AddRange(lfls);
+                    wsd.Files = fileList.ToArray();
+                }
+            }
+            wsd.ServicePath = Configuration.Location;
+            if (!wsd.ServicePath.EndsWith("/"))
+                wsd.ServicePath = wsd.ServicePath + "/";
+            return wsd;
+        }
+
         public override void Process(string path, HttpCall call)
         {
-            if (path.StartsWith("/|") && allowNavigation)
+            if (allowNavigation && path.Contains("/|"))
             {
-                path = path.Substring(2);
+                path = path.Substring(path.IndexOf("/|") + 2);
                 switch (path)
                 {
                     case "data":
-                        call.Write(JsonNet.Serialize(new WebServiceData()
-                        {
-                            Files = new List<WebServiceFile>()
-                        }));
+                        call.Write(JsonNet.Serialize(GetWebServiceData(call.Parameters.GetValue("path", null))));
                         break;
                 }
             }
@@ -92,12 +110,16 @@ namespace DolphinWebXplorer2.Services
                 //Directory entry, go for index file or navigation
                 if (index != null)
                 {
-                    if (idx != null)
+                    if (idx != null && !idx.Folder)
+                    {
                         DownloadAt(idx, call);
+                        return;
+                    }
                 }
                 if (allowNavigation)
                 {
-                    if (idx != null && idx.Folder)
+                    idx = vfs.GetItem(path);
+                    if (idx != null && idx.Folder)// WHY?
                         DownloadAt("/$sunfish/index.html", call);
                     else
                         call.NotFound();
@@ -111,7 +133,7 @@ namespace DolphinWebXplorer2.Services
                 if (idx != null)
                 {
                     if (idx.Folder)
-                        call.Redirect(path + "/");
+                        call.Redirect(call.Request.Url.LocalPath + "/");
                     else
                         DownloadAt(idx, call);
                 }
