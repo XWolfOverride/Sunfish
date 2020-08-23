@@ -1,0 +1,37 @@
+<!--SEC:head-a-->
+<html>
+
+<head>
+    <title>{AppName} {AppVersion}</title>
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link type="text/css" rel="stylesheet" href="/$sunfish/style.css">
+</head>
+
+<body>
+    <div id="head">
+        <span id="main-title"><a href="/$sunfish/Sunfish.exe">{AppName}</a></span>
+        <span id="main-subtitle">{AppVersion}</span>
+        <span id="main-location">
+            <!--SEC:head-location-item-->
+            <!--SEC:head-b-->
+        </span>
+        <span id="main-toolbar">
+            <!--SEC:head-toolbar-item-->
+            <!--SEC:head-c-->
+        </span>
+    </div>
+    <div id="wrapper">
+        <!--SEC:item-->
+        <div class="item {Styles}">
+            <a href="{Link}">
+                <img class="item-icon" src="/$sunfish/folder.png">
+                <div class="item-name">{Name}</div>
+                <div class="item-desc">{Description}</div>
+            </a>
+            <div class="item-actions"></div>
+        </div>
+        <!--SEC:footer-->
+    </div>
+</body>
+
+</html>
