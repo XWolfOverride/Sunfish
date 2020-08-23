@@ -35,6 +35,7 @@ namespace DolphinWebXplorer2.Services
                             continue;
                         WebUI.WriteItem(new WebUIListItem()
                         {
+                            Icon= "/$sunfish/folder.png",
                             Name = s.Configuration.Name,
                             Description = s.Configuration.Location,
                             Link = s.Configuration.Location,
@@ -66,7 +67,7 @@ namespace DolphinWebXplorer2.Services
                 }
             }
             else
-                call.NotFound();
+                call.HTTPNotFound();
         }
 
         protected override void Start()

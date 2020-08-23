@@ -9,38 +9,41 @@ namespace DolphinWebXplorer2.Middleware
 {
     public class VFSItem
     {
-        private VFSFolder vfolder;
-        
-        public VFSItem(VFSFolder vfolder, string path, bool isFolder)
+
+        public VFSItem(VFSFolder vfolder, string path, bool isFolder, long length)
         {
-            this.vfolder = vfolder;
-            this.Path = path;
-            this.Folder = isFolder;
+            Folder = vfolder;
+            Path = path;
+            Directory = isFolder;
             Name = System.IO.Path.GetFileName(Path);
+            Length = length;
         }
 
         public Stream OpenRead()
         {
-            return vfolder.OpenRead(Path);
+            return Folder.OpenRead(Path);
         }
 
         public Stream OpenWrite()
         {
-            return vfolder.OpenWrite(Path);
+            return Folder.OpenWrite(Path);
         }
 
         public string[] ListDirectories()
         {
-            return vfolder.ListDirectories(Path);
+            return Folder.ListDirectories(Path);
         }
 
         public string[] ListFiles()
         {
-            return vfolder.ListFiles(Path);
+            return Folder.ListFiles(Path);
         }
 
         public string Path { get; }
         public string Name { get; }
-        public bool Folder { get; }
+        public bool Directory { get; }
+        public long Length { get; }
+
+        public VFSFolder Folder { get; }
     }
 }

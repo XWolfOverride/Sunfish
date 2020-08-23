@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DolphinWebXplorer2.Middleware
 {
-    public class VFSFolderFileSystem:VFSFolder
+    public class VFSFolderFileSystem : VFSFolder
     {
         private string basePath;
 
@@ -26,7 +26,8 @@ namespace DolphinWebXplorer2.Middleware
             try
             {
                 return File.OpenRead(path);
-            }catch { };
+            }
+            catch { };
             return null;
         }
 
@@ -37,12 +38,14 @@ namespace DolphinWebXplorer2.Middleware
 
         public override VFSItem GetItem(string path)
         {
+            if (Path.DirectorySeparatorChar != '/')
+                path = path.Replace('/', Path.DirectorySeparatorChar);
             string fpath = Path.Combine(basePath, path);
             FileInfo fi = new FileInfo(fpath);
             DirectoryInfo di = new DirectoryInfo(fpath);
             if (!fi.Exists && !di.Exists)
                 return null;
-            return new VFSItem(this,path,di.Exists);
+            return new VFSItem(this, path, di.Exists, fi.Exists ? fi.Length : 0);
         }
 
         public override string[] ListDirectories(string path)
@@ -50,7 +53,7 @@ namespace DolphinWebXplorer2.Middleware
             string fpath = Path.Combine(basePath, path);
             List<string> lst = new List<string>();
             foreach (string d in Directory.GetDirectories(fpath))
-                lst.Add(d.Substring(fpath.Length+1));
+                lst.Add(d.Substring(fpath.Length + 1));
             lst.Sort();
             return lst.ToArray();
         }
@@ -65,5 +68,9 @@ namespace DolphinWebXplorer2.Middleware
             return lst.ToArray();
         }
 
+        public string GetFSPath(string path)
+        {
+            return Path.Combine(basePath, path);
+        }
     }
 }

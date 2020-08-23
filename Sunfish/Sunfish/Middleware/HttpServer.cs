@@ -381,13 +381,19 @@ namespace DolphinWebXplorer2.Middleware
             Response.Headers["Location"] = to;
         }
 
-        public void Forbidden()
+        public void HTTPBadRequest()
+        {
+            Response.StatusCode = 400;
+            Response.StatusDescription = "Bad Request";
+        }
+
+        public void HTTPForbidden()
         {
             Response.StatusCode = 402;
             Response.StatusDescription = "Forbidden";
         }
 
-        public void NotFound()
+        public void HTTPNotFound()
         {
             Response.StatusCode = 404;
             Response.StatusDescription = "Not found";
@@ -421,16 +427,6 @@ namespace DolphinWebXplorer2.Middleware
         {
             GetOut().Flush();
             GetOut().BaseStream.TransferFrom(s);
-        }
-
-        public void Write(Icon image)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                image.Save(ms);
-                ms.Position = 0;
-                Write(ms);
-            }
         }
 
         public void Close()
