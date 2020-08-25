@@ -1,6 +1,7 @@
 ﻿using DolphinWebXplorer2.Middleware;
 using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DolphinWebXplorer2.Services
@@ -10,6 +11,18 @@ namespace DolphinWebXplorer2.Services
     {
         public const string DIR_COMMON = "/$sunfish/";
         public const string DIR_API = "api/";
+        private static WebUILink linkHome;
+
+        static RootService()
+        {
+            linkHome = new WebUILink()
+            {
+                Icon = "home",
+                Link = "/",
+                Tooltip = "Root",
+            };
+        }
+
         public RootService() : base(new SunfishServiceConfiguration()
         {
             Enabled = true,
@@ -28,14 +41,20 @@ namespace DolphinWebXplorer2.Services
                 // Root page
                 if (ShowMenu)
                 {
-                    WebUI.WriteHeader(call);
+                    WebUI.WriteHeader(new WebUILink[]{
+                        new WebUILink()
+                        {
+                            Icon = "home",
+                            Link = "/",
+                        }
+                    }, null, call);
                     foreach (SunfishService s in Sunfish.Services)
                     {
                         if (!s.Enabled)
                             continue;
-                        WebUI.WriteItem(new WebUIListItem()
+                        WebUI.WriteItem(new WebUILink()
                         {
-                            Icon= "/$sunfish/folder.png",
+                            Icon = "/$sunfish/folder.png",
                             Name = s.Configuration.Name,
                             Description = s.Configuration.Location,
                             Link = s.Configuration.Location,
@@ -77,6 +96,8 @@ namespace DolphinWebXplorer2.Services
         protected override void Stop()
         {
         }
+
+        public static WebUILink LinkHome => linkHome;
 
         public override string Description => "Root page service and API";
         public bool ShowMenu { get; set; } = true;

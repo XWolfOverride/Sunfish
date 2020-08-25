@@ -10,6 +10,7 @@ namespace DolphinWebXplorer2.Services
         internal const string CFG_SHARE = "folderShare";
         internal const string CFG_NAVIGATION = "allowSubfolderNavigation";
         internal const string CFG_UPLOAD = "allowUploads";
+        internal const string CFG_EDITOR = "allowEditor";
         internal const string CFG_RENAME = "allowRenaming";
         internal const string CFG_DELETE = "allowDeletion";
         internal const string CFG_EXECUTE = "allowServerExecution";
@@ -49,7 +50,11 @@ namespace DolphinWebXplorer2.Services
                     },
                     new ConfigurationBool(CFG_UPLOAD,"Allow upload")
                     {
-                        Tooltip = "Allow upload of files and folders."
+                        Tooltip = "Allow upload of files and folders, also enables the create folder option if subfolder navigation is enabled."
+                    },
+                    new ConfigurationBool(CFG_EDITOR,"Allow text editor")
+                    {
+                        Tooltip = "Allow text file creation and edition, also enables the create folder option if subfolder navigation is enabled."
                     },
                     new ConfigurationBool(CFG_RENAME,"Allow rename")
                     {

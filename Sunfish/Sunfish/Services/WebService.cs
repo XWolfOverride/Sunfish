@@ -99,9 +99,10 @@ namespace DolphinWebXplorer2.Services
                 }
                 if (allowNavigation)
                 {
+                    //TODO: Block subfolder navigation if not allowed checking path
                     idx = vfs.GetItem(path);
                     if (idx != null && idx.Directory)
-                        WriteIndex(idx, call);
+                        WriteIndex(path, idx, call);
                     else
                         call.HTTPNotFound();
                 }
@@ -183,10 +184,10 @@ namespace DolphinWebXplorer2.Services
             }
         }
 
-        private void WriteIndex(VFSItem dir, HttpCall call)
+        private void WriteIndex(string path, VFSItem dir, HttpCall call)
         {
             WebUI.InitResources();
-            WebUI.WriteHeader(call);
+            WebUI.WriteHeader(getBreadcrumb(path), null, call);
             List<string> fileList = new List<string>();
             if (allowSubfolderNavigation)
             {
@@ -195,7 +196,7 @@ namespace DolphinWebXplorer2.Services
                 fileList.Sort();
                 foreach (string d in fileList)
                 {
-                    WebUI.WriteItem(new WebUIListItem()
+                    WebUI.WriteItem(new WebUILink()
                     {
                         Icon = "/$sunfish/folder.png",
                         Name = d,
@@ -210,7 +211,7 @@ namespace DolphinWebXplorer2.Services
             fileList.Sort();
             foreach (string d in fileList)
             {
-                WebUI.WriteItem(new WebUIListItem()
+                WebUI.WriteItem(new WebUILink()
                 {
                     Icon = d + "?meta=icon",
                     Name = d,
@@ -219,6 +220,26 @@ namespace DolphinWebXplorer2.Services
                 }, call);
             }
             WebUI.WriteFooter(call);
+        }
+
+        private WebUILink[] getBreadcrumb(string path)
+        {
+            string link = "";
+            path = Configuration.Location + path;
+            List<WebUILink> lst = new List<WebUILink>();
+            lst.Add(RootService.LinkHome);
+            foreach (string p in path.Split('/'))
+            {
+                if (p.Length == 0)
+                    continue;
+                link += "/" + p;
+                lst.Add(new WebUILink()
+                {
+                    Name = p,
+                    Link = link,
+                });
+            }
+            return lst.ToArray();
         }
 
         protected override void Start()

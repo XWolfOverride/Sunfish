@@ -11,7 +11,7 @@ namespace DolphinWebXplorer2.Middleware
     {
         static WebUI()
         {
-           InitResources();
+            InitResources();
         }
 
         #region Frontend Resources
@@ -51,12 +51,16 @@ namespace DolphinWebXplorer2.Middleware
 
         #endregion
 
-        public static void WriteHeader(HttpCall call)
+        public static void WriteHeader(WebUILink[] breadcrumb, WebUILink[] toolbar, HttpCall call)
         {
             call.Write(Templs["head-a"].Process(BaseData));
-            //call.Write(Templs["head-location-item"].Process(BaseData));
+            if (breadcrumb != null)
+                foreach (WebUILink l in breadcrumb)
+                    call.Write(Templs["head-location-item"].Process(l, BaseData));
             call.Write(Templs["head-b"].Process(BaseData));
-            //call.Write(Templs["head-toolbar-item"].Process(BaseData));
+            if (breadcrumb != null)
+                foreach (WebUILink l in breadcrumb)
+                    call.Write(Templs["head-toolbar-item"].Process(l, BaseData));
             call.Write(Templs["head-c"].Process(BaseData));
         }
 
@@ -65,7 +69,7 @@ namespace DolphinWebXplorer2.Middleware
             call.Write(Templs["footer"].Process(BaseData));
         }
 
-        public static void WriteItem(WebUIListItem item, HttpCall call)
+        public static void WriteItem(WebUILink item, HttpCall call)
         {
             call.Write(Templs["item"].Process(item, BaseData));
         }
@@ -89,12 +93,13 @@ namespace DolphinWebXplorer2.Middleware
 
     }
 
-    public struct WebUIListItem
+    public class WebUILink
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Link { get; set; }
         public string Icon { get; set; }
+        public string Tooltip { get; set; }
 
         public string Styles { get; set; }
     }
