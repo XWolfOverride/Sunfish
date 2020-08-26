@@ -4,7 +4,7 @@ using System;
 namespace DolphinWebXplorer2
 {
     [AttributeUsage(AttributeTargets.Class)]
-    class DefineConfigurator : Attribute
+    public class DefineConfigurator : Attribute
     {
         public DefineConfigurator(Type configuratorType)
         {

@@ -72,7 +72,6 @@ namespace DolphinWebXplorer2
         #endregion
 
         private SunfishServiceConfigurator configurator;
-        protected VFS vfs = new VFS();
 
         public SunfishService(SunfishServiceConfiguration ssc)
         {

@@ -11,11 +11,10 @@ namespace DolphinWebXplorer2.Services
     {
         public const string DIR_COMMON = "/$sunfish/";
         public const string DIR_API = "api/";
-        private static WebUILink linkHome;
 
         static RootService()
         {
-            linkHome = new WebUILink()
+            LinkHome = new WebUILink()
             {
                 Icon = "home",
                 Link = "/",
@@ -41,13 +40,7 @@ namespace DolphinWebXplorer2.Services
                 // Root page
                 if (ShowMenu)
                 {
-                    WebUI.WriteHeader(new WebUILink[]{
-                        new WebUILink()
-                        {
-                            Icon = "home",
-                            Link = "/",
-                        }
-                    }, null, call);
+                    WebUI.WriteHeader(new WebUILink[] { LinkHome }, null, call);
                     foreach (SunfishService s in Sunfish.Services)
                     {
                         if (!s.Enabled)
@@ -71,7 +64,41 @@ namespace DolphinWebXplorer2.Services
                 if (path.StartsWith(DIR_API))
                 {
                     // API
-                    path = path.Substring(DIR_API.Length);
+                    path = "/" + path.Substring(DIR_API.Length);
+                    SunfishService servc = Sunfish.GetServiceForPath(ref path);
+                    if (servc == null || servc is RootService)
+                    {
+                        ApiRest.WriteError("Service does not exists", call);
+                    }
+                    else
+                    {
+                        if (path.StartsWith("/"))
+                            path = path.Substring(1);
+                        if (path == "")
+                        {
+                            string meta;
+                            if (!call.Parameters.TryGetValue("format", out meta))
+                                meta = "json";
+                            switch (meta)
+                            {
+                                case "js":
+                                    ApiRest.WriteError("Not implemented", call);
+                                    break;
+                                case "json":
+                                    ApiRest.WriteError("Not implemented", call);
+                                    break;
+                                default:
+                                    ApiRest.WriteError("Format only supports 'js' and 'json'.", call);
+                                    break;
+                            }
+
+                        }
+                        else
+                        {
+                            //call method (path is method name)
+                        }
+                    }
+
                 }
                 else if (path == "Sunfish.exe")
                 {
@@ -97,7 +124,7 @@ namespace DolphinWebXplorer2.Services
         {
         }
 
-        public static WebUILink LinkHome => linkHome;
+        public static WebUILink LinkHome { get; private set; }
 
         public override string Description => "Root page service and API";
         public bool ShowMenu { get; set; } = true;

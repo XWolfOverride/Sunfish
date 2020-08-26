@@ -12,6 +12,7 @@ namespace DolphinWebXplorer2.Services
     [DefineConfigurator(typeof(WebServiceConfigurator))]
     class WebService : SunfishService
     {
+        private VFS vfs = new VFS();
         private string index;
         private bool allowNavigation;
         private bool allowSubfolderNavigation;
@@ -24,6 +25,8 @@ namespace DolphinWebXplorer2.Services
             allowNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_SHARE);
             allowSubfolderNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_NAVIGATION);
         }
+
+        #region WebServer
 
         private void ErrorPage(int code, HttpCall call, string text)
         {
@@ -242,6 +245,8 @@ namespace DolphinWebXplorer2.Services
             return lst.ToArray();
         }
 
+        #endregion
+
         protected override void Start()
         {
         }
@@ -249,6 +254,16 @@ namespace DolphinWebXplorer2.Services
         protected override void Stop()
         {
         }
+
+        #region API
+
+        [ApiMethod("rename")]
+        public bool ApiMove(string from, string to)
+        {
+            return false;
+        }
+
+        #endregion
 
         public override string Description => "For Webpages or file sharing";
     }
