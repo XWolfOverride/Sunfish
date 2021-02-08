@@ -8,10 +8,7 @@ namespace DolphinWebXplorer2.Services
         internal const string CFG_PATH = "path";
         internal const string CFG_INDEX = "defaultFile";
         internal const string CFG_SHARE = "folderShare";
-        internal const string CFG_NAVIGATION = "allowSubfolderNavigation";
-        internal const string CFG_UPLOAD = "allowUploads";
-        internal const string CFG_EDITOR = "allowEditor";
-        internal const string CFG_RENAME = "allowRenaming";
+        internal const string CFG_RONLY = "readOnly";
         internal const string CFG_DELETE = "allowDeletion";
         internal const string CFG_EXECUTE = "allowServerExecution";
 
@@ -38,27 +35,15 @@ namespace DolphinWebXplorer2.Services
                         Tooltip = "Default document for directory path",
                         DefaultValue = "index.html"
                     },
-                    new ConfigurationBool(CFG_SHARE,"Folder share")
+                    new ConfigurationBool(CFG_SHARE,"Folder share (Web && DAV)")
                     {
-                        Tooltip = "Allow directory listings, switched off the server will report a forbidden message if the directory has no default file.",
+                        Tooltip = "Allow directory listings, switched off the server will report a forbidden message if the directory has no default file. Also enables DAV protocol",
                         DefaultValue = true,
                     },
-                    new ConfigurationBool(CFG_NAVIGATION,"Subfolder navigation")
+                    new ConfigurationBool(CFG_RONLY,"Read only")
                     {
-                        Tooltip = "Allow subfolder navigation.",
+                        Tooltip = "Avoids upload of files and folders, create folders, edit files, copy and move.",
                         DefaultValue = true,
-                    },
-                    new ConfigurationBool(CFG_UPLOAD,"Allow upload")
-                    {
-                        Tooltip = "Allow upload of files and folders, also enables the create folder option if subfolder navigation is enabled."
-                    },
-                    new ConfigurationBool(CFG_EDITOR,"Allow text editor")
-                    {
-                        Tooltip = "Allow text file creation and edition, also enables the create folder option if subfolder navigation is enabled."
-                    },
-                    new ConfigurationBool(CFG_RENAME,"Allow rename")
-                    {
-                        Tooltip = "Allow raname of server files and folders."
                     },
                     new ConfigurationBool(CFG_DELETE,"Allow delete")
                     {

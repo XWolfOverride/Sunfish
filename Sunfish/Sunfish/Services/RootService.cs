@@ -1,5 +1,6 @@
 ﻿using DolphinWebXplorer2.Middleware;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -40,20 +41,24 @@ namespace DolphinWebXplorer2.Services
                 // Root page
                 if (ShowMenu)
                 {
-                    WebUI.WriteHeader(new WebUILink[] { LinkHome }, null, call);
+                    List<WebUILink> items = new List<WebUILink>();
                     foreach (SunfishService s in Sunfish.Services)
                     {
                         if (!s.Enabled)
                             continue;
-                        WebUI.WriteItem(new WebUILink()
+                        items.Add(new WebUILink()
                         {
                             Icon = "/$sunfish/folder.png",
                             Name = s.Configuration.Name,
                             Description = s.Configuration.Location,
                             Link = s.Configuration.Location,
-                        }, call);
+                        });
                     }
-                    WebUI.WriteFooter(call);
+                    Dictionary<string, object> data = new Dictionary<string, object>();
+                    data["Breadcrumb"] = new WebUILink[] { LinkHome };
+                    //data["Actions"] = actions;
+                    data["Items"] = items;
+                    WebUI.WriteTemplate("directory-index", call, data);
                 }
                 else
                     call.Response.StatusCode = 404;
@@ -91,7 +96,6 @@ namespace DolphinWebXplorer2.Services
                                     ApiRest.WriteError("Format only supports 'js' and 'json'.", call);
                                     break;
                             }
-
                         }
                         else
                         {

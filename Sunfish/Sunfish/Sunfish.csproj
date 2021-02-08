@@ -108,6 +108,7 @@
     <Compile Include="Middleware\ApiRest.cs" />
     <Compile Include="Middleware\HttpServer.cs" />
     <Compile Include="IpInfo.cs" />
+    <Compile Include="Middleware\MimeTypes.cs" />
     <Compile Include="Middleware\SunfishServerPage.cs" />
     <Compile Include="Middleware\SunfishServerPages.cs" />
     <Compile Include="Middleware\Templater.cs" />

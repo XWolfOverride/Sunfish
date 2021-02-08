@@ -15,7 +15,9 @@ namespace DolphinWebXplorer2.Services
         private VFS vfs = new VFS();
         private string index;
         private bool allowNavigation;
-        private bool allowSubfolderNavigation;
+        private bool allowDelete;
+        private bool allowExec;
+        private bool readOnly;
         public WebService(SunfishServiceConfiguration ssc) : base(ssc)
         {
             vfs.AddVirtualFolder(null, new VFSFolderFileSystem(ssc.GetConf<string>(WebServiceConfigurator.CFG_PATH)));
@@ -23,7 +25,9 @@ namespace DolphinWebXplorer2.Services
             if (string.IsNullOrWhiteSpace(index))
                 index = null;
             allowNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_SHARE);
-            allowSubfolderNavigation = ssc.GetConf<bool>(WebServiceConfigurator.CFG_NAVIGATION);
+            allowDelete = ssc.GetConf<bool>(WebServiceConfigurator.CFG_DELETE);
+            allowExec = ssc.GetConf<bool>(WebServiceConfigurator.CFG_EXECUTE);
+            readOnly = ssc.GetConf<bool>(WebServiceConfigurator.CFG_RONLY);
         }
 
         #region WebServer
@@ -39,18 +43,18 @@ namespace DolphinWebXplorer2.Services
             ErrorPage(500, call, text);
         }
 
-        private void DownloadAt(string path, HttpCall call)
-        {
-            using (Stream s = vfs.OpenRead(path))
-            {
-                if (s == null)
-                {
-                    Error500(call, "Problem transfering file");
-                    return;
-                }
-                call.Out.BaseStream.TransferFrom(s);
-            }
-        }
+        //private void DownloadAt(string path, HttpCall call)
+        //{
+        //    using (Stream s = vfs.OpenRead(path))
+        //    {
+        //        if (s == null)
+        //        {
+        //            Error500(call, "Problem transfering file");
+        //            return;
+        //        }
+        //        call.Out.BaseStream.TransferFrom(s);
+        //    }
+        //}
 
         private void DownloadAt(VFSItem item, HttpCall call)
         {
@@ -61,6 +65,7 @@ namespace DolphinWebXplorer2.Services
                     Error500(call, "Problem transfering file");
                     return;
                 }
+                call.Response.ContentType = MimeTypes.GetMimeType(Path.GetExtension(item.Name));
                 call.Out.BaseStream.TransferFrom(s);
             }
         }
@@ -189,43 +194,53 @@ namespace DolphinWebXplorer2.Services
 
         private void WriteIndex(string path, VFSItem dir, HttpCall call)
         {
-            WebUI.InitResources();
-            WebUI.WriteHeader(getBreadcrumb(path), null, call);
+            List<WebUILink> items = new List<WebUILink>();
             List<string> fileList = new List<string>();
-            if (allowSubfolderNavigation)
+            foreach (string d in dir.ListDirectories())
+                fileList.Add(d);
+            fileList.Sort();
+            foreach (string d in fileList)
             {
-                foreach (string d in dir.ListDirectories())
-                    fileList.Add(d);
-                fileList.Sort();
-                foreach (string d in fileList)
+                items.Add(new WebUILink()
                 {
-                    WebUI.WriteItem(new WebUILink()
-                    {
-                        Icon = "/$sunfish/folder.png",
-                        Name = d,
-                        Description = "Directory",
-                        Link = d + "/"
-                    }, call);
-                }
-                fileList.Clear();
+                    Icon = "/$sunfish/folder.png",
+                    Name = d,
+                    Description = "Directory",
+                    Link = d + "/"
+                });
             }
+            fileList.Clear();
             foreach (string d in dir.ListFiles())
                 fileList.Add(d);
             fileList.Sort();
             foreach (string d in fileList)
             {
-                WebUI.WriteItem(new WebUILink()
+                items.Add(new WebUILink()
                 {
                     Icon = d + "?meta=icon",
                     Name = d,
                     Description = "File",
-                    Link = d
-                }, call);
+                    Link = d,
+                    Actions = new WebUILink[]{
+                        allowDelete?new WebUILink()
+                        {
+                            Icon="delete",
+                            Tooltip="Delete file",
+                            //Link="?action=delete"
+                            Click="sunfish.ask('Sure to delete?',{b:'Cancel'},{b:'Delete',color:'red',go:'?action=delete&file="+d+"'});"
+                        }:null
+                    }
+                }); ;
             }
-            WebUI.WriteFooter(call);
+            WebUI.InitResources();
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data["Breadcrumb"] = GetBreadcrumb(path);
+            //data["Actions"] = actions;
+            data["Items"] = items;            
+            WebUI.WriteTemplate("directory-index", call, data);
         }
 
-        private WebUILink[] getBreadcrumb(string path)
+        private WebUILink[] GetBreadcrumb(string path)
         {
             string link = "";
             path = Configuration.Location + path;

@@ -252,7 +252,6 @@ namespace DolphinWebXplorer2
                     ssc.Enabled = true;
                     ssc.Settings[Services.WebServiceConfigurator.CFG_PATH] = fil;
                     ssc.Settings[Services.WebServiceConfigurator.CFG_SHARE] = true;
-                    ssc.Settings[Services.WebServiceConfigurator.CFG_NAVIGATION] = true;
                     EditConfiguration(ssc, null);
                 }
                 Activate();

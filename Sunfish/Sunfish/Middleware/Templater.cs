@@ -1,5 +1,6 @@
 ﻿using Microsoft.SqlServer.Server;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +12,28 @@ namespace DolphinWebXplorer2.Middleware
 {
     public class Templater
     {
-        private List<string> parts = new List<string>();
+        enum TempaltePartMode
+        {
+            Literal, Value, Start, End, Call
+        }
+
+        class TemplatePart
+        {
+            public TempaltePartMode Mode;
+            public string Key;
+
+            public TemplatePart(TempaltePartMode mode, string key)
+            {
+                Mode = mode;
+                Key = key;
+            }
+            public override string ToString()
+            {
+                return "Part <" + Mode + " " + Key + ">";
+            }
+        }
+
+        private List<TemplatePart> parts = new List<TemplatePart>();
 
         public Templater(string template)
         {
@@ -29,24 +51,43 @@ namespace DolphinWebXplorer2.Middleware
                 if (!key && c == '{')
                 {
                     key = true;
-                    parts.Add(sb.ToString());
+                    string p = sb.ToString();
+                    if (!string.IsNullOrWhiteSpace(p))
+                        parts.Add(new TemplatePart(TempaltePartMode.Literal, p));
                     sb.Clear();
                 }
                 else if (key && c == '}')
                 {
                     key = false;
-                    parts.Add(sb.ToString());
+                    string p = sb.ToString().Trim();
+                    if (p.Length > 0)
+                        if (p.StartsWith("@"))
+                            parts.Add(new TemplatePart(TempaltePartMode.Start, p.Substring(1)));
+                        else if (p.StartsWith("%"))
+                            parts.Add(new TemplatePart(TempaltePartMode.Call, p.Substring(1)));
+                        else if (p == "/")
+                            parts.Add(new TemplatePart(TempaltePartMode.End, null));
+                        else if (p == "{")
+                            parts.Add(new TemplatePart(TempaltePartMode.Literal, p));
+                        else parts.Add(new TemplatePart(TempaltePartMode.Value, p));
                     sb.Clear();
                 }
                 else
                     sb.Append(c);
             }
             if (sb.Length > 0)
-                parts.Add(sb.ToString());
+                if (key)
+                    throw new Exception("Template placeholder not closed");
+                else
+                    parts.Add(new TemplatePart(TempaltePartMode.Literal, sb.ToString().Trim()));
         }
 
-        private string GetValue(string key, object[] data)
+        private object GetValue(string key, object[] data)
         {
+            if (key == "AppName")
+                return "Sunfish";
+            if (key == "AppVersion")
+                return Program.VERSION;
             foreach (object o in data)
             {
                 if (o == null)
@@ -56,10 +97,7 @@ namespace DolphinWebXplorer2.Middleware
                     Dictionary<string, object> d = (Dictionary<string, object>)o;
                     object v;
                     if (d.TryGetValue(key, out v))
-                        if (v == null)
-                            return null;
-                        else
-                            return v.ToString();
+                        return v;
                 }
                 else
                 {
@@ -70,7 +108,7 @@ namespace DolphinWebXplorer2.Middleware
                         if (p != null)
                         {
                             object v = p.GetValue(o);
-                            return v?.ToString();
+                            return v;
                         }
                     }
                     catch { };
@@ -82,24 +120,74 @@ namespace DolphinWebXplorer2.Middleware
         public string Process(params object[] data)
         {
             StringBuilder sb = new StringBuilder();
-            bool key = false;
-            foreach (string s in parts)
+            int level = 0;
+            int ignore = int.MaxValue;
+            foreach (TemplatePart s in parts)
             {
-                if (key)
+                switch (s.Mode)
                 {
-                    key = false;
-                    string v = GetValue(s, data);
-                    if (!string.IsNullOrEmpty(v))
-                        sb.Append(v);
-                }
-                else
-                {
-                    key = true;
-                    sb.Append(s);
+                    case TempaltePartMode.Value:
+                        if (level < ignore)
+                        {
+                            string v = GetValue(s.Key, data)?.ToString();
+                            if (!string.IsNullOrEmpty(v))
+                                sb.Append(v);
+                        }
+                        break;
+                    case TempaltePartMode.Literal:
+                        if (level < ignore)
+                            sb.Append(s.Key);
+                        break;
+                    case TempaltePartMode.Start:
+                        level++;
+                        if (level < ignore)
+                        {
+                            object v = GetValue(s.Key, data);
+                            if (v == null || (v is string && ((string)v).Length == 0))
+                                ignore = level;
+                        }
+                        break;
+                    case TempaltePartMode.End:
+                        level--;
+                        if (level < ignore)
+                            ignore = int.MaxValue;
+                        break;
+                    case TempaltePartMode.Call:
+                        if (level < ignore)
+                        {
+                            string[] cmd = s.Key.Split(':');
+                            if (cmd.Length != 2)
+                                throw new Exception("Template call placeholder format is <value>:<template>");
+                            object v;
+                            if (cmd[0].Length > 0)
+                            {
+                                v = GetValue(cmd[0], data);
+                                if (v == null)
+                                    break;
+                            }
+                            else v = data;
+                            Templater templ = WebUI.Templs[cmd[1]];
+                            if (templ == null)
+                                break;
+                            if (v is Array)
+                            {
+                                foreach (object o in (Array)v)
+                                    if (o != null)
+                                        sb.Append(templ.Process(o));
+                            }
+                            else if (v is IList)
+                            {
+                                foreach (object o in (IList)v)
+                                    if (o != null)
+                                        sb.Append(templ.Process(o));
+                            }
+                            else
+                                sb.Append(templ.Process(v));
+                        }
+                        break;
                 }
             }
             return sb.ToString();
         }
-
     }
 }

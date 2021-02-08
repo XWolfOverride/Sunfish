@@ -19,13 +19,9 @@ namespace DolphinWebXplorer2.Middleware
         private static string rpath = @"C:\Users\XWolf\Source\Repos\Sunfish\Sunfish\ShareWeb\$sunfish";
         private const string SECBEGIN = "<!--SEC:";
         private const string SECTAGEND = "-->";
-        private static Dictionary<string, object> BaseData = new Dictionary<string, object>()
-        {
-            ["AppName"] = "Sunfish",
-            ["AppVersion"] = Program.VERSION,
-        };
+        public static Dictionary<string, Templater> Templs = new Dictionary<string, Templater>();
 
-        public static void InitResources()
+        public static void InitResources() //TODO: Now calling from several sites, in future make private and call in static ctor
         {
             Templs.Clear();
             string template = File.ReadAllText(Path.Combine(rpath, "$index.html"));
@@ -47,36 +43,16 @@ namespace DolphinWebXplorer2.Middleware
                 Templs[tname] = new Templater(template);
         }
 
-        private static Dictionary<string, Templater> Templs = new Dictionary<string, Templater>();
-
         #endregion
-
-        public static void WriteHeader(WebUILink[] breadcrumb, WebUILink[] toolbar, HttpCall call)
-        {
-            call.Write(Templs["head-a"].Process(BaseData));
-            if (breadcrumb != null)
-                foreach (WebUILink l in breadcrumb)
-                    call.Write(Templs["head-location-item"].Process(l, BaseData));
-            call.Write(Templs["head-b"].Process(BaseData));
-            if (breadcrumb != null)
-                foreach (WebUILink l in breadcrumb)
-                    call.Write(Templs["head-toolbar-item"].Process(l, BaseData));
-            call.Write(Templs["head-c"].Process(BaseData));
-        }
-
-        public static void WriteFooter(HttpCall call)
-        {
-            call.Write(Templs["footer"].Process(BaseData));
-        }
-
-        public static void WriteItem(WebUILink item, HttpCall call)
-        {
-            call.Write(Templs["item"].Process(item, BaseData));
-        }
 
         public static void WriteResource(string path, HttpCall call)
         {
             call.Write(File.ReadAllBytes(Path.Combine(rpath, path)));
+        }
+
+        public static void WriteTemplate(string template, HttpCall call, params object[] para)
+        {
+            call.Write(Templs[template].Process(para));
         }
 
         public static string FBytes(double lng)
@@ -90,7 +66,6 @@ namespace DolphinWebXplorer2.Middleware
             }
             return lng.ToString("#0.00") + (taili >= tail.Length ? "^b" : tail[taili]);
         }
-
     }
 
     public class WebUILink
@@ -100,7 +75,8 @@ namespace DolphinWebXplorer2.Middleware
         public string Link { get; set; }
         public string Icon { get; set; }
         public string Tooltip { get; set; }
-
-        public string Styles { get; set; }
+        public string Style { get; set; }
+        public string Click { get; set; }
+        public WebUILink[] Actions { get; set; }
     }
 }

@@ -5,42 +5,43 @@ html {
 }
 
 body {
-    margin: 0 auto;
+    margin: 0;
     padding: 0;
     width: 100%;
-    max-width: 50rem;
     background: white;
-    box-shadow: 0 0 0.3rem black;
 }
 
 a {
     text-decoration: none;
-    color: unset;
+    color: black;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 a:hover {
-    color: #272c2a;
+    color: #5d6962;
 }
 
 #head {
-    height: 3rem;
-    background: #e7eff3 url(/$sunfish/logo.png) 1rem 1rem no-repeat;
+    height: 4.7rem;
+    background: white url(/$sunfish/logo.png) 1rem 1rem no-repeat;
     padding: 1rem;
     position: relative;
-    box-shadow: 0 0.1rem 0.1rem #00000066;
 }
 
 #main-title {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Montserrat', Verdana, sans-serif;
     font-size: 2.2rem;
-    left: 5rem;
-    top: 0;
+    left: 4.5rem;
+    top: 0.3rem;
     position: absolute;
 }
 
 #main-subtitle {
     position: absolute;
-    font-family: tahoma, verdana, sans-serif;
+    font-family: 'Montserrat', Verdana, sans-serif;
     font-size: 1.1rem;
     color: #000000b2;
     top: 1.3rem;
@@ -49,25 +50,32 @@ a:hover {
 
 #main-location {
     position: absolute;
-    bottom: 0.5rem;
-    left: 6rem;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 0.8rem;
+    bottom: 0;
+    left: 4.5rem;
+    right: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9rem;
     color: #696969;
+    background: #a6e1ff;
+    padding: 0.2rem;
+    border-top-left-radius: 0.6rem;
+    border-bottom-left-radius: 0.6rem;
 }
 
-.breadcrumb::after {
-    content: "/";
+#main-location>a::after {
+    content: " / ";
+    color: #777777;
 }
 
-.breadcrumb i.material-icons{
-    font-size: 1.0rem;
+#main-location>a>i.material-icons {
+    font-size: 1.3rem;
     vertical-align: bottom;
 }
 
 #wrapper {
+    margin: 0 auto;
     padding: 0.5rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
     text-align: center;
 }
 
@@ -80,16 +88,14 @@ a:hover {
     width: 22.5rem;
     max-width: calc(100% - 2rem);
     display: inline-block;
-    border-bottom: 1px solid #EEEEEE;
+    border-bottom: 1px solid #DEDEDE;
     text-align: initial;
-    height: 2rem;
+    height: 3rem;
 }
 
 .item:hover {
-    border: 1px solid #66A7E8;
-    background-color: #EEF4FF;
-    margin: 4px 4px 9px 4px;
-    border-radius: 2px;
+    background-color: #ecf9ff;
+    border-radius: 0.2rem;
 }
 
 .item-icon {
@@ -105,6 +111,7 @@ a:hover {
     top: 0.3rem;
     left: 3rem;
     font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .item-desc {
@@ -114,4 +121,40 @@ a:hover {
     font-weight: 400;
     font-size: 0.7rem;
     color: gray;
+}
+
+.item-actions {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0rem;
+}
+
+.item-actions i.material-icons {
+    font-size: 1.1rem;
+    color: #aaaaaa;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 30rem;
+    max-width: 90%;
+    background-color: #201a12be;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: bold;
+    color: white;
+    padding: 1rem;
+    margin-left: -15rem;
+    margin-top: -2rem;
+    border-radius: 1rem;
+}
+
+.popup button {
+    background-color: #e2d9cd;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    color: #424242;
+    border:0;
+    border-radius: 1rem;
 }
