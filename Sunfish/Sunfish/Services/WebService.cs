@@ -230,18 +230,19 @@ namespace DolphinWebXplorer2.Services
                     Name = d,
                     Description = "Directory",
                     Link = d + "/",
+                    Style = "directory",
                     Actions = new WebUILink[]{
                         readOnly?null:new WebUILink()
                         {
                             Icon="drive_file_rename_outline",
                             Tooltip="Rename",
-                            Click="sunfish.renameFile(this,'"+d+"');"
+                            Click="sunfish.renameFile(this)"
                         },
                         allowDelete?new WebUILink()
                         {
                             Icon="delete",
                             Tooltip="Delete folder",
-                            Click="sunfish.deleteFile(this,'"+d+"',true);"
+                            Click="sunfish.deleteFile(this);"
                         }:null
                     }
                 });
@@ -263,19 +264,19 @@ namespace DolphinWebXplorer2.Services
                         {
                             Icon="api",
                             Tooltip="Open in server",
-                            Link=d+"?action=open"
+                            Click="sunfish.openFile(this)"
                         }:null,
                         readOnly?null:new WebUILink()
                         {
                             Icon="drive_file_rename_outline",
                             Tooltip="Rename",
-                            Click="sunfish.renameFile(this,'"+d+"');"
+                            Click="sunfish.renameFile(this)"
                         },
                         allowDelete?new WebUILink()
                         {
                             Icon="delete",
                             Tooltip="Delete file",
-                            Click="sunfish.deleteFile(this,'"+d+"',false);"
+                            Click="sunfish.deleteFile(this)"
                         }:null
                     }
                 }); ;
