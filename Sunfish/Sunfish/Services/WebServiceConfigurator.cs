@@ -23,9 +23,9 @@ namespace DolphinWebXplorer2.Services
             {
                 Elements = new ConfigurationElement[]
                 {
-                    new ConfigurationString(CFG_PATH,"Web path")
+                    new ConfigurationString(CFG_PATH,"Directory")
                     {
-                        Tooltip = "Folder, zip or web-file path of site document root",
+                        Tooltip = "Folder of site document root",
                         IsDirectoiryPath = true,
                         IsFilePath = true,
                         Mandatory = true

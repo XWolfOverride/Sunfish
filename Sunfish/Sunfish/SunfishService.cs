@@ -85,7 +85,6 @@ namespace DolphinWebXplorer2
         }
 
         public abstract void Process(string path, HttpCall call);
-
         protected abstract void Start();
         protected abstract void Stop();
 

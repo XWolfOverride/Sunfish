@@ -8,7 +8,7 @@ namespace DolphinWebXplorer2
         {
             object value;
             if (Settings.TryGetValue(key, out value))
-                return (T) value;
+                return (T)value;
             return def;
         }
 

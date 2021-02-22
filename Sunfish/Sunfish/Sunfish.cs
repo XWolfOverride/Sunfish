@@ -12,10 +12,10 @@ namespace DolphinWebXplorer2
     {
         class SunfishConfiguration
         {
-            public int Port = 90;
-            public bool Active = false;
-            public bool SunfishRoot = true;
-            public List<SunfishServiceConfiguration> Services = new List<SunfishServiceConfiguration>();
+            public int Port { get; set; }= 90;
+            public bool Active { get; set; } = false;
+            public bool SunfishRoot { get; set; } = true;
+            public List<SunfishServiceConfiguration> Services { get; set; } = new List<SunfishServiceConfiguration>();
         }
 
         public const string DEFAULT_CONF_FILE = "sunfish2";
@@ -32,24 +32,27 @@ namespace DolphinWebXplorer2
 
         static void Load()
         {
-            if (!File.Exists(DEFAULT_CONF_FILE))
-                return;
-
-            string json = File.ReadAllText(DEFAULT_CONF_FILE);
-            conf = JsonNet.Deserialize<SunfishConfiguration>(json);
-            if (conf.Services == null)
-                conf.Services = new List<SunfishServiceConfiguration>();
-            sroot.ShowMenu = conf.SunfishRoot;
-            foreach (SunfishServiceConfiguration ssc in conf.Services)
+            try
             {
-                srvs.Add(SunfishService.Instance(ssc));
+                if (!File.Exists(DEFAULT_CONF_FILE))
+                    return;
+                conf = new SunfishConfiguration();
+                conf = JsonNet.Deserialize<SunfishConfiguration>(File.ReadAllText(DEFAULT_CONF_FILE));
+                if (conf.Services == null)
+                    conf.Services = new List<SunfishServiceConfiguration>();
+                sroot.ShowMenu = conf.SunfishRoot;
+                foreach (SunfishServiceConfiguration ssc in conf.Services)
+                {
+                    srvs.Add(SunfishService.Instance(ssc));
+                }
+                if (conf.Active)
+                {
+                    //Bypass set active check
+                    conf.Active = false;
+                    SetActive(true);
+                }
             }
-            if (conf.Active)
-            {
-                //Bypass set active check
-                conf.Active = false;
-                SetActive(true);
-            }
+            catch { }
         }
 
         public static void Save()

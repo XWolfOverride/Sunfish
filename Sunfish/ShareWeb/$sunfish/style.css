@@ -67,7 +67,7 @@ a:hover {
     color: #777777;
 }
 
-#main-location>a>i.material-icons {
+#main-location>a>i.material-icons-round {
     font-size: 1.3rem;
     vertical-align: bottom;
 }
@@ -125,13 +125,23 @@ a:hover {
 
 .item-actions {
     position: absolute;
-    bottom: 0.5rem;
+    bottom: 0.1rem;
     right: 0rem;
+    padding-right: 0.5rem;
 }
 
-.item-actions i.material-icons {
+.item-actions i.material-icons-round {
     font-size: 1.1rem;
     color: #aaaaaa;
+    margin-left: 0.3rem;
+}
+
+.desktop .item-actions {
+    display: none;
+}
+
+.desktop .item:hover .item-actions {
+    display: unset;
 }
 
 .popup {
@@ -140,21 +150,78 @@ a:hover {
     left: 50%;
     width: 30rem;
     max-width: 90%;
-    background-color: #201a12be;
+    background-color: rgba(39, 36, 31, 0.822);
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: bold;
     color: white;
     padding: 1rem;
     margin-left: -15rem;
-    margin-top: -2rem;
-    border-radius: 1rem;
+    margin-top: -5rem;
+    border-radius: 0.5rem;
 }
 
-.popup button {
+.popup.error {
+    background-color: rgba(116, 11, 3, 0.822);
+}
+
+.popup>.body {
+    padding-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.popup>.buttons {
+    text-align: right;
+}
+
+.popup>.body>.input>input {
+    display: block;
+    width: 100%;
+}
+
+.popup-wall {
+    z-index: 200;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.199);
+}
+
+button {
     background-color: #e2d9cd;
     font-family: 'Open Sans', sans-serif;
     font-weight: bold;
     color: #424242;
-    border:0;
+    border: 0;
     border-radius: 1rem;
+    margin-left: 0.5rem;
+    padding: 0.3rem 1rem;
+    outline: none;
+}
+
+button:hover {
+    background-color: #beb7ae;
+}
+
+button.warning {
+    background-color: tomato;
+}
+
+button.warning:hover {
+    background-color: #d4523b;
+}
+
+input {
+    border: 0;
+    background-color: whitesmoke;
+    border-radius: 1rem;
+    font-family: 'Open Sans', sans-serif;
+    margin-top: 1rem;
+    padding: 0.3rem 1rem;
+    outline: none;
+}
+
+input:hover {
+    background-color: #cecece;
 }

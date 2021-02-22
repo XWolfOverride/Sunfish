@@ -14,5 +14,8 @@ namespace DolphinWebXplorer2.Middleware
         public abstract VFSItem GetItem(string path);
         public abstract string[] ListFiles(string path);
         public abstract string[] ListDirectories(string path);
+        public abstract bool DeleteFile(string path);
+        public abstract bool DeleteFolder(string path);
+        public abstract bool Rename(string from, string to);
     }
 }

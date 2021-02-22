@@ -9,7 +9,6 @@ namespace DolphinWebXplorer2.Middleware
 {
     public class VFSItem
     {
-
         public VFSItem(VFSFolder vfolder, string path, bool isFolder, long length)
         {
             Folder = vfolder;
@@ -39,11 +38,23 @@ namespace DolphinWebXplorer2.Middleware
             return Folder.ListFiles(Path);
         }
 
+        public bool Delete()
+        {
+            if (Directory)
+                return Folder.DeleteFolder(Path);
+            else
+                return Folder.DeleteFile(Path);
+        }
+
+        public bool RenameTo(string newName)
+        {
+            return Folder.Rename(Path, newName);
+        }
+
         public string Path { get; }
         public string Name { get; }
         public bool Directory { get; }
         public long Length { get; }
-
         public VFSFolder Folder { get; }
     }
 }

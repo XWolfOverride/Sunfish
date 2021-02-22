@@ -1,5 +1,4 @@
 ﻿using DolphinWebXplorer2.Middleware;
-using Json.Net;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -43,19 +42,6 @@ namespace DolphinWebXplorer2.Services
             ErrorPage(500, call, text);
         }
 
-        //private void DownloadAt(string path, HttpCall call)
-        //{
-        //    using (Stream s = vfs.OpenRead(path))
-        //    {
-        //        if (s == null)
-        //        {
-        //            Error500(call, "Problem transfering file");
-        //            return;
-        //        }
-        //        call.Out.BaseStream.TransferFrom(s);
-        //    }
-        //}
-
         private void DownloadAt(VFSItem item, HttpCall call)
         {
             using (Stream s = item.OpenRead())
@@ -72,18 +58,24 @@ namespace DolphinWebXplorer2.Services
 
         public override void Process(string path, HttpCall call)
         {
-            string meta;
-            if (!call.Parameters.TryGetValue("meta", out meta))
-                meta = null;
-            else if (string.IsNullOrEmpty(meta))
-                meta = null;
-            switch (meta)
+            string action;
+            if (!call.Parameters.TryGetValue("action", out action))
+                action = null;
+            else if (string.IsNullOrEmpty(action))
+                action = null;
+            switch (action)
             {
                 case null:
                     ProcessGET(path, call);
                     break;
                 case "icon":
                     ProcessIcon(path, call);
+                    break;
+                case "delete":
+                    ProcessDelete(path, call);
+                    break;
+                case "rename":
+                    ProcessRename(path, call);
                     break;
                 default:
                     call.HTTPBadRequest();
@@ -170,6 +162,37 @@ namespace DolphinWebXplorer2.Services
             }
         }
 
+        private void ProcessDelete(string path, HttpCall call)
+        {
+            VFSItem fil = vfs.GetItem(path);
+            if (fil != null)
+                call.Write(fil.Delete() ? "OK" : "KO");
+            else
+                call.Write("KO");
+        }
+
+        private void ProcessRename(string path, HttpCall call)
+        {
+            char[] forbiddenTo = { '/', '\\' };
+            string to;
+            if (!call.Parameters.TryGetValue("to", out to))
+            {
+                call.Write("KO (missing to)");
+                return;
+            }
+            if (to.IndexOfAny(forbiddenTo) >= 0 || to == "." || to == "..")
+            {
+                call.Write("KO (forbidden)");
+                return;
+            }
+
+            VFSItem fil = vfs.GetItem(path);
+            if (fil != null)
+                call.Write(fil.RenameTo(to) ? "OK" : "KO");
+            else
+                call.Write("KO");
+        }
+
         public void WriteIcon(Icon image, HttpCall call)
         {
             call.Response.ContentType = "image/vnd.microsoft.icon";
@@ -206,7 +229,21 @@ namespace DolphinWebXplorer2.Services
                     Icon = "/$sunfish/folder.png",
                     Name = d,
                     Description = "Directory",
-                    Link = d + "/"
+                    Link = d + "/",
+                    Actions = new WebUILink[]{
+                        readOnly?null:new WebUILink()
+                        {
+                            Icon="drive_file_rename_outline",
+                            Tooltip="Rename",
+                            Click="sunfish.renameFile(this,'"+d+"');"
+                        },
+                        allowDelete?new WebUILink()
+                        {
+                            Icon="delete",
+                            Tooltip="Delete folder",
+                            Click="sunfish.deleteFile(this,'"+d+"',true);"
+                        }:null
+                    }
                 });
             }
             fileList.Clear();
@@ -217,17 +254,28 @@ namespace DolphinWebXplorer2.Services
             {
                 items.Add(new WebUILink()
                 {
-                    Icon = d + "?meta=icon",
+                    Icon = d + "?action=icon",
                     Name = d,
                     Description = "File",
                     Link = d,
                     Actions = new WebUILink[]{
+                        allowExec?new WebUILink()
+                        {
+                            Icon="api",
+                            Tooltip="Open in server",
+                            Link=d+"?action=open"
+                        }:null,
+                        readOnly?null:new WebUILink()
+                        {
+                            Icon="drive_file_rename_outline",
+                            Tooltip="Rename",
+                            Click="sunfish.renameFile(this,'"+d+"');"
+                        },
                         allowDelete?new WebUILink()
                         {
                             Icon="delete",
                             Tooltip="Delete file",
-                            //Link="?action=delete"
-                            Click="sunfish.ask('Sure to delete?',{b:'Cancel'},{b:'Delete',color:'red',go:'?action=delete&file="+d+"'});"
+                            Click="sunfish.deleteFile(this,'"+d+"',false);"
                         }:null
                     }
                 }); ;
@@ -236,7 +284,8 @@ namespace DolphinWebXplorer2.Services
             Dictionary<string, object> data = new Dictionary<string, object>();
             data["Breadcrumb"] = GetBreadcrumb(path);
             //data["Actions"] = actions;
-            data["Items"] = items;            
+            data["Items"] = items;
+            data["Include"] = "<script src=\"/$sunfish/sunfish-directory.js\"></script>";
             WebUI.WriteTemplate("directory-index", call, data);
         }
 
@@ -269,16 +318,6 @@ namespace DolphinWebXplorer2.Services
         protected override void Stop()
         {
         }
-
-        #region API
-
-        [ApiMethod("rename")]
-        public bool ApiMove(string from, string to)
-        {
-            return false;
-        }
-
-        #endregion
 
         public override string Description => "For Webpages or file sharing";
     }

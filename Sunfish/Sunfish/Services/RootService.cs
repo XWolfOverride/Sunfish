@@ -11,7 +11,6 @@ namespace DolphinWebXplorer2.Services
     class RootService : SunfishService
     {
         public const string DIR_COMMON = "/$sunfish/";
-        public const string DIR_API = "api/";
 
         static RootService()
         {
@@ -66,45 +65,7 @@ namespace DolphinWebXplorer2.Services
             else if (path.StartsWith(DIR_COMMON))
             {
                 path = path.Substring(DIR_COMMON.Length);
-                if (path.StartsWith(DIR_API))
-                {
-                    // API
-                    path = "/" + path.Substring(DIR_API.Length);
-                    SunfishService servc = Sunfish.GetServiceForPath(ref path);
-                    if (servc == null || servc is RootService)
-                    {
-                        ApiRest.WriteError("Service does not exists", call);
-                    }
-                    else
-                    {
-                        if (path.StartsWith("/"))
-                            path = path.Substring(1);
-                        if (path == "")
-                        {
-                            string meta;
-                            if (!call.Parameters.TryGetValue("format", out meta))
-                                meta = "json";
-                            switch (meta)
-                            {
-                                case "js":
-                                    ApiRest.WriteError("Not implemented", call);
-                                    break;
-                                case "json":
-                                    ApiRest.WriteError("Not implemented", call);
-                                    break;
-                                default:
-                                    ApiRest.WriteError("Format only supports 'js' and 'json'.", call);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            //call method (path is method name)
-                        }
-                    }
-
-                }
-                else if (path == "Sunfish.exe")
+                if (path == "Sunfish.exe")
                 {
                     // Self copy
                     call.Response.ContentType = "application/x-msdownload";

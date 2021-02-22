@@ -68,6 +68,59 @@ namespace DolphinWebXplorer2.Middleware
             return lst.ToArray();
         }
 
+        public override bool DeleteFile(string path)
+        {
+            string fpath = Path.Combine(basePath, path);
+            try
+            {
+                File.Delete(fpath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public override bool DeleteFolder(string path)
+        {
+            string fpath = Path.Combine(basePath, path);
+            try
+            {
+                FSDeleteFolder(fpath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public override bool Rename(string from, string to)
+        {
+            string ffrom = Path.Combine(basePath, from);
+            string realbase = Path.GetDirectoryName(ffrom);
+            string tto= Path.Combine(realbase, to);
+            try
+            {
+                Directory.Move(ffrom, tto);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void FSDeleteFolder(string path)
+        {
+            foreach (string d in Directory.GetDirectories(path))
+                FSDeleteFolder(d);
+            foreach (string d in Directory.GetFiles(path))
+                File.Delete(d);
+            Directory.Delete(path);
+        }
+
         public string GetFSPath(string path)
         {
             return Path.Combine(basePath, path);
