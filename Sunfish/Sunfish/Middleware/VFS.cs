@@ -71,6 +71,29 @@ namespace DolphinWebXplorer2.Middleware
             return folder.GetItem(path);
         }
 
+        public VFSItem Create(string path)
+        {
+            bool asDir = path.EndsWith("/");
+            if (asDir)
+                path = path.Substring(0, path.Length - 1);
+            int sep = path.LastIndexOf('/');
+            string inner = path.Substring(sep + 1);
+            path = path.Substring(0, sep);
+            VFSItem dir = GetItem(path);
+            while (dir == null)
+            {
+                sep = path.LastIndexOf('/');
+                if (sep < 0)
+                    return null;
+                inner = path.Substring(sep + 1) + '/' + inner;
+                path = path.Substring(0, sep);
+                dir = GetItem(path);
+            }
+            if (!dir.Directory)
+                return null;
+            return dir.Create(inner, asDir);
+        }
+
         public string[] ListFiles(string path)
         {
             VFSFolder folder = LocateFolder(ref path);

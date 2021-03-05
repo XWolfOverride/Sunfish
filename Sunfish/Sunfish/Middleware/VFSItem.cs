@@ -51,6 +51,11 @@ namespace DolphinWebXplorer2.Middleware
             return Folder.Rename(Path, newName);
         }
 
+        public VFSItem Create(string name, bool asFolder)
+        {
+            return Folder.Create(System.IO.Path.Combine(Path, name), asFolder);
+        }
+
         public string Path { get; }
         public string Name { get; }
         public bool Directory { get; }

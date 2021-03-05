@@ -33,7 +33,13 @@ namespace DolphinWebXplorer2.Middleware
 
         public override Stream OpenWrite(string path)
         {
-            throw new NotImplementedException();
+            path = Path.Combine(basePath, path);
+            try
+            {
+                return File.OpenWrite(path);
+            }
+            catch { };
+            return null;
         }
 
         public override VFSItem GetItem(string path)
@@ -100,7 +106,7 @@ namespace DolphinWebXplorer2.Middleware
         {
             string ffrom = Path.Combine(basePath, from);
             string realbase = Path.GetDirectoryName(ffrom);
-            string tto= Path.Combine(realbase, to);
+            string tto = Path.Combine(realbase, to);
             try
             {
                 Directory.Move(ffrom, tto);
@@ -110,6 +116,21 @@ namespace DolphinWebXplorer2.Middleware
             {
                 return false;
             }
+        }
+
+        public override VFSItem Create(string path, bool asFolder)
+        {
+            string fspath = Path.Combine(basePath, path);
+            if (asFolder)
+            {
+                Directory.CreateDirectory(fspath);
+            }
+            else
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(fspath));
+                File.WriteAllBytes(fspath, new byte[0]);
+            }
+            return GetItem(path);
         }
 
         private void FSDeleteFolder(string path)
@@ -125,5 +146,6 @@ namespace DolphinWebXplorer2.Middleware
         {
             return Path.Combine(basePath, path);
         }
+
     }
 }

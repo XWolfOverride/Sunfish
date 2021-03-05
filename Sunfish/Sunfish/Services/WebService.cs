@@ -63,6 +63,8 @@ namespace DolphinWebXplorer2.Services
                 action = null;
             else if (string.IsNullOrEmpty(action))
                 action = null;
+            if (call.Request.HttpMethod == "PUT")
+                action = "upload";
             switch (action)
             {
                 case null:
@@ -76,6 +78,12 @@ namespace DolphinWebXplorer2.Services
                     break;
                 case "rename":
                     ProcessRename(path, call);
+                    break;
+                case "open":
+                    ProcessOpen(path, call);
+                    break;
+                case "upload":
+                    ProcessUpload(path, call);
                     break;
                 default:
                     call.HTTPBadRequest();
@@ -193,6 +201,60 @@ namespace DolphinWebXplorer2.Services
                 call.Write("KO");
         }
 
+        private void ProcessOpen(string path, HttpCall call)
+        {
+            VFSItem fil = vfs.GetItem(path);
+            if (fil != null)
+            {
+                string fpath = ((VFSFolderFileSystem)fil.Folder).GetFSPath(fil.Path);
+                System.Diagnostics.Process.Start(fpath);
+                call.Write("OK");
+            }
+            else
+                call.Write("KO");
+        }
+
+        private void ProcessUpload(string path, HttpCall call)
+        {
+            string soffset = call.Request.Headers["X-Sunfish-Offset"];
+            string slength = call.Request.Headers["X-Sunfish-Length"];
+            if (string.IsNullOrEmpty(soffset))
+                soffset = call.Parameters["offset"];
+            if (string.IsNullOrEmpty(slength))
+                slength = call.Parameters["length"];
+            int pos, len;
+            if (string.IsNullOrEmpty(soffset) || string.IsNullOrEmpty(slength) || !int.TryParse(soffset, out pos) || !int.TryParse(slength, out len))
+            {
+                call.Write("KO: No offset or length");
+                return;
+            }
+            try
+            {
+                VFSItem fil = vfs.GetItem(path);
+                if (fil == null)
+                    fil = vfs.Create(path);
+                if (fil.Directory)
+                {
+                    call.Write("KO: Exists as directory");
+                    return;
+                }
+                using (Stream s = fil.OpenWrite())
+                {
+                    s.Position = pos;
+                    using (Stream sin = call.Request.InputStream)
+                    {
+                        s.TransferFrom(sin, len);
+                    }
+                }
+                call.Write("OK");
+            }
+            catch (Exception e)
+            {
+                call.Write("KO: " + e.GetType().Name + ":" + e.Message);
+            }
+        }
+
+
         public void WriteIcon(Icon image, HttpCall call)
         {
             call.Response.ContentType = "image/vnd.microsoft.icon";
@@ -284,7 +346,27 @@ namespace DolphinWebXplorer2.Services
             WebUI.InitResources();
             Dictionary<string, object> data = new Dictionary<string, object>();
             data["Breadcrumb"] = GetBreadcrumb(path);
-            //data["Actions"] = actions;
+            data["Actions"] = new WebUILink[] {
+                readOnly?null:new WebUILink()
+                {
+                    Icon="create_new_folder",
+                    Tooltip="New folder",
+                    Click="sunfish.newFolder(this)",
+                },
+                readOnly?null:new WebUILink()
+                {
+                    Icon="note_add",
+                    Tooltip="New file",
+                    Click="sunfish.newFile(this)",
+                },
+                readOnly?null:new WebUILink()
+                {
+                    Icon="upload",
+                    Tooltip="Upload. Drop files or fonders here",
+                    Click="sunfish.uploadFile(this)",
+                    //Style="upload-drop",
+                }
+            };
             data["Items"] = items;
             data["Include"] = "<script src=\"/$sunfish/sunfish-directory.js\"></script>";
             WebUI.WriteTemplate("directory-index", call, data);

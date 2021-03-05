@@ -27,8 +27,8 @@ function Sunfish() {
         delete def._;
         for (var i in def) {
             if (i == "style")
-                for (var sn in def)
-                    el.style[sn] = def[sn];
+                for (var sn in def.style)
+                    el.style[sn] = def.style[sn];
             else
                 el[i] = def[i];
         }
@@ -43,24 +43,48 @@ function Sunfish() {
         return el;
     }
 
-    function ask(question, bt1, bt2, bt3, bt4, bt5, iserror) {
+    function dialog(content, buttons, classes) {
+        var btdef = [];
+        for (var i in buttons) {
+            var bt = buttons[i];
+            if (bt.$)
+                btdef.push(bt);
+            else
+                btdef.push({
+                    $: "button",
+                    className: bt.class,
+                    _: bt.b,
+                    onclick: bt.do
+                });
+        }
+
         var wall = build({ $: "div", className: "popup-wall" }, document.body);
         var def = {
-            $: "div", className: iserror ? "popup error" : "popup", _: [
-                { $: "div", className: "body", _: [question] },
-                { $: "div", className: "buttons", _: [] }
+            $: "div", className: "popup" + (classes ? " " + classes : ""), _: [
+                { $: "div", className: "body", _: content },
+                { $: "div", className: "buttons", _: btdef }
             ]
         };
+        var dialog = build(def, wall);
+        dialog.close = function () {
+            document.body.removeChild(wall);
+        }
+        return dialog;
+    }
+
+    function ask(question, bt1, bt2, bt3, bt4, bt5, iserror) {
+        var buttons = [];
         var el;
         function addbt(bt) {
             if (bt) {
                 if (bt.go)
                     bt.do = function () { document.location = bt.go };
-                def._[1]._.push({
-                    $: "button", className: bt.class, _: bt.b,
-                    onclick: function () {
+                buttons.push({
+                    class: bt.class,
+                    b: bt.b,
+                    do: function () {
                         bt.do && bt.do();
-                        document.body.removeChild(wall);
+                        el.close();
                     }
                 });
             }
@@ -70,7 +94,7 @@ function Sunfish() {
         addbt(bt3);
         addbt(bt4);
         addbt(bt5);
-        return el = build(def, wall);
+        return el = dialog([question], buttons, iserror ? "error" : null);
     }
 
     function askString(text, def, cb) {
@@ -123,11 +147,30 @@ function Sunfish() {
                 ctrl.ok && ctrl.ok(xhr.responseText, xhr);
         };
         xhr.open(ctrl.method || 'GET', url);
-        xhr.send();
+        if (ctrl.headers)
+            for (var k in ctrl.headers)
+                xhr.setRequestHeader(k, ctrl.headers[k]);
+        if (ctrl.binary)
+            xhr.sendAsBinary(ctrl.binary, "binary/octet");
+        else
+            xhr.send(ctrl.data);
     }
+
+    if (!XMLHttpRequest.prototype.sendAsBinary)
+        XMLHttpRequest.prototype.sendAsBinary = function (datastr, contentType) {
+            var bb = new BlobBuilder();
+            var len = datastr.length;
+            var data = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                data[i] = datastr.charCodeAt(i);
+            }
+            bb.append(data.buffer);
+            this.send(bb.getBlob(contentType));
+        }
 
     this.init = init;
     this.build = build;
+    this.dialog = dialog;
     this.ask = ask;
     this.askString = askString;
     this.say = say;

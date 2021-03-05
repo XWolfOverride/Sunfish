@@ -72,6 +72,24 @@ a:hover {
     vertical-align: bottom;
 }
 
+#main-toolbar {
+    position: absolute;
+    right: 4rem;
+    top: 0.8rem;
+}
+
+#main-toolbar i.material-icons-round {
+    font-size: 26px;
+    cursor: pointer;
+    color: dimgrey;
+}
+
+#main-toolbar i.material-icons-round:hover {
+    font-size: 26px;
+    cursor: pointer;
+    color: #818181;
+}
+
 #wrapper {
     margin: 0 auto;
     padding: 0.5rem;
@@ -136,7 +154,7 @@ a:hover {
     margin-left: 0.3rem;
 }
 
-.test{
+.test {
     background-color: #4f6e05;
 }
 
@@ -240,4 +258,93 @@ input {
 
 input:hover {
     background-color: #cecece;
+}
+
+.upload-drop {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.upload-drop-icon {
+    position: absolute;
+    top: 5%;
+    height: 90%;
+    left: 25%;
+    width: 50%;
+    bottom: 25%;
+    border: 10px dashed #c1c1c1;
+    border-radius: 2rem;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.upload-drop-icon>i.material-icons-round {
+    width: 100%;
+    color: white;
+    height: 100%;
+    vertical-align: middle;
+    font-size: 8rem;
+    margin-top: 35%;
+    text-align: center;
+}
+
+.upload-drop-icon>i.material-icons-round::before {
+    content: "Drop here to upload";
+    position: absolute;
+    top: 58%;
+    left: 0;
+    right: 0;
+    font-family: 'Open Sans';
+    font-size: 1rem;
+}
+
+.upload-list {
+    height: calc( 100% - 4rem);
+    overflow-y: auto;
+    padding: 0 1rem;
+    margin: 1rem 0;
+}
+
+.upload-progress-box {
+    height: 2rem;
+    background: #383838;
+    position: relative;
+}
+
+.upload-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #a6e1ff;
+}
+
+.upload-item {
+    font-family: 'Open Sans';
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.upload-item-progress-box {
+    height: 1rem;
+    background: #383838;
+    border-radius: 0.5rem;
+    margin-top: 0.2rem;
+    border: 1px solid black;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-item-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #a6e1ff url(/$sunfish/logo.png) 100% 0.05rem/0.8rem 0.8rem no-repeat;
+}
+
+.upload-close {
+    margin-top: 0.15rem;
+    background: #6d6d6d;
+    color: white;
+    margin-left: calc( 100% - 5rem);
 }
