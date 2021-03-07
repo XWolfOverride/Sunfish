@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,16 +16,35 @@ namespace DolphinWebXplorer2.Middleware
         }
 
         #region Frontend Resources
+#if DEBUG
+        private static bool EXTERNAL_RESOURCES = true;
+        private static string sfpath;
+#endif
 
-        private static string rpath = @"C:\Users\XWolf\Source\Repos\Sunfish\Sunfish\ShareWeb\$sunfish";
         private const string SECBEGIN = "<!--SEC:";
         private const string SECTAGEND = "-->";
         public static Dictionary<string, Templater> Templs = new Dictionary<string, Templater>();
 
-        public static void InitResources() //TODO: Now calling from several sites, in future make private and call in static ctor
+        private static void InitResources()
         {
-            Templs.Clear();
-            string template = File.ReadAllText(Path.Combine(rpath, "$index.html"));
+#if DEBUG
+            if (EXTERNAL_RESOURCES)
+            {
+                Templs.Clear();
+                sfpath=Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "$sunfish");
+                EXTERNAL_RESOURCES = Directory.Exists(sfpath);
+                if (EXTERNAL_RESOURCES)
+                {
+                    ProcessTemplate(File.ReadAllText(Path.Combine(sfpath, "$index.html")));
+                    return;
+                }
+            }
+#endif
+
+        }
+
+        private static void ProcessTemplate(string template)
+        {
             string tname = "";
             string tval;
             int i = template.IndexOf(SECBEGIN);
@@ -47,12 +67,27 @@ namespace DolphinWebXplorer2.Middleware
 
         public static void WriteResource(string path, HttpCall call)
         {
-            call.Write(File.ReadAllBytes(Path.Combine(rpath, path)));
+#if DEBUG
+            if (EXTERNAL_RESOURCES)
+            {
+                call.Write(File.ReadAllBytes(Path.Combine(sfpath, path)));
+                return;
+            }
+#endif
+
         }
 
         public static void WriteTemplate(string template, HttpCall call, params object[] para)
         {
-            call.Write(Templs[template].Process(para));
+#if DEBUG
+            if (EXTERNAL_RESOURCES)
+                InitResources();
+#endif
+            Templater t;
+            if (Templs.TryGetValue(template, out t))
+                call.Write(t.Process(para));
+            else
+                throw new Exception("No template found for: " + template);
         }
 
         public static string FBytes(double lng)

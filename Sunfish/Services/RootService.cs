@@ -34,7 +34,6 @@ namespace DolphinWebXplorer2.Services
 
         public override void Process(string path, HttpCall call)
         {
-            WebUI.InitResources();
             if (path == "/")
             {
                 // Root page
@@ -74,7 +73,7 @@ namespace DolphinWebXplorer2.Services
                 else
                 {
                     // Internal Resources
-                    WebUI.WriteResource(path, call); //TODO: Change to internal resources ZIP
+                    WebUI.WriteResource(path, call);
                 }
             }
             else

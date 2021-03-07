@@ -341,7 +341,6 @@ namespace DolphinWebXplorer2.Services
                     }
                 }); ;
             }
-            WebUI.InitResources();
             Dictionary<string, object> data = new Dictionary<string, object>();
             data["Breadcrumb"] = GetBreadcrumb(path);
             data["Actions"] = new WebUILink[] {
