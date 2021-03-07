@@ -1,5 +1,4 @@
 ﻿using DolphinWebXplorer2.Properties;
-using DolphinWebXplorer2.wx;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,10 +33,13 @@ namespace DolphinWebXplorer2
             nudPort.Value = Sunfish.Port;
             cbActive.Checked = Sunfish.Active;
             cbRootList.Checked = Sunfish.RootMenu;
+            cbAdmin.Checked = Sunfish.AdminPanel;
+            tbAdminPWD.Text = Sunfish.AdminPwd;
             lbPaths.Items.Clear();
             foreach (SunfishService s in Sunfish.Services)
                 lbPaths.Items.Add(s);
             Enabled = true;
+            tbAdminPWD.Enabled = cbAdmin.Checked;
         }
 
         private List<IpInfo> ListInterfacesIPs()
@@ -120,6 +122,7 @@ namespace DolphinWebXplorer2
         private void btAdd_Click(object sender, EventArgs e)
         {
             SunfishServiceConfiguration ssc = new SunfishServiceConfiguration();
+            ssc.Type = "WebService";
             EditConfiguration(ssc, null);
         }
 
@@ -186,7 +189,7 @@ namespace DolphinWebXplorer2
             }
             sb.Append("\r\nSunfish ");
             sb.Append(Program.VERSION);
-            sb.Append(" (C) XWolfOverride@gmail.com 2007-2020\r\nEasy folder shares");
+            sb.Append(" (C) XWolfOverride@gmail.com 2007-2021\r\nEasy folder shares");
             MessageBox.Show(sb.ToString(), "Sunfish information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -261,6 +264,17 @@ namespace DolphinWebXplorer2
         private void cbRootList_CheckedChanged(object sender, EventArgs e)
         {
             Sunfish.RootMenu = cbRootList.Checked;
+        }
+
+        private void cbAdmin_CheckedChanged(object sender, EventArgs e)
+        {
+            Sunfish.AdminPanel = cbAdmin.Checked;
+            tbAdminPWD.Enabled = cbAdmin.Checked;
+        }
+
+        private void tbAdminPWD_TextChanged(object sender, EventArgs e)
+        {
+            Sunfish.AdminPwd = tbAdminPWD.Text;
         }
     }
 }

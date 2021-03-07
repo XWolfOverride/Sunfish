@@ -30,7 +30,7 @@ namespace DolphinWebXplorer2
             {
                 int toRead = (int)Math.Min(buf.Length, length);
                 int readed = from.Read(buf, 0, toRead);
-                if (readed != toRead)
+                if (readed == 0)
                     throw new IOException("Unexpected EOF");
                 s.Write(buf, 0, readed);
                 length -= readed;

@@ -12,9 +12,11 @@ namespace DolphinWebXplorer2
     {
         class SunfishConfiguration
         {
-            public int Port { get; set; }= 90;
+            public int Port { get; set; } = 90;
             public bool Active { get; set; } = false;
             public bool SunfishRoot { get; set; } = true;
+            public bool AdminPanel { get; set; } = false;
+            public string AdminPwd { get; set; } = "";
             public List<SunfishServiceConfiguration> Services { get; set; } = new List<SunfishServiceConfiguration>();
         }
 
@@ -175,6 +177,9 @@ namespace DolphinWebXplorer2
         public static bool Active { get => conf.Active; set => SetActive(value); }
         public static int Port { get => conf.Port; set => SetPort(value); }
         public static bool RootMenu { get => conf.SunfishRoot; set => conf.SunfishRoot = value; }
+        public static bool AdminPanel { get => conf.AdminPanel; set => conf.AdminPanel = value; }
+        public static string AdminPwd { get => conf.AdminPwd; set => conf.AdminPwd = value; }
+
         public static SunfishService[] Services => srvs.ToArray();
     }
 }

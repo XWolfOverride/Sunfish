@@ -55,7 +55,7 @@ namespace DolphinWebXplorer2.Services
                     },
                     new ConfigurationMessage(ConfigurationMessage.MessageType.WARNING,"WARNING: Sunfish is executed as elevated process, any anction or process started by sunfish will be also elevated.")
                 },
-                Advanced = AdvancedEditing
+                //Advanced = AdvancedEditing
             };
         }
 

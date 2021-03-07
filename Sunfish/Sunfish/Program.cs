@@ -1,5 +1,4 @@
 ﻿using DolphinWebXplorer2.Middleware;
-using DolphinWebXplorer2.wx;
 using System;
 using System.Windows.Forms;
 

@@ -78,12 +78,15 @@
         sunfish.askString('Folder name:', "", function (name) {
             if (!name)
                 return;
-            sunfish.ajax(document.location.href + "?action=createFolder&name=" + name, {
+            sunfish.ajax(document.location.href + name + '/', {
+                method: "PUT",
                 ok: function (result) {
                     if (result != "OK")
-                        sunfish.error("Error creading folder", function () {
+                        sunfish.error("Error creading file", function () {
                             document.location.reload();
                         });
+                    else
+                        document.location.reload();
                 }
             });
         });
@@ -93,12 +96,15 @@
         sunfish.askString('File name:', "", function (name) {
             if (!name)
                 return;
-            sunfish.ajax(document.location.href + "?action=createFolder&name=" + name, {
+            sunfish.ajax(document.location.href + name, {
+                method: "PUT",
                 ok: function (result) {
                     if (result != "OK")
                         sunfish.error("Error creading file", function () {
                             document.location.reload();
                         });
+                    else
+                        document.location.reload();
                 }
             });
         });
@@ -185,9 +191,10 @@
                     itemProgress.style.backgroundColor = "tomato";
                     if (info)
                         console.error(info);
+                    me.pos = me.length;
                 }
                 function step() {
-                    var length = Math.min(1024 * 128, me.length - me.pos);
+                    var length = Math.min(1024 * 512, me.length - me.pos);
                     var blob = file.slice(me.pos, me.pos + length);
                     if (blob.length == 0)
                         return ko("Nothing to send");
@@ -200,7 +207,7 @@
                         },
                         ok: function (result) {
                             if (result != "OK")
-                                ko("Upload is "+result);
+                                ko("Upload is " + result);
                             else {
                                 me.pos += blob.size;
                                 updateProgress();
@@ -222,8 +229,14 @@
                 $: "div", className: "upload-progress", _: [
                     {
                         $: "button", className: "upload-close", style: { display: "none" }, _: ["Close"], onclick: function () {
+                            /*
                             document.body.removeChild(edrop);
                             uploads = [];
+                            elist.innerHTML="";
+                            cbutton.style.display = "none";
+                            pb.style.width="0";
+                            */
+                           document.location.reload();
                         }
                     }
                 ]
@@ -264,7 +277,6 @@
                     upload(ev.dataTransfer.files[i].getAsFile());
             }
         });
-
         document.body.addEventListener("dragover", function (ev) {
             ev.preventDefault();
             document.body.appendChild(edrop);
@@ -276,6 +288,7 @@
         });
 
         function upload(file, to) {
+            document.body.appendChild(edrop);
             if (!elist)
                 show();
             to = to || file.name;

@@ -145,8 +145,6 @@
     <Compile Include="Middleware\Win32.cs" />
     <Compile Include="Services\RootServiceConfigurator.cs" />
     <Compile Include="Services\RootService.cs" />
-    <Compile Include="Services\AdminServiceConfigurator.cs" />
-    <Compile Include="Services\AdminService.cs" />
     <Compile Include="DefineConfigurator.cs" />
     <Compile Include="Configurator\SunfishServiceConfigurator.cs" />
     <Compile Include="Services\ErrorServiceConfigurator.cs" />
@@ -160,9 +158,6 @@
     <Compile Include="SunfishService.cs" />
     <Compile Include="Sunfish.cs" />
     <Compile Include="SunfishServiceConfiguration.cs" />
-    <Compile Include="wx\RemoteScreen.cs" />
-    <Compile Include="wx\WebXplorer.cs" />
-    <Compile Include="wx\WShared.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DolphinWeb.ico" />
@@ -195,7 +190,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="_OLD_\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

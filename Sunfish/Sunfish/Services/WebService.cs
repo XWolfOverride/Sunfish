@@ -219,33 +219,31 @@ namespace DolphinWebXplorer2.Services
             string soffset = call.Request.Headers["X-Sunfish-Offset"];
             string slength = call.Request.Headers["X-Sunfish-Length"];
             if (string.IsNullOrEmpty(soffset))
-                soffset = call.Parameters["offset"];
+                call.Parameters.TryGetValue("offset", out soffset);
             if (string.IsNullOrEmpty(slength))
-                slength = call.Parameters["length"];
+                call.Parameters.TryGetValue("length", out slength);
             int pos, len;
-            if (string.IsNullOrEmpty(soffset) || string.IsNullOrEmpty(slength) || !int.TryParse(soffset, out pos) || !int.TryParse(slength, out len))
-            {
-                call.Write("KO: No offset or length");
-                return;
-            }
+            int.TryParse(soffset, out pos);
+            int.TryParse(slength, out len);
             try
             {
                 VFSItem fil = vfs.GetItem(path);
                 if (fil == null)
                     fil = vfs.Create(path);
-                if (fil.Directory)
+                if (fil.Directory && len > 0)
                 {
                     call.Write("KO: Exists as directory");
                     return;
                 }
-                using (Stream s = fil.OpenWrite())
-                {
-                    s.Position = pos;
-                    using (Stream sin = call.Request.InputStream)
+                if (len > 0)
+                    using (Stream s = fil.OpenWrite())
                     {
-                        s.TransferFrom(sin, len);
+                        s.Position = pos;
+                        using (Stream sin = call.Request.InputStream)
+                        {
+                            s.TransferFrom(sin, len);
+                        }
                     }
-                }
                 call.Write("OK");
             }
             catch (Exception e)
