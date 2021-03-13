@@ -14,7 +14,7 @@ namespace DolphinWebXplorer2.Middleware
             Folder = vfolder;
             Path = path;
             Directory = isFolder;
-            Name = System.IO.Path.GetFileName(Path);
+            Name = System.IO.Path.GetFileName(path);
             Length = length;
         }
 
@@ -28,12 +28,12 @@ namespace DolphinWebXplorer2.Middleware
             return Folder.OpenWrite(Path);
         }
 
-        public string[] ListDirectories()
+        public VFSItem[] ListDirectories()
         {
             return Folder.ListDirectories(Path);
         }
 
-        public string[] ListFiles()
+        public VFSItem[] ListFiles()
         {
             return Folder.ListFiles(Path);
         }

@@ -15,6 +15,14 @@ namespace DolphinWebXplorer2.Middleware
         public VFSFolderFileSystem(string path)
         {
             basePath = path;
+            while (basePath[basePath.Length - 1] == (Path.DirectorySeparatorChar))
+            {
+                if (basePath.Length < 2)
+                    throw new Exception("Invalid path");
+                basePath = basePath.Substring(0, basePath.Length - 1);
+            }
+            if (basePath.Length == 2)
+                basePath += Path.DirectorySeparatorChar;
         }
 
         public bool AllowSubfolder { get; set; } = true;
@@ -54,23 +62,32 @@ namespace DolphinWebXplorer2.Middleware
             return new VFSItem(this, path, di.Exists, fi.Exists ? fi.Length : 0);
         }
 
-        public override string[] ListDirectories(string path)
+        public override VFSItem[] ListDirectories(string path)
         {
             string fpath = Path.Combine(basePath, path);
-            List<string> lst = new List<string>();
+            int basecut = basePath.Length;
+            if (basePath[basePath.Length - 1] != Path.DirectorySeparatorChar)
+                basecut++;
+            List<VFSItem> lst = new List<VFSItem>();
             foreach (string d in Directory.GetDirectories(fpath))
-                lst.Add(d.Substring(fpath.Length + 1));
-            lst.Sort();
+                lst.Add(new VFSItem(this, d.Substring(basecut), true, 0));
+            lst.Sort((a, b) => a.Name.CompareTo(b.Name));
             return lst.ToArray();
         }
 
-        public override string[] ListFiles(string path)
+        public override VFSItem[] ListFiles(string path)
         {
             string fpath = Path.Combine(basePath, path);
-            List<string> lst = new List<string>();
+            int basecut = basePath.Length;
+            if (basePath[basePath.Length - 1] != Path.DirectorySeparatorChar)
+                basecut++;
+            List<VFSItem> lst = new List<VFSItem>();
             foreach (string d in Directory.GetFiles(fpath))
-                lst.Add(d.Substring(fpath.Length + 1));
-            lst.Sort();
+            {
+                FileInfo fi = new FileInfo(d);
+                lst.Add(new VFSItem(this, d.Substring(basecut), false, fi.Length));
+            }
+            lst.Sort((a, b) => a.Name.CompareTo(b.Name));
             return lst.ToArray();
         }
 

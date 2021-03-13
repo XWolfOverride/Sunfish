@@ -95,9 +95,13 @@ namespace DolphinWebXplorer2.Middleware
             {
                 prc(this, call);
             }
-            finally
+            catch (Exception e)
             {
                 call.Response.StatusCode = 500;
+                call.Write(e.GetType().Name + ": " + e.Message);
+            }
+            finally
+            {
                 call.Close();
             }
         }

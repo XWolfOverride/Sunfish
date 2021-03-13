@@ -44,5 +44,18 @@ namespace DolphinWebXplorer2
                 return value;
             return def;
         }
+
+        public static string ToSize(this long l)
+        {
+            string[] tails = { "bytes", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb" };
+            int scale = 0;
+            double cnt = l;
+            while (cnt > 1024)
+            {
+                scale++;
+                cnt /= 1024;
+            }
+            return cnt.ToString("#0.00") + " " + (scale >= tails.Length ? "^b" : tails[scale]);
+        }
     }
 }

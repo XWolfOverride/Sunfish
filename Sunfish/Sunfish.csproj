@@ -113,6 +113,7 @@
     <Compile Include="Middleware\VFSFolderFileSystem.cs" />
     <Compile Include="Middleware\VFSItem.cs" />
     <Compile Include="Middleware\WebUI.cs" />
+    <Compile Include="Middleware\ZipDownload.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

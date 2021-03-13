@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace DolphinWebXplorer2.Services
 {
@@ -84,6 +83,9 @@ namespace DolphinWebXplorer2.Services
                     break;
                 case "upload":
                     ProcessUpload(path, call);
+                    break;
+                case "zip":
+                    ProcessFolderZip(path, call);
                     break;
                 default:
                     call.HTTPBadRequest();
@@ -172,7 +174,7 @@ namespace DolphinWebXplorer2.Services
 
         private void ProcessDelete(string path, HttpCall call)
         {
-            VFSItem fil = vfs.GetItem(path);
+            VFSItem fil = !readOnly && allowDelete ? vfs.GetItem(path) : null;
             if (fil != null)
                 call.Write(fil.Delete() ? "OK" : "KO");
             else
@@ -181,6 +183,11 @@ namespace DolphinWebXplorer2.Services
 
         private void ProcessRename(string path, HttpCall call)
         {
+            if (readOnly)
+            {
+                call.Write("KO");
+                return;
+            }
             char[] forbiddenTo = { '/', '\\' };
             string to;
             if (!call.Parameters.TryGetValue("to", out to))
@@ -203,6 +210,11 @@ namespace DolphinWebXplorer2.Services
 
         private void ProcessOpen(string path, HttpCall call)
         {
+            if (!allowExec)
+            {
+                call.Write("KO");
+                return;
+            }
             VFSItem fil = vfs.GetItem(path);
             if (fil != null)
             {
@@ -216,6 +228,11 @@ namespace DolphinWebXplorer2.Services
 
         private void ProcessUpload(string path, HttpCall call)
         {
+            if (readOnly)
+            {
+                call.Write("KO");
+                return;
+            }
             string soffset = call.Request.Headers["X-Sunfish-Offset"];
             string slength = call.Request.Headers["X-Sunfish-Length"];
             if (string.IsNullOrEmpty(soffset))
@@ -252,6 +269,23 @@ namespace DolphinWebXplorer2.Services
             }
         }
 
+        private void ProcessFolderZip(string path, HttpCall call)
+        {
+            VFSItem fil = vfs.GetItem(path);
+            if (fil != null)
+            {
+                using (ZipDownload z = new ZipDownload(call))
+                {
+                    if (fil.Directory)
+                        z.AddDirectory(fil, null);
+                    else
+                        z.AddFile(fil, fil.Name);
+                }
+            }
+            else
+                call.HTTPNotFound();
+        }
+
 
         public void WriteIcon(Icon image, HttpCall call)
         {
@@ -279,19 +313,23 @@ namespace DolphinWebXplorer2.Services
         {
             List<WebUILink> items = new List<WebUILink>();
             List<string> fileList = new List<string>();
-            foreach (string d in dir.ListDirectories())
-                fileList.Add(d);
-            fileList.Sort();
-            foreach (string d in fileList)
+            foreach (VFSItem vd in dir.ListDirectories())
             {
                 items.Add(new WebUILink()
                 {
                     Icon = "/$sunfish/folder.png",
-                    Name = d,
+                    Name = vd.Name,
                     Description = "Directory",
-                    Link = d + "/",
+                    Link = vd.Name + "/",
                     Style = "directory",
                     Actions = new WebUILink[]{
+                        new WebUILink()
+                        {
+                            Icon="archive",
+                            Tooltip="Download as zip",
+                            //Click="sunfish.openFile(this)"
+                            Link=vd.Name + "?action=zip"
+                        },
                         readOnly?null:new WebUILink()
                         {
                             Icon="drive_file_rename_outline",
@@ -308,17 +346,14 @@ namespace DolphinWebXplorer2.Services
                 });
             }
             fileList.Clear();
-            foreach (string d in dir.ListFiles())
-                fileList.Add(d);
-            fileList.Sort();
-            foreach (string d in fileList)
+            foreach (VFSItem vf in dir.ListFiles())
             {
                 items.Add(new WebUILink()
                 {
-                    Icon = d + "?action=icon",
-                    Name = d,
-                    Description = "File",
-                    Link = d,
+                    Icon = vf.Name + "?action=icon",
+                    Name = vf.Name,
+                    Description = "<span class='size'>" + vf.Length.ToSize() + "</span> <span class='info'>(" + MimeTypes.GetMimeType(Path.GetExtension(vf.Name)) + ")</span>",
+                    Link = vf.Name,
                     Actions = new WebUILink[]{
                         allowExec?new WebUILink()
                         {

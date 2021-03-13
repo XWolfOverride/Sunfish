@@ -94,7 +94,7 @@ namespace DolphinWebXplorer2.Middleware
             return dir.Create(inner, asDir);
         }
 
-        public string[] ListFiles(string path)
+        public VFSItem[] ListFiles(string path)
         {
             VFSFolder folder = LocateFolder(ref path);
             if (folder == null)
@@ -102,7 +102,7 @@ namespace DolphinWebXplorer2.Middleware
             return folder.ListFiles(path);
         }
 
-        public string[] ListDirectories(string path)
+        public VFSItem[] ListDirectories(string path)
         {
             VFSFolder folder = LocateFolder(ref path);
             if (folder == null)
