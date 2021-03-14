@@ -35,7 +35,7 @@ namespace DolphinWebXplorer2.Services
                         Tooltip = "Default document for directory path",
                         DefaultValue = "index.html"
                     },
-                    new ConfigurationBool(CFG_SHARE,"Folder share (Web && DAV)")
+                    new ConfigurationBool(CFG_SHARE,"Folder share")// (Web && DAV)")
                     {
                         Tooltip = "Allow directory listings, switched off the server will report a forbidden message if the directory has no default file. Also enables DAV protocol",
                         DefaultValue = true,
@@ -53,7 +53,7 @@ namespace DolphinWebXplorer2.Services
                     {
                         Tooltip = "Allow application execution on server."
                     },
-                    new ConfigurationMessage(ConfigurationMessage.MessageType.WARNING,"WARNING: Sunfish is executed as elevated process, any anction or process started by sunfish will be also elevated.")
+                    new ConfigurationMessage(ConfigurationMessage.MessageType.WARNING,"WARNING: Sunfish is executed as elevated process, any action or process started by sunfish will be also elevated.")
                 },
                 //Advanced = AdvancedEditing
             };
