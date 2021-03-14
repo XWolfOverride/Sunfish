@@ -188,5 +188,9 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 .vs
-/Sunfish/ShareWeb/TestFS
 ShareWeb
+/Sunfish/bin/Debug/*
+!/Sunfish
+!/Sunfish/bin
+!/Sunfish/bin/Debug
+!/Sunfish/bin/Debug/$sunfish

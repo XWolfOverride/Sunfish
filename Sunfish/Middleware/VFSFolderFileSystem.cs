@@ -15,7 +15,8 @@ namespace DolphinWebXplorer2.Middleware
         public VFSFolderFileSystem(string path)
         {
             basePath = path;
-            while (basePath[basePath.Length - 1] == (Path.DirectorySeparatorChar))
+            while (basePath[basePath.Length - 1] == Path.DirectorySeparatorChar ||
+                basePath[basePath.Length - 1] == Path.AltDirectorySeparatorChar)
             {
                 if (basePath.Length < 2)
                     throw new Exception("Invalid path");
