@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
-    class WebUI
+    public class WebUI
     {
         static WebUI()
         {

@@ -1,4 +1,4 @@
-﻿namespace DolphinWebXplorer2.Configurator
+﻿namespace Sunfish.Configurator
 {
     public class ConfigurationScreen
     {

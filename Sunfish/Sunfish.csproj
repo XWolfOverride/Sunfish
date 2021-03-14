@@ -8,7 +8,7 @@
     <ProjectGuid>{5511BE4E-6AE1-479B-B5CD-5A20DC4C13F7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DolphinWebXplorer2</RootNamespace>
+    <RootNamespace>Sunfish</RootNamespace>
     <AssemblyName>Sunfish</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

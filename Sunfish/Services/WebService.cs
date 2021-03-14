@@ -1,11 +1,11 @@
-﻿using DolphinWebXplorer2.Middleware;
+﻿using Sunfish.Middleware;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace DolphinWebXplorer2.Services
+namespace Sunfish.Services
 {
     [DefineConfigurator(typeof(WebServiceConfigurator))]
     class WebService : SunfishService

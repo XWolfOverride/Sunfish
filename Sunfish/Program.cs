@@ -1,8 +1,8 @@
-﻿using DolphinWebXplorer2.Middleware;
+﻿using Sunfish.Middleware;
 using System;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     static class Program
     {

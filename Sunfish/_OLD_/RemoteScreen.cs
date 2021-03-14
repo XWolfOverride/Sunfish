@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2.wx
+namespace Sunfish.wx
 {
     class RemoteScreen
     {

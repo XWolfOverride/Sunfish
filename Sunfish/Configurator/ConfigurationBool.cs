@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2.Configurator
+namespace Sunfish.Configurator
 {
     public class ConfigurationBool : ConfigurationElement
     {

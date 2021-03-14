@@ -13,6 +13,8 @@ Select the port and click "listen to port" to start the service. Remote connecti
 
 The root menu is a small directory of available services, can be disabled, but no service can be used as root.
 
+Sunfish embeds Json.Net from Newtonsoft.
+
 ### Editor
 
 |![](doc/editor.png)|
@@ -46,9 +48,12 @@ The files can be deleted, requires non read only configuration.
 **Allow execute:**
 Execute the file on the server side (See warinigs).
 
-### Plugin development
+### Modifications and plugin development
 
-See [Plugin development](doc/plugins.md) file
+A fresh compiled Sunfish.exe does not contain the default resources, place the $sunfish directory on the same path of the .exe with the resources or seal it into the .exe
+To seal resources open sunfish.exe and open the root webpage on a browser. Enter path /$sunfish/info and you will find the seal link. A new sunfish.exe will be generated with the resources inside.
+
+For [Plugin development](doc/plugins.md) open the plugins.md document inside doc folder.
 
 ### Notes
 
@@ -57,3 +62,12 @@ A list o available computer IPs are show on the About... button (near the OK)
 | Waring |
 |:--:|
 | Sunfish uses the C# web server implementation, and this implementation requires elevated user to allow remote computers connections, will be dropped on next versions |
+
+### Roadmap
+In future version of Sunfish .Net Framework will be replaced by .Net Core that will add the next great changes:
+
+· Add Web administration panel with a lot more of configuration options.
+· Custom resources for plugins.
+· Reduce the windows GUI to a more basic version embedding the administration panel.
+· Add alternative GUI for Linux / Macos or switch to electron app.
+· A way for Dynamic Web Pages.

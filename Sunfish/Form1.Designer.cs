@@ -1,4 +1,4 @@
-﻿namespace DolphinWebXplorer2
+﻿namespace Sunfish
 {
     partial class Form1
     {
@@ -197,7 +197,7 @@
             // 
             this.btShowIp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btShowIp.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btShowIp.Image = global::DolphinWebXplorer2.Properties.Resources.messagebox_info;
+            this.btShowIp.Image = global::Sunfish.Properties.Resources.messagebox_info;
             this.btShowIp.Location = new System.Drawing.Point(126, 298);
             this.btShowIp.Name = "btShowIp";
             this.btShowIp.Size = new System.Drawing.Size(23, 23);

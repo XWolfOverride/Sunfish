@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace DolphinWebXplorer2.Configurator
+namespace Sunfish.Configurator
 {
     public abstract class SunfishServiceConfigurator
     {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
     public class Templater
     {

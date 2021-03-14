@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
     class HttpServer
     {

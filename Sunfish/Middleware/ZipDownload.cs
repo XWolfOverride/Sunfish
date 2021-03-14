@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
-    class ZipDownload : IDisposable
+    public class ZipDownload : IDisposable
     {
         private HttpCall call;
         private ZipArchive z;

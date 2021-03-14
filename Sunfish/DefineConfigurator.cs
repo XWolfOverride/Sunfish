@@ -1,7 +1,7 @@
-﻿using DolphinWebXplorer2.Configurator;
+﻿using Sunfish.Configurator;
 using System;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class DefineConfigurator : Attribute

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DolphinWebXplorer2.Properties {
+namespace Sunfish.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

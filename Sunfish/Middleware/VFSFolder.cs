@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
     public abstract class VFSFolder
     {

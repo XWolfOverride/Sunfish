@@ -1,4 +1,4 @@
-﻿using DolphinWebXplorer2.Properties;
+﻿using Sunfish.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     public partial class Form1 : Form
     {

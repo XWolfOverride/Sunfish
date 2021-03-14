@@ -1,9 +1,9 @@
-﻿using DolphinWebXplorer2.Configurator;
+﻿using Sunfish.Configurator;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     public partial class FServiceConf : Form
     {

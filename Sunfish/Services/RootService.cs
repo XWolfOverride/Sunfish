@@ -1,11 +1,11 @@
-﻿using DolphinWebXplorer2.Middleware;
+﻿using Sunfish.Middleware;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DolphinWebXplorer2.Services
+namespace Sunfish.Services
 {
     [DefineConfigurator(typeof(RootServiceConfigurator))]
     class RootService : SunfishService

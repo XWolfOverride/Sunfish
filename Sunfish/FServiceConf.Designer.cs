@@ -1,4 +1,4 @@
-﻿namespace DolphinWebXplorer2
+﻿namespace Sunfish
 {
     partial class FServiceConf
     {

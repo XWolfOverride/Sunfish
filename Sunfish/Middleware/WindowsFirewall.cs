@@ -6,7 +6,7 @@ using NetFwTypeLib;
 using System.Reflection;
 using System.Security.Cryptography;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
     public class WindowsFirewall
     {

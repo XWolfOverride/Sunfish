@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     public class SunfishServiceConfiguration
     {

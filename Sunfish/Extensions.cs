@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     public static class Extensions
     {

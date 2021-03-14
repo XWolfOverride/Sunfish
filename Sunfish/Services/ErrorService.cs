@@ -1,7 +1,7 @@
-﻿using DolphinWebXplorer2.Middleware;
+﻿using Sunfish.Middleware;
 using System.Net;
 
-namespace DolphinWebXplorer2.Services
+namespace Sunfish.Services
 {
     [DefineConfigurator(typeof(ErrorServiceConfigurator))]
     class ErrorService : SunfishService

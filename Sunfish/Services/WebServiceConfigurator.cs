@@ -1,7 +1,7 @@
-﻿using DolphinWebXplorer2.Configurator;
+﻿using Sunfish.Configurator;
 using System;
 
-namespace DolphinWebXplorer2.Services
+namespace Sunfish.Services
 {
     class WebServiceConfigurator : SunfishServiceConfigurator
     {

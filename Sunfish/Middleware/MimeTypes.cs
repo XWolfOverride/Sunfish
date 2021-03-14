@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
-    class MimeTypes
+    public class MimeTypes
     {
         private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
 

@@ -1,12 +1,12 @@
-﻿using DolphinWebXplorer2.Middleware;
-using DolphinWebXplorer2.Services;
+﻿using Sunfish.Middleware;
+using Sunfish.Services;
 using Json.Net;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     static class Sunfish
     {

@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace DolphinWebXplorer2.Configurator
+namespace Sunfish.Configurator
 {
-    class ConfigurationMessage : ConfigurationElement
+    public class ConfigurationMessage : ConfigurationElement
     {
         public enum MessageType
         {

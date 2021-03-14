@@ -1,6 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     class IpInfo
     {

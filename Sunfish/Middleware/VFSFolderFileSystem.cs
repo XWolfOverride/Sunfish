@@ -6,7 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DolphinWebXplorer2.Middleware
+namespace Sunfish.Middleware
 {
     public class VFSFolderFileSystem : VFSFolder
     {

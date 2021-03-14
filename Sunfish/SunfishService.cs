@@ -1,11 +1,12 @@
-﻿using DolphinWebXplorer2.Configurator;
-using DolphinWebXplorer2.Middleware;
-using DolphinWebXplorer2.Services;
+﻿using Sunfish.Configurator;
+using Sunfish.Middleware;
+using Sunfish.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
-namespace DolphinWebXplorer2
+namespace Sunfish
 {
     public abstract class SunfishService : IDisposable
     {
@@ -22,6 +23,17 @@ namespace DolphinWebXplorer2
         {
             List<Type> st = new List<Type>();
             ScanForServices(Assembly.GetExecutingAssembly(), st);
+            string sfpath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            foreach (string s in Directory.GetFiles(sfpath)) try
+                {
+                    var sname = Path.GetFileName(s);
+                    if (sname.StartsWith("sf-") && sname.EndsWith(".dll"))
+                        ScanForServices(Assembly.LoadFile(s), st);
+                }
+                catch (Exception e)
+                {
+                    //TODO: LOG
+                }
             ServiceTypes = st.ToArray();
         }
 
@@ -51,7 +63,7 @@ namespace DolphinWebXplorer2
             Type stype = GetServiceTypeOf(ssc.Type);
             try
             {
-                return (SunfishService)stype.GetConstructor(new Type[] { typeof(SunfishServiceConfiguration) }).Invoke(new Object[] { ssc });
+                return (SunfishService)stype.GetConstructor(new Type[] { typeof(SunfishServiceConfiguration) }).Invoke(new object[] { ssc });
             }
             catch { return new ErrorService(ssc); }
         }
