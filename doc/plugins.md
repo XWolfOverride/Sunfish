@@ -11,6 +11,10 @@ If the resulting assemlby is not a .dll and not starts with sf- Sunfish will not
 
 Also is hight recomendable to set the startup program on debug as the Sunfish.exe inside bin/debug folder.
 
+Create a class that inherits SunfishService and implement Process method.
+
+The call object contains methods for accessing request and response.
+
 # Use the plugin
 
 Place the plugin on the same path ans sunfish.exe
