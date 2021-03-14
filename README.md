@@ -66,8 +66,8 @@ A list o available computer IPs are show on the About... button (near the OK)
 ### Roadmap
 In future version of Sunfish .Net Framework will be replaced by .Net Core that will add the next great changes:
 
-· Add Web administration panel with a lot more of configuration options.
-· Custom resources for plugins.
-· Reduce the windows GUI to a more basic version embedding the administration panel.
-· Add alternative GUI for Linux / Macos or switch to electron app.
-· A way for Dynamic Web Pages.
+- Add Web administration panel with a lot more of configuration options.
+- Custom resources for plugins.
+- Reduce the windows GUI to a more basic version embedding the administration panel.
+- Add alternative GUI for Linux / Macos or switch to electron app.
+- A way for Dynamic Web Pages.
