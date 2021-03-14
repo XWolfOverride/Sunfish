@@ -88,32 +88,33 @@ namespace DolphinWebXplorer2.Middleware
                 return "Sunfish";
             if (key == "AppVersion")
                 return Program.VERSION;
-            foreach (object o in data)
-            {
-                if (o == null)
-                    continue;
-                if (o is Dictionary<string, object>)
+            if (data != null)
+                foreach (object o in data)
                 {
-                    Dictionary<string, object> d = (Dictionary<string, object>)o;
-                    object v;
-                    if (d.TryGetValue(key, out v))
-                        return v;
-                }
-                else
-                {
-                    Type t = o.GetType();
-                    try
+                    if (o == null)
+                        continue;
+                    if (o is Dictionary<string, object>)
                     {
-                        PropertyInfo p = t.GetProperty(key);
-                        if (p != null)
-                        {
-                            object v = p.GetValue(o);
+                        Dictionary<string, object> d = (Dictionary<string, object>)o;
+                        object v;
+                        if (d.TryGetValue(key, out v))
                             return v;
-                        }
                     }
-                    catch { };
+                    else
+                    {
+                        Type t = o.GetType();
+                        try
+                        {
+                            PropertyInfo p = t.GetProperty(key);
+                            if (p != null)
+                            {
+                                object v = p.GetValue(o);
+                                return v;
+                            }
+                        }
+                        catch { };
+                    }
                 }
-            }
             return null;
         }
 

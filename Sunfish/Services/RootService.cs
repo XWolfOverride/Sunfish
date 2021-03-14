@@ -70,7 +70,34 @@ namespace DolphinWebXplorer2.Services
                     call.Response.ContentType = "application/x-msdownload";
                     call.Write(File.ReadAllBytes(Assembly.GetExecutingAssembly().Location));
                 }
+                else if (path == "info")
+                {
+                    WebUI.WriteTemplate("sunfish-header", call, null);
+                    call.Write("<p>Sunfish " + Program.VERSION + " (C) XWolfOverride</p>");
+#if DEBUG
+                    call.Write("<p>Debug build</p>");
+                    if (WebUI.EXTERNAL_RESOURCES)
+                        call.Write("<p>Using external resources</p>");
+                    else
+                        call.Write("<p>Using internal resources</p>");
+#else
+                    call.Write("<p>Release build</p>");
+#endif
+                    if (WebUI.Ready)
+                        call.Write("<p>Resources loaded succesfully</p>");
+                    else
+                        call.Write("<p>No resources</p>");
+                    call.Write("<p><b><a href='info/seal'>Seal resources</a></b></p>");
+                    WebUI.WriteTemplate("sunfish-footer", call, null);
+
+                } else if (path == "info/seal")
+                {
+                    WebUI.Seal();
+                    call.Response.StatusCode = 307;
+                    call.Response.Headers["Location"] = "/$sunfish/info";
+                }
                 else
+
                 {
                     // Internal Resources
                     WebUI.WriteResource(path, call);

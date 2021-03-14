@@ -143,9 +143,9 @@
             this.lbPaths.FormattingEnabled = true;
             this.lbPaths.IntegralHeight = false;
             this.lbPaths.ItemHeight = 28;
-            this.lbPaths.Location = new System.Drawing.Point(0, 58);
+            this.lbPaths.Location = new System.Drawing.Point(0, 32);
             this.lbPaths.Name = "lbPaths";
-            this.lbPaths.Size = new System.Drawing.Size(253, 233);
+            this.lbPaths.Size = new System.Drawing.Size(253, 259);
             this.lbPaths.TabIndex = 7;
             this.lbPaths.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbPaths_DrawItem);
             this.lbPaths.SelectedIndexChanged += new System.EventHandler(this.lbPaths_SelectedIndexChanged);
@@ -232,6 +232,7 @@
             this.toolTip1.SetToolTip(this.cbAdmin, "If there is no service located at root sunfish will show a listing page with all " +
         "availables services and paths.");
             this.cbAdmin.UseVisualStyleBackColor = true;
+            this.cbAdmin.Visible = false;
             this.cbAdmin.CheckedChanged += new System.EventHandler(this.cbAdmin_CheckedChanged);
             // 
             // tbAdminPWD
@@ -243,6 +244,7 @@
             this.tbAdminPWD.PasswordChar = '•';
             this.tbAdminPWD.Size = new System.Drawing.Size(150, 20);
             this.tbAdminPWD.TabIndex = 11;
+            this.tbAdminPWD.Visible = false;
             this.tbAdminPWD.TextChanged += new System.EventHandler(this.tbAdminPWD_TextChanged);
             // 
             // Form1
