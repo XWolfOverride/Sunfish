@@ -1,0 +1,39 @@
+<!--SEC:sunfish-header-->
+<html><head>
+    <title>{AppName}&nbsp;{AppVersion}</title>
+    <meta charset="utf-8">    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="icon" type="image/png" href="/$sunfish/logo.png">
+    <link rel="apple-touch-icon" href="/$sunfish/logo.png">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&family=Open+Sans&family=Roboto+Condensed:wght@300&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/$sunfish/style.css">
+    <script src="/$sunfish/konsole.js"></script>
+	<script src="/$sunfish/sunfish.js"></script>
+	{Include}
+</head>
+<body onload="sunfish.init()" class="desktop">
+    <div id="head">
+        <span id="main-title" title="Click to download this server program"><a href="/$sunfish/Sunfish.exe">{AppName}</a></span>
+        <span id="main-subtitle">{AppVersion}</span>
+        <span id="main-location">{%Breadcrumb:action}</span>
+        <span id="main-toolbar">{%Actions:action}</span>
+    </div>
+    <div id="wrapper">
+<!--SEC:sunfish-footer-->
+</div>
+</body></html>
+<!--SEC:directory-index-->
+{%:sunfish-header}{%Items:directory-item}{%:sunfish-footer}
+<!--SEC:directory-item-->
+<div class="item item-row {Style}" title="{Tooltip}">
+	<a href="{Link}">
+		<img loading="lazy" class="item-icon" src="{Icon}">
+		<div class="item-name">{Name}</div>
+		<div class="item-desc">{Description}</div>
+	</a>{@Actions}<div class="item-actions">{%Actions:action}</div>{/}
+</div>
+<!--SEC:action-->
+<a {@Style}class="{Style}"{/}{@Link}href="{Link}"{/}{@Tooltip}title="{Tooltip}"{/}{@Click}onclick="{Click}"{/}>{@Icon}<i class="material-icons-round">{Icon}</i>{/}{Name}</a>
