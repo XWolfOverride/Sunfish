@@ -189,7 +189,7 @@ namespace DolphinWebXplorer2
             }
             sb.Append("\r\nSunfish ");
             sb.Append(Program.VERSION);
-            sb.Append(" (C) XWolfOverride@gmail.com 2007-2021\r\nEasy folder shares");
+            sb.Append(" (C) XWolfOverride@gmail.com 2007-2021\r\nEasy web server and folder shares.\r\nMIT license.");
             MessageBox.Show(sb.ToString(), "Sunfish information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
